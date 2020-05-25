@@ -15,4 +15,4 @@ It describes the southbound interface
 
 
 ##PAIF
-It describes the placement algorithm interface to enforce the resource selection logic
+It describes the placement algorithm interface to enforce the resource selection logic. It is also used for RA algorithm

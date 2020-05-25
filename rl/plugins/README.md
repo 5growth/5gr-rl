@@ -9,7 +9,9 @@ It contains the plugins for transport domain:
 - **_5G Crosshaul WIM Plugin_** (plugin that controls the transport nodes developed in [5G-Crosshaul EU project](http://5g-crosshaul.eu/) ). Released with [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html) license.
 - **_5G SDN WIM Plugin_** (plugin to SDN control based domains via [ONOS](https://onosproject.org/) ). Released with [Apachev2](https://www.apache.org/licenses/LICENSE-2.0) license. 
 - **_5G Optical SDN WIM Plugin_** (plugin to control optical domain via [ONOS](https://onosproject.org/) ). Released with [Apachev2](https://www.apache.org/licenses/LICENSE-2.0) license.
-- **_Dummy WIM Plugin_** used for internal test. Released with [Apachev2](https://www.apache.org/licenses/LICENSE-2.0) license.
+- **_Dummy WIM Plugin_** used for internal test. Released with [Apachev2](https://www.apache.org/licenses/LICENSE
+- **_ONOS-OpenFlow-Slicing_** (plugin to manage slicing via ONOS using openflow switches). Released with [Apachev2](https://www.apache.org/licenses/LICENSE-2.0) license.-2.0) license.
+- **_ONOS-P4-Slicing_** (plugin to manage slicing via ONOS using P4 switches). Released with [Apachev2](https://www.apache.org/licenses/LICENSE-2.0) license.
 
 ## 2. VIM
 It contains the plugins for datacenter domain:
@@ -26,7 +28,7 @@ It contains the plugin for MEC  domains:
 ## 4. RADIO
 It contains the plugin for radio domains:
 - **_Radio Plugin_** used for internal test. Released with [Apachev2](https://www.apache.org/licenses/LICENSE-2.0) license.
-
+- **_DummyRadioPlugin_** used for internal test. Released with [Apachev2](https://www.apache.org/licenses/LICENSE
 ## 5. Cloudify
 It contains the plugin to be used in Cloudify to interacts with the Resource Layer via NBI. Please refer to [Cloudify documentation](https://cloudify.co/plugins/) on how to install itEquipment. Released with [Apachev2](https://www.apache.org/licenses/LICENSE-2.0) license.
 
