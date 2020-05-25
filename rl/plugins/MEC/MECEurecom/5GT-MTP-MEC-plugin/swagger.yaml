@@ -1,0 +1,529 @@
+swagger: "2.0"
+
+info:
+  version: "1"
+  title: MEC Plugin API
+  description: Northbound REST API of the MEC plugin.
+schemes:
+  - http
+host: "127.0.0.1:8082"
+basePath: /MEC/v1
+
+paths:
+  /service/requests:
+    get:
+      summary: Retrieve a list of MEC service requests. 
+      description: Retrieve a list of MEC service requests.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: List of MEC service requests. 
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/MECTrafficServiceCreationRequest"
+
+    post:
+      summary: Create MEC service rules.
+      description: Create MEC service rules.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: mecTrafficServiceCreationRequest
+          in: body
+          required: true
+          description: Information about the MEC app, including required services, traffic rules, etc.
+          schema:
+            $ref: "#/definitions/MECTrafficServiceCreationRequest"
+      responses:
+        201:
+          description: MEC service created successfully.
+          schema:
+            $ref: "#/definitions/MECTrafficServiceCreationResponse"
+        401:
+          description: MEC service creation failed.
+
+  /service/requests/{RequestId}:
+    get:
+      summary: Retrieve information about a MEC service request.
+      description: Retrieve information about a MEC service request.
+      produces:
+        - application/json
+      parameters:
+        - name: RequestId
+          in: path
+          required: true
+          description: Request identifier.
+          type: string
+      responses:
+        200:
+          description: MEC service request information.
+          schema:
+            $ref: "#/definitions/MECTrafficServiceCreationRequest"
+        404:
+          description: Service not found.
+
+    delete:
+      summary: Delete service.
+      description: Delete service identified by the given request ID.
+      produces:
+        - application/json
+      parameters:
+        - name: RequestId
+          in: path
+          required: true
+          description: Request identifier.
+          type: string
+      responses:
+        201:
+          description: MEC service deleted successfully.
+        404:
+          description: Service not found.
+
+  /service/regions:
+    get:
+      summary: Retrieve a list of all covered regions.
+      description: Retrieve a list of MEC regions, reporting their identifiers and location information.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: List of regions.
+          schema:
+            type: object
+            properties:
+              Regions:
+                type: array
+                items:
+                  $ref: '#/definitions/MECRegionInfo'
+        400:
+          description: Bad request
+
+  /service/regions/{RegionId}:
+    get:
+      summary: Retrieve a list of MEC service requests for the given region.
+      description: Retrieve a list of MEC service requests for the given region.
+      produces:
+        - application/json
+      parameters:
+        - name: RegionId
+          in: path
+          required: true
+          description: Region identifier.
+          type: string
+      responses:
+        200:
+          description: List of MEC service requests. 
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/MECTrafficServiceCreationRequest"
+        404:
+          description: Region not found.
+
+definitions:
+  AddressData:
+    required:
+      - addressType
+    properties:
+      addressType:
+        description: Describes the type of the address to be assigned to the CP instantiated from the parent CPD. The content type shall be aligned with the address type supported by the layerProtocol attribute of the parent CPD.
+        type: string
+        enum: [MAC, IPV4, IPV6] #maybe more to add
+      l2AddressData:
+        description: Provides the information on the MAC addresses to be assigned to the CP(s) instantiated from the parent CPD. Shall be present when the addressType is MAC address.
+        type: object
+        additionalProperties: true
+      l3AddressData:
+        description: Provides the information on the IP addresses to be assigned to the CP instantiated from the parent CPD. Shall be present when the addressType is IP address.
+        type: object
+        additionalProperties: true
+ 
+  ########################
+  # From ETSI MEC GS 011 #
+  ########################
+  CategoryRef:
+    description: A category reference of the service.
+    required:
+      - href
+      - id
+      - name
+      - version
+    properties:
+      href:
+        description: Reference of the catalogue.
+        type: string
+      id:
+        description: Unique identifier of the category.
+        type: string
+      name:
+        description: Name of the category.
+        type: string
+      version:
+        description: Category version.
+        type: string
+
+  ##################################
+  # MEC-related (from GS MEC 010-2) #
+  ##################################
+  
+  ServiceDescriptor:
+    required:
+      - serName
+      - version
+    properties:
+      serName:
+        description: The name of the service, for example, RNIS, LocationService, etc.
+        type: string
+      serCategory:
+        $ref: "#/definitions/CategoryRef"
+      version:
+        description: The version of the service.
+        type: string
+      transportsSupported:
+        description: Indicates transport and serialization formats supported made available to the service-consuming application. Defaults to REST+JSON if absent.
+        type: object
+        properties:
+          transport:
+            $ref: "#/definitions/TransportDescriptor"
+          serializers:
+            description: Information about the serializers in this binding, as defined in the SerializerTypes type in ETSI GS MEC 011.
+            type: string
+            enum: [JSON, XML, PROTOBUF3]
+
+  ServiceDependency:
+    required:
+      - serName
+      - version
+    properties:
+      serName:
+        description: The name of the service, for example, RNIS, LocationService, etc.
+        type: string
+      serCategory:
+        $ref: "#/definitions/CategoryRef"
+      version:
+        description: The version of the service.
+        type: string
+      serTransportDependencies:
+        description: Indicates transport and serialization format dependencies of consuming the service. Defaults to REST + JSON if absent. This attribute indicates groups of transport bindings that a service-consuming ME application supports for the consumption of the ME service defined by this ServiceDependency structure. If at leastone of the indicated groups is supported by the service it may be consumed by the application.
+        type: array
+        items:
+          $ref: "#/definitions/TransportDependency"
+      requestedPermissions:
+        description: Requested permissions regarding the access of the application to the service. See clause 8.2 of ETSI GS MEC 009. The format of this attribute is left for the data model design stage.
+        type: object
+        additionalProperties: true
+
+  TransportDescriptor:
+    description: Information about the transport in a transport binding.
+    required:
+      - type
+      - protocol
+      - version
+      - security
+    properties:
+      type: 
+        description: Type of the transport, as defined in the TransportTypes type in ETSI GS MEC 011.
+        type: string
+        enum: [REST_HTTP, MB_TOPIC_BASED, MB_ROUTING, MB_PUBSUB, RPC, RPC_STREAMING, WEBSOCKET]
+      protocol:
+        description: The name of the protocol used. Shall be set to "HTTP" for a REST API.
+        type: string
+      version:
+        description: The version of the protocol used.
+        type: string
+      security:
+        description: Information about the security used by the transport in ETSI GS MEC 011. (not implemented)
+        type: object
+        additionalProperties: true
+        
+  TransportDependency:
+    required:
+      - transport
+      - serializers
+      - labels
+    properties:
+      transport:
+        $ref: "#/definitions/TransportDescriptor"
+      serializers:
+        description: Information about the serializers in this transport binding, as defined in the SerializerTypes type in ETSI GS MEC 011. Support for at least one of the entries is required in conjunction with the transport.
+        type: string
+        enum: [JSON, XML, PROTOBUF3]
+      labels:
+        description: Set of labels that allow to define groups of transport bindings.
+        type: array
+        items: 
+          type: string
+
+  TunnelInfo:
+    required:
+      - tunnelType
+      - tunnelDstAddress
+      - tunnelSrcAddress
+    properties:
+      tunnelType:
+        description: TType of tunnel (GTP-U, GRE, etc.)
+        type: string
+        enum: [GTP-U, GRE]
+      tunnelDstAddress:
+        description: Destination address of the tunnel.
+        type: string
+      tunnelSrcAddress:
+        description: Source address of the tunnel.
+        type: string
+      tunnelSpecificData:
+        description: Parameters specific to the tunnel.
+        type: object
+        additionalProperties: true
+
+  InterfaceDescriptor:
+    required:
+      - interfaceType
+    properties:
+      interfaceType:
+        description: Type of interface (TUNNEL, MAC, IP, etc.)
+        type: string
+        enum: [TUNNEL, MAC, IP]
+      tunnelInfo:
+        $ref: "#/definitions/TunnelInfo"
+      srcMACAddress:
+        description: If the interface type is MAC, the source address identifies the MAC address of the interface.
+        type: string
+      dstMACAddress:
+        description: If the interface type is MAC, the destination address identifies the MAC address of the interface. Only used for dstInterface.
+        type: string
+      dstIPAddress:
+        description: f the interface type is IP, the destination address identifies the IP address of the destination. Only used for dstInterface.
+        type: string
+
+  TrafficFilter:
+    properties:
+      srcAddress:
+        description: An IP address or a range of IP addresses. For IPv4, the IP address could be an IP address plus mask, or an individual IP address, or a range of IP addresses. For IPv6, the IP address could be an IP prefix, or a range of IP prefixes.
+        type: array
+        items:
+          type: string
+      dstAddress:
+        description: An IP address or a range of IP addresses. For IPv4, the IP address could be an IP address plus mask, or an individual IP address, or a range of IP addresses. For IPv6, the IP address could be an IP prefix, or a range of IP prefixes.
+        type: array
+        items:
+          type: string
+      srcPort:
+        description: A port or a range of ports.
+        type: array
+        items:
+          type: string
+      dstPort:
+        description: A port or a range of ports.
+        type: array
+        items:
+          type: string
+      Protocol:
+        description: Specifies the protocol of the traffic rule.
+        type: array
+        items:
+          type: string
+      Token:
+        description: Used for token based traffic rule.
+        type: array
+        items:
+          type: string
+      srcTunnelAddress:
+        description: Used for GTP tunnel based traffic rule.
+        type: array
+        items:
+          type: string
+      dstTunnelAddress:
+        description: Used for GTP tunnel based traffic rule.
+        type: array
+        items:
+          type: string
+      srcTunnelPort:
+        description: Used for GTP tunnel based traffic rule.
+        type: array
+        items:
+          type: string
+      dstTunnelPort:
+        description: Used for GTP tunnel based traffic rule.
+        type: array
+        items:
+          type: string
+      qci:
+        description: Used to match all packets that have the same QCI.
+        type: number
+      dscp:
+        description: Used to match all IPv4 packets that have the same DSCP.
+        type: number
+      tc:
+        description: Used to match all IPv6 packets that have the same TC.
+        type: number
+
+  TrafficRuleDescriptor:
+    required:
+      - trafficRuleId
+      - filterType
+      - priority
+      - trafficFilter
+      - action
+    properties:
+      trafficRuleId:
+        description: Identifies the traffic rule.
+        type: string
+      filterType:
+        description: Definition of filter type, i.e., per FLOW or PACKET. If it is per FLOW, the filter matches UE->EPC packets and the reverse packets are handled by the same context. 
+        type: string
+        enum: [FLOW, PACKET]
+      priority:
+        description: Priority of this traffic rule. If traffic rule conflicts, the one with higher priority take precedence.
+        type: number
+      trafficFilter:
+        description: The filter used to identify specific flow/packets that need to be handled by the MEC host.
+        type: array
+        items:
+          $ref: "#/definitions/TrafficFilter"
+      action:
+        description: Identifies the action of the ME host data plane, when a packet matches the trafficFilter. The example actions include DROP, FORWARD, DECAPSULATED, FORWARD_AS_IS, PASSTHROUGH, DUPLICATED_DECAPSULATED, DUPLICATE_AS_IS.
+        type: string
+        enum: [DROP, FORWARD, DECAPSULATED, FORWARD_AS_IS, PASSTHROUGH, DUPLICATED_DECAPSULATED, DUPLICATE_AS_IS]
+      dstInterface:
+        description: Describes the destination interface information, if the action is FORWARD. Some applications (e.g. inline/tap) require two interfaces, where the first is on the UE side and the second is on the EPC side.
+        type: array
+        items:
+          $ref: "#/definitions/InterfaceDescriptor"
+
+  DNSRuleDescriptor:
+    required:
+      - dnsRuleId
+      - domainName
+      - ipAddressType
+      - ipAddress
+    properties:
+      dnsRuleId:
+        description: Identifies the DNS rule.
+        type: string
+      domainName:
+        description: FQDN of the DNS rule.
+        type: string
+      ipAddressType:
+        description: Specifies the IP address type (IP_V6, IP_V4)
+        type: string
+        enum: [IP_V6, IP_V4]
+      ipAddress: 
+        description: IP address given by the DNS rule.
+        type: string
+      ttl:
+        description: Time-to-live value.
+        type: number
+  
+  LatencyDescriptor:
+    description: This is used to describe the maximum latency tolerated by the mobile edge application.
+    required:
+      - timeUnit
+      - latency
+    properties:
+      timeUnit:
+        description: Time unit, e.g., ms
+        type: string # The standard specifies int; for the moment we decided to go for string
+      latency:
+        description: The value of the latency
+        type: number # I think types are the other way around in the standard
+
+  MECTrafficServiceCreationRequest:
+    required:
+      - RegionId
+    properties:
+      RequestId:
+        description: Identifier of the request, assigned by the MEC plugin at creation time.
+        type: string
+      RegionId:
+        description: Identifier of the region where the MEC app will be instantiated.
+        type: string
+      appServiceRequired:
+        description: Describes services a mobile edge application requires to run.
+        type: array
+        items:
+          $ref: "#/definitions/ServiceDependency"
+      appServiceOptional:
+        description: Describes services a mobile edge application may use if available.
+        type: array
+        items:
+          $ref: "#/definitions/ServiceDependency"
+      appServiceProduced:
+        description: Describes services a mobile edge application is able to produce to the platform or other mobile edge applications. Only relevant for service-producing apps.
+        type: array
+        items:
+          $ref: "#/definitions/ServiceDescriptor"
+      transportDependencies:
+        description: Transports, if any, that this application requires to be provided by the platform. These transports will be used by the application to deliver services provided by this application. Only relevant for service-producing apps.
+        type: array
+        items:
+          $ref: "#/definitions/TransportDependency"
+      appTrafficRule:
+        description: Describes traffic rules the mobile edge application requires.
+        type: array
+        items:
+          $ref: "#/definitions/TrafficRuleDescriptor"
+      appDNSRule:
+        description: Describes DNS rules the mobile edge application requires.
+        type: array
+        items:
+          $ref: "#/definitions/DNSRuleDescriptor"
+      appLatency:
+        $ref: "#/definitions/LatencyDescriptor"
+      status:
+        description: Status of the request.
+        type: string
+        enum: ["CREATED", "FAILED", "PENDING", "DELETED"]
+      createdAt:
+        description: Timestamp of when service request was created.
+        type: string
+      lastModified:
+        description: Timestamp of when service was last modified (e.g., deleted).
+        type: string
+
+  MECTrafficServiceCreationResponse:
+    required:
+      - RequestId
+    properties:
+      RequestId:
+        description: Request identifier assigned by the MEC plugin. This will be used for future queries or service deletion requests.
+        type: string
+
+  LocationInfo:
+    description: Geographical location info of a region, expressed as a circle centered at specific coordinates and with a specified range.
+    required:
+      - latitude
+      - longitude
+      - altitude
+      - range
+    properties:
+      latitude:
+        description: Latitude coordinate
+        type: number
+      longitude:
+        description: Longitude coordinate
+        type: number
+      altitude:
+        description: Altitude coordinate
+        type: number
+      range:
+        description: Coverage radius (in km)
+        type: number
+
+  MECRegionInfo:
+    description: Information about a region.
+    required: 
+      - RegionId
+    properties:
+      MECRegionInfo:
+        type: object
+        properties:
+          RegionId:
+            description: Identifier of the region.
+            type: string
+          LocationInfo:
+            $ref: "#/definitions/LocationInfo"
+

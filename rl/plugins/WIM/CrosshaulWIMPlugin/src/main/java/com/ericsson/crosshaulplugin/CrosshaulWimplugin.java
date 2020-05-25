@@ -1,0 +1,142 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.ericsson.crosshaulplugin;
+
+import com.ericsson.crosshaulplugin.events.abstraction.Parsedomainlist;
+import com.ericsson.crosshaulplugin.events.abstraction.StopServer;
+import com.ericsson.crosshaulplugin.nbi.swagger.api.AbstractComputeResourcesApi;
+import com.ericsson.crosshaulplugin.nbi.swagger.api.AbstractNetworkApi;
+import com.ericsson.crosshaulplugin.nbi.swagger.api.AbstractNetworkResourcesApi;
+import com.ericsson.crosshaulplugin.nbi.swagger.api.AbstractResourcesApi;
+import com.ericsson.crosshaulplugin.nbi.swagger.api.ComputeResourcesApi;
+import com.ericsson.crosshaulplugin.nbi.swagger.api.HealthzApi;
+import com.ericsson.crosshaulplugin.nbi.swagger.api.InformationApi;
+import com.ericsson.crosshaulplugin.nbi.swagger.api.MTPIF;
+import com.ericsson.crosshaulplugin.nbi.swagger.api.NetworkResourcesApi;
+import com.ericsson.crosshaulplugin.nbi.swagger.api.QuotasApi;
+import com.ericsson.crosshaulplugin.nbi.swagger.api.ReservationsApi;
+import com.ericsson.crosshaulplugin.nbi.swagger.api.SoftwareImagesApi;
+import com.ericsson.crosshaulplugin.sbi.CrosshaulIF;
+import com.google.common.eventbus.EventBus;
+//import com.mtp.abstraction.E2EAbstractionLogic;
+//import com.mtp.abstraction.ResourceSelectionLogic;
+//import com.mtp.common.DatabaseDriver;
+//import com.mtp.extinterface.sbi.SBIIF;
+//import com.mtp.resourcemanagement.ResouceOrchestration;
+////import java.lang.String;
+//import com.mtp.events.abstraction.Creation.Parsedomainlist;
+//import com.mtp.events.abstraction.Creation.StopServer;
+//import com.mtp.extinterface.nbi.swagger.api.ComputeResourcesApi;
+//import com.mtp.extinterface.nbi.swagger.api.HealthzApi;
+//import com.mtp.extinterface.nbi.swagger.api.InformationApi;
+//import com.mtp.extinterface.nbi.swagger.api.NBIIF;
+//import com.mtp.extinterface.nbi.swagger.api.NetworkResourcesApi;
+//import com.mtp.extinterface.nbi.swagger.api.QuotasApi;
+//import com.mtp.extinterface.nbi.swagger.api.ReservationsApi;
+//import com.mtp.extinterface.nbi.swagger.api.SoftwareImagesApi;
+import java.util.Scanner;
+//import com.eranplugin.DeadEventListener;
+/**
+ *
+ * @author user
+ */
+public class CrosshaulWimplugin {
+    public static void main(String[] args) {
+        boolean onexit = false;
+//        boolean stub_en = true; //enable stubmode
+        Scanner scanner = new Scanner(System.in);
+        String prompt;
+        //Create eventbus
+        System.out.println("RAN PLUGIN START");
+        EventBus evbus;
+        MTPIF mtpif = new MTPIF(args[1], args[2]);
+        evbus = SingletonEventBus.getBus();
+        
+//        //see if STUB_MODE is set as properties
+//        String stubmode;
+//        stubmode = System.getProperty("STUB_ENABLE");
+//        
+//        if ((stubmode ==null) || (!stubmode.equals("yes"))) {
+//            //Execute MTP using IFA005 as SBI
+//            System.out.println("///////STUB MODE DISABLE /////////");
+//            stub_en = false;
+//        } else {
+//            System.out.println("///////STUB MODE ENABLE /////////");
+//        }
+        
+        //register all modules
+        System.out.println("RAN PLUGIN registering modules ...");
+
+        evbus.register(mtpif);
+        evbus.register(new CrosshaulIF());
+
+        //register jaxrs api
+        evbus.register(new ComputeResourcesApi());
+        evbus.register(new HealthzApi());
+        evbus.register(new InformationApi());
+        evbus.register(new NetworkResourcesApi());
+        evbus.register(new QuotasApi());
+        evbus.register(new ReservationsApi());
+        evbus.register(new SoftwareImagesApi());
+        evbus.register(new AbstractComputeResourcesApi());
+        evbus.register(new AbstractNetworkResourcesApi());
+        evbus.register(new AbstractNetworkApi());
+        evbus.register(new AbstractResourcesApi());
+        
+                
+        //class to register dead event
+        evbus.register (new DeadEventListener());
+        //register deadevent for debug
+        System.out.println("Done !!!");
+        System.out.println("Start acquiring abstract domain info... !!!");
+        String domfile = args[0];
+        Parsedomainlist domlist = new Parsedomainlist(domfile);
+        evbus.post(domlist);
+        //System.out.println("MTP ready ");
+        System.out.println("Start MTP feature TEST:");
+        while (!onexit) {
+//            System.out.println("-- type ADVCOMPTEST for compute advertise test");
+//            System.out.println("-- type ADVNETTEST for network advertise test");
+//            System.out.println("-- type ALLCOMPTEST for compute allocation test ");
+//            System.out.println("-- type ALLNETTEST for network allocation test");
+//            System.out.println("-- type TERMCOMPTEST for compute termination test");
+//            System.out.println("-- type TERMNETTEST for network termination test");
+              System.out.println("-- Type EXIT to exit the program:");
+            
+            prompt = scanner.next();
+            if (prompt.equals("EXIT")) {
+                StopServer servreq = new StopServer();
+                evbus.post(servreq);
+                onexit = true;
+//                continue;
+            } 
+//            if (prompt.equals("ADVCOMPTEST")) {
+//                soif.test_AdvertiseVirtualCompute();
+//                continue;
+//            }
+//            if (prompt.equals("ADVNETTEST")) {
+//                soif.test_AdvertiseVirtualNetork();
+//                continue;
+//            }
+//            if (prompt.equals("ALLCOMPTEST")) {
+//                soif.test_AllocateVirtualCompute();
+//                continue;
+//            }
+//            if (prompt.equals("ALLNETTEST")) {
+//                soif.test_AllocateVirtualNetwork();
+//                continue;
+//            }
+//            if (prompt.equals("TERMCOMPTEST")) {
+//                soif.test_TerminateVirtualCompute();
+//                continue;
+//            }
+//            if (prompt.equals("TERMNETTEST")) {
+//                soif.test_TerminateVirtualNetwork();
+//            }
+        }
+        
+    }
+}

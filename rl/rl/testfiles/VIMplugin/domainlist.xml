@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+<Domains>
+    <Domain >
+        <Type>T-WIM</Type>
+        <Name>WIMtransport1</Name>
+        <Id>11</Id>
+        <Ip>127.0.0.1</Ip>
+        <Port>10000</Port>
+    </Domain>
+    <Domain >
+        <Type>R-WIM</Type>
+        <Name>WIMRadio1</Name>
+        <Id>12</Id>
+        <Ip>127.0.0.1</Ip>
+        <Port>20000</Port>
+    </Domain>
+    <Domain >
+        <Type>VIM</Type>
+        <Name>VIM1</Name>
+        <Id>13</Id>
+        <Ip>127.0.0.1</Ip>
+        <Port>30000</Port>
+    </Domain>
+    <Domain >
+        <Type>MEC</Type>
+        <Name>MEC1</Name>
+        <Id>14</Id>
+        <Ip>127.0.0.1</Ip>
+        <Port>40000</Port>
+    </Domain>
+</Domains>
+-->
+<Domains>
+    <Domain >
+        <Type>VIM</Type>
+        <Name>VIM1</Name>
+        <Id>1</Id>
+        <Ip>127.0.0.1</Ip>
+        <Port>10000</Port>
+    </Domain>
+    <Domain >
+        <Type>T-WIM</Type>
+        <Name>WIMtransport1</Name>
+        <Id>5</Id>
+        <Ip>127.0.0.1</Ip>
+        <Port>50000</Port>
+    </Domain>
+   
+    <Domain >
+        <Type>VIM</Type>
+        <Name>VIM2</Name>
+        <Id>2</Id>
+        <Ip>127.0.0.1</Ip>
+        <Port>20000</Port>
+    </Domain>
+    <Domain >
+        <Type>VIM</Type>
+        <Name>VIM3</Name>
+        <Id>3</Id>
+        <Ip>127.0.0.1</Ip>
+        <Port>30000</Port>
+    </Domain>
+    <Domain >
+        <Type>VIM</Type>
+        <Name>VIM4</Name>
+        <Id>4</Id>
+        <Ip>127.0.0.1</Ip>
+        <Port>40000</Port>
+    </Domain>
+</Domains>

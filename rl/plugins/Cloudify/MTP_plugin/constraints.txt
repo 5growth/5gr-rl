@@ -1,0 +1,4 @@
+# Contents of contraints.txt
+
+cloudify-plugins-common===3.4.2
+requests

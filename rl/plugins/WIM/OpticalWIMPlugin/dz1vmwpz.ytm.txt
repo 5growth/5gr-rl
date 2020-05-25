@@ -1,0 +1,35 @@
+﻿Last changes working (with some abstraction)
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+#	deleted:    .idea/codeStyles/Project.xml
+#	deleted:    .idea/dbnavigator.xml
+#	modified:   .idea/encodings.xml
+#	new file:   .idea/vcs.xml
+#	modified:   .idea/workspace.xml
+#	modified:   src/gen/java/io/swagger/api/AbstractNetworkApi.java
+#	modified:   src/gen/java/io/swagger/api/AbstractNetworkApiService.java
+#	modified:   src/main/java/io/swagger/api/constants/ConstantValues.java
+#	new file:   src/main/java/io/swagger/api/constants/topo.json
+#	modified:   src/main/java/io/swagger/api/impl/NetworkResourcesApiServiceImpl.java
+#	modified:   src/main/java/io/swagger/api/intent/model/IntentModel.java
+#	new file:   src/main/java/io/swagger/api/intent/model/Signal.java
+#	modified:   target/classes/io/swagger/api/AbstractNetworkApiService.class
+#	modified:   target/classes/io/swagger/api/constants/ConstantValues.class
+#	modified:   target/classes/io/swagger/api/impl/NetworkResourcesApiServiceImpl.class
+#	modified:   target/classes/io/swagger/api/intent/model/IntentModel.class
+#	new file:   target/classes/io/swagger/api/intent/model/Signal.class
+#	modified:   target/maven-archiver/pom.properties
+#	modified:   target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+#	modified:   target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+#	modified:   target/swagger-jaxrs-server-1.0.0.war
+#	modified:   target/swagger-jaxrs-server-1.0.0/WEB-INF/classes/io/swagger/api/AbstractNetworkApiService.class
+#	modified:   target/swagger-jaxrs-server-1.0.0/WEB-INF/classes/io/swagger/api/constants/ConstantValues.class
+#	modified:   target/swagger-jaxrs-server-1.0.0/WEB-INF/classes/io/swagger/api/impl/NetworkResourcesApiServiceImpl.class
+#	modified:   target/swagger-jaxrs-server-1.0.0/WEB-INF/classes/io/swagger/api/intent/model/IntentModel.class
+#	new file:   target/swagger-jaxrs-server-1.0.0/WEB-INF/classes/io/swagger/api/intent/model/Signal.class
+#
+

@@ -1,0 +1,10 @@
+[run]
+branch = True
+source = vim_manager
+omit = vim_manager/tests/*
+
+[report]
+ignore_errors = True
+exclude_lines =
+    @abc.abstract
+    raise NotImplementedError

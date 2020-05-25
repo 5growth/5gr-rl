@@ -1,0 +1,87 @@
+#!/bin/groovy
+
+def repoGroup = "falcon/app"
+def repoName = "vim-manager"
+def userName = "svc-prj-falcon"
+def sshCredentialId = env.GIT_CREDENTIAL
+//def sshCredentialId = "62e5694c-5a35-4108-8f42-9b0220b79b71"
+def gitUrl = "ssh://${userName}@review.b-com.com:29418/${repoGroup}/${repoName}"
+def strategy = env.PACKAGE_STRATEGY ?: "patch"
+def dockerRegistry = env.REGISTRY_URL ?: ""
+def gerritRefSpec = env.GERRIT_REFSPEC
+def gerritEventType = env.GERRIT_EVENT_TYPE
+def sshOptions = "-o StrictHostKeyChecking=no"
+
+
+library identifier: 'falcon-lib@master', retriever: modernSCM(
+  [$class: 'GitSCMSource',
+   remote: 'ssh://gitolite@forge.b-com.com/falcon/falcon-ci.git',
+   credentialsId: sshCredentialId])
+
+
+node() {
+    stage("Init workspace") {
+        deleteDir()
+        if (gerritRefSpec == null) {
+            error 'No Gerrit Refspec'
+        } else {
+            retry(3){
+                gerritClone{
+                    url = gitUrl
+                    userCredentialId = sshCredentialId
+                    refSpec = gerritRefSpec
+                }
+            }
+        }
+        stash name: 'git_repo', useDefaultExcludes: false
+    }
+}
+
+node('jenkins-slave-python') {
+    if ((gerritEventType == 'patchset-created') ||
+        (gerritEventType == 'comment-added')) {  // commend-added only works for 'recheck' comment
+        checking {
+            pep8 = true
+            py35 = true
+            py36 = true
+            docs = true
+            cover = true
+            gitRepoGroup = "${repoGroup}"
+            user = "${userName}"
+            userCredentialId = sshCredentialId
+            refSpec = gerritRefSpec
+        }
+
+    } else  if (gerritEventType == "change-merged") {
+        tagging {
+            user = "${userName}"
+            userCredentialId = sshCredentialId
+            refSpec = gerritRefSpec
+            tagStrategy = strategy
+        }
+
+        building {
+            reno = true
+            docs = true
+            cover = true
+            wheel = true
+        }
+
+        delivering {
+            cover = true
+            sonar = true
+            docs = true
+            reno = true
+            wheel = true
+            docker = true
+            gitRepoGroup = "${repoGroup}"
+            gitRepoName = "${repoName}"
+            user = "${userName}"
+            userCredentialId = sshCredentialId
+            refSpec = gerritRefSpec
+            tagStrategy = strategy
+        }
+    } else  {
+        println 'Gerrit Event not handled.'
+    }
+}

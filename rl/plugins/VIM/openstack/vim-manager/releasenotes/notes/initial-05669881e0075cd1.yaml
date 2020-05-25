@@ -1,0 +1,12 @@
+---
+prelude: >
+    the `vim-manager` service implements part of the ETSI GS NFV-IFA 005
+    v2.4.1 (2018-02) specification. Only OpenStack VIM is supported.
+features:
+  - Added support for software image management
+  - Added support for virtualised compute resources management
+  - Added support for virtualised network resources management
+  - Added support for virtualised compute resources information
+  - Added support for virtualised network resources information
+  - Added support for resources quota management
+  - Added support for resources reservation (API specification only)

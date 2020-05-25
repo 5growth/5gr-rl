@@ -1,0 +1,190 @@
+{
+  "appDId": "6ee7f285-8247-4693-af55-6ad6c454724e",
+  "appName": "robot-control-app",
+  "appProvider": "pfrag",
+  "appSoftVersion": "1.0",
+  "appDVersion": "1.0",
+  "mecVersion": [
+    "1.0"
+  ],
+  "appInfoName": "robot-control-app",
+  "appDescription": "This is a application for controlling a mobile robot based on the values received by the MEC RNIS service.",
+  "virtualComputeDescriptor": {
+    "virtualComputeDescId": "1c0897de-bc1a-4730-9d99-364fa83d7643",
+    "virtualMemory": {
+      "virtualMemSize": 1024,
+      "numaEnabled": false,
+      "virtualMemOversubscriptionPolicy": "None"
+    },
+    "virtualCpu": {
+      "cpuArchitecture": "x86_64",
+      "numVirtualCpu": 1,
+      "virtualCpuClock": 0,
+      "virtualCpuOversubscriptionPolicy": "string",
+      "virtualCpuPinning": {
+        "cpuPinningPolicy": "static",
+        "cpuPinningMap": {
+          "additionalProp1": {}
+        }
+      }
+    }
+  },
+  "swImageDescriptor": [
+    {
+      "id": "string",
+      "name": "robotctrl",
+      "version": "1.0",
+      "checksum": "string",
+      "containerFormat": "lxd_unified",
+      "diskFormat": "rootfs",
+      "minDisk": 1,
+      "minRam": 512,
+      "size": 512,
+      "swImage": "http://127.0.0.1/lxdimages/robotctrl.tar.gz",
+      "operatingSystem": "string",
+      "supportedVirtualizationEnvironment": [
+        "lxd"
+      ]
+    }
+  ],
+  "virtualStorageDescriptor": [
+    {
+      "id": "1c0897de-bc1a-4730-9d99-364fa83d7643",
+      "typeOfStorage": "string",
+      "sizeOfStorage": 1,
+      "rdmaEnabled": true,
+      "swImageDesc": "string"
+    }
+  ],
+  "appServiceRequired": [
+    {
+      "serName": "RNIS",
+      "serCategory": {
+        "href": "string",
+        "id": "string",
+        "name": "string",
+        "version": "string"
+      },
+      "version": "1.0",
+      "serTransportDependencies": [
+        {
+          "transport": {
+            "type": "REST_HTTP",
+            "protocol": "string",
+            "version": "string",
+            "security": {
+              "additionalProp1": {}
+            }
+          },
+          "serializers": "JSON",
+          "labels": [
+            "string"
+          ]
+        }
+      ],
+      "requestedPermissions": {
+        "additionalProp1": {}
+      }
+    }
+  ],
+  "appServiceOptional": [
+    {
+      "serName": "string",
+      "serCategory": {
+        "href": "string",
+        "id": "string",
+        "name": "string",
+        "version": "string"
+      },
+      "version": "string",
+      "serTransportDependencies": [
+        {
+          "transport": {
+            "type": "REST_HTTP",
+            "protocol": "string",
+            "version": "string",
+            "security": {
+              "additionalProp1": {}
+            }
+          },
+          "serializers": "JSON",
+          "labels": [
+            "string"
+          ]
+        }
+      ],
+      "requestedPermissions": {
+        "additionalProp1": {}
+      }
+    }
+  ],
+  "transportDependencies": [
+    {
+      "transport": {
+        "type": "REST_HTTP",
+        "protocol": "string",
+        "version": "string",
+        "security": {
+          "additionalProp1": {}
+        }
+      },
+      "serializers": "JSON",
+      "labels": [
+        "string"
+      ]
+    }
+  ],
+  "appTrafficRule": [
+    {
+      "trafficRuleId": "a704c3f1-385d-468d-9d61-95c2ec433d47",
+      "filterType": "FLOW",
+      "priority": 0,
+      "trafficFilter": [
+        {
+          "srcAddress": [
+            "208930100001114"
+          ],
+          "dstAddress": [
+            "172.16.0.100"
+          ],
+          "dstPort": [
+            "9990"
+          ],
+          "Protocol": [
+            "tcp"
+          ]
+        }
+      ],
+      "action": "FORWARD"
+    }
+  ],
+  "appDNSRule": [
+    {
+      "dnsRuleId": "a234dec8-7ba3-4504-be68-8f03561ffee3",
+      "domainName": "robot.control",
+      "ipAddressType": "IP_V4",
+      "ipAddress": "0.0.0.0",
+      "ttl": 0
+    },
+    {
+      "dnsRuleId": "a234dec8-7ba3-4504-be68-8f03561ffee3",
+      "domainName": "sfr.fr",
+      "ipAddressType": "IP_V4",
+      "ipAddress": "0.0.0.0",
+      "ttl": 0
+    }      
+  ],
+  "appLatency": {
+    "timeUnit": "ms",
+    "latency": 100
+  },
+  "terminateAppInstanceOpConfig": {
+    "minGracefulTerminationTimeout": 0,
+    "macRecommendedGracefulTerminationTimeout": 0
+  },
+  "changeAppInstanceStateOpConfig": {
+    "minGracefulStopTimeout": 0,
+    "macRecommendedGracefulStopTimeout": 0
+  }
+}
+

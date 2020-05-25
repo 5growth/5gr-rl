@@ -1,0 +1,1436 @@
+{
+  "definitions": {
+    "AllocateParameters": {
+      "type": "object",
+      "required": [
+        "affinityOrAntiAffinityConstraints",
+        "locationConstraints",
+        "metadata",
+        "networkResourceName",
+        "networkResourceType",
+        "reservationId",
+        "resourceGroupId",
+        "typeNetworkData",
+        "typeNetworkPortData",
+        "typeSubnetData"
+      ],
+      "properties": {
+        "locationConstraints": {
+          "type": "string",
+          "description": "Controls the visibility of the image. In case of \"private\" value the image is available only for the tenant assigned to the provided resourceGroupId and the administrator tenants of the VIM while in case of \"public\" value, all tenants of the VIM can use the image."
+        },
+        "reservationId": {
+          "type": "string",
+          "description": "Identifier of the resource reservation applicable to this virtualised resource management operation."
+        },
+        "typeNetworkData": {
+          "type": "string",
+          "description": "The network data provides information about the particular virtual network resource to create. Cardinality can be \"0\" depending on the value of networkResourceType."
+        },
+        "affinityOrAntiAffinityConstraints": {
+          "type": "string",
+          "description": "The binary software image file."
+        },
+        "typeNetworkPortData": {
+          "type": "string",
+          "description": "The binary software image file."
+        },
+        "resourceGroupId": {
+          "type": "string",
+          "description": "Unique identifier of the \"infrastructure resource group\", logical grouping of virtual resources assigned to a tenant within an Infrastructure Domain."
+        },
+        "metadata": {
+          "type": "string",
+          "description": "The binary software image file."
+        },
+        "networkResourceType": {
+          "type": "string",
+          "description": "Type of virtualised network resource. Possible values are: \"network\", \"subnet\" or network-port."
+        },
+        "networkResourceName": {
+          "type": "string",
+          "description": "Name provided by the consumer for the virtualised network resource to allocate. It can be used for identifying resources from consumer side."
+        },
+        "typeSubnetData": {
+          "type": "string",
+          "description": "The binary software image file."
+        }
+      }
+    },
+    "NfviPop": {
+      "type": "object",
+      "required": [
+        "geographicalLocationInfo",
+        "networkConnectivityEndpoint",
+        "nfviPopId",
+        "vimId"
+      ],
+      "properties": {
+        "geographicalLocationInfo": {
+          "type": "string",
+          "description": "It provides information about the geographic location (e.g. geographic coordinates or address of the building, etc.) of the NFVI resources that the VIM manages."
+        },
+        "vimId": {
+          "type": "string",
+          "description": "Identification of the VIM."
+        },
+        "networkConnectivityEndpoint": {
+          "type": "string",
+          "description": "Information about network connectivity endpoints to the NFVI-PoP that the VIM manages which helps build topology information relative to NFVI-PoP connectivity to other NFVI-PoP or N-PoP."
+        },
+        "nfviPopId": {
+          "type": "string",
+          "description": "Identification of the NFVI-PoP."
+        }
+      }
+    },
+    "CapacityInformation": {
+      "type": "object",
+      "required": [
+        "allocatedCapacity",
+        "availableCapacity",
+        "reservedCapacity",
+        "totalCapacity"
+      ],
+      "properties": {
+        "reservedCapacity": {
+          "type": "string",
+          "description": "The reserved capacity. It can be specified in terms of current capacity; or minimum and maximum capacity; average capacity; or other statistical measurement in the specified time interval. The set of measurements is to be defined during Stage 3."
+        },
+        "availableCapacity": {
+          "type": "string",
+          "description": "The free capacity available for allocation and reservation. It can be specified in terms of current capacity; or minimum and maximum capacity; average capacity; or other statistical measurement in the specified time interval. The set of measurements is to be defined during Stage 3."
+        },
+        "totalCapacity": {
+          "type": "string",
+          "description": "The total capacity is usually specified as a fixed capacity without variations in time. The set of measurements is left to Stage 3."
+        },
+        "allocatedCapacity": {
+          "type": "string",
+          "description": "The allocated capacity is usually specified as the current allocated capacity."
+        }
+      }
+    },
+    "VirtualComputeResourceInformation": {
+      "type": "object",
+      "required": [
+        "accelerationCapability",
+        "computeResourceTypeId",
+        "virtualCPU",
+        "virtualMemory"
+      ],
+      "properties": {
+        "virtualMemory": {
+          "type": "object",
+          "required": [
+            "numaSupported",
+            "virtualMemOversubscriptionPolicy",
+            "virtualMemSize"
+          ],
+          "description": "It defines the virtual memory characteristics of the consumable virtualised compute resource.",
+          "properties": {
+            "numaSupported": {
+              "type": "boolean",
+              "description": "It specifies if the memory allocation can be cognisant of the relevant process/core allocation."
+            },
+            "virtualMemOversubscriptionPolicy": {
+              "type": "string",
+              "description": "The memory core oversubscription policy in terms of virtual memory to physical memory on the platform. The cardinality can be 0 if no concrete policy is defined."
+            },
+            "virtualMemSize": {
+              "type": "number",
+              "description": "Amount of virtual memory (e.g. in MB). Cardinality \"1\" covers the case where a specific configuration for the consumable resource is advertised."
+            }
+          }
+        },
+        "virtualCPU": {
+          "type": "object",
+          "required": [
+            "cpuArchitecture",
+            "cpuClock",
+            "numVirtualCpu",
+            "virtualCpuOversubscriptionPolicy",
+            "virtualCpuPinningSupported"
+          ],
+          "description": "It defines the virtual CPU(s) characteristics of the consumable virtualised compute resource.",
+          "properties": {
+            "virtualCpuPinningSupported": {
+              "type": "boolean",
+              "description": "It defines whether CPU pinning capability is available on the consumable virtualised compute resource."
+            },
+            "numVirtualCpu": {
+              "type": "number",
+              "description": "Number of virtual CPUs. Cardinality \"1\" covers the case where a specific configuration for the consumable resource is advertised."
+            },
+            "cpuClock": {
+              "type": "number",
+              "description": "Minimum CPU clock rate (e.g. in MHz) available for the virtualised CPU resources."
+            },
+            "cpuArchitecture": {
+              "type": "string",
+              "description": "CPU architecture type. Examples are x86, ARM."
+            },
+            "virtualCpuOversubscriptionPolicy": {
+              "type": "string",
+              "description": "The CPU core oversubscription policy, e.g. the relation of virtual CPU cores to physical CPU cores/threads. The cardinality can be 0 if no concrete policy is defined."
+            }
+          }
+        },
+        "accelerationCapability": {
+          "type": "string",
+          "description": "Acceleration capabilities (e.g. crypto, GPU) for the consumable virtualised compute resources from the set of capabilities offered by the compute node acceleration resources. The cardinality can be 0, if no particular acceleration capability is provided."
+        },
+        "computeResourceTypeId": {
+          "type": "string",
+          "description": "Identifier of the consumable virtualised compute resource type."
+        }
+      }
+    },
+    "QueryNetworkCapacityRequest": {
+      "type": "object",
+      "required": [
+        "attributeSelector",
+        "networkResourceTypeId",
+        "resourceCriteria",
+        "timePeriod",
+        "zoneId"
+      ],
+      "properties": {
+        "networkResourceTypeId": {
+          "type": "string",
+          "description": "Identifier of the resource type for which the issuer wants to know the available, total, reserved and/or allocated capacity."
+        },
+        "zoneId": {
+          "type": "string",
+          "description": "When specified this parameter identifies the resource zone for which the capacity is requested. When not specified the total capacity managed by the VIM instance will be returned."
+        },
+        "timePeriod": {
+          "type": "object",
+          "required": [
+            "startTime",
+            "stopTime"
+          ],
+          "description": "The time interval for which capacity is queried. When omitted, an interval starting \"now\" is used. The time interval can be specified since resource reservations can be made for a specified time interval.",
+          "properties": {
+            "startTime": {
+              "format": "date-time",
+              "type": "string",
+              "description": "Indication when the capacity query period starts."
+            },
+            "stopTime": {
+              "format": "date-time",
+              "type": "string",
+              "description": "Indication when the capacity query period stops."
+            }
+          }
+        },
+        "resourceCriteria": {
+          "type": "string",
+          "description": "Input capacity computation parameter for selecting the characteristics of the virtual network for which the issuer wants to know the available, total, reserved and/or allocated capacity. Selecting parameters/attributes that shall be used are defined in the VirtualNetworkResourceInformation information element. This information element and the networkResourceTypeID are mutually exclusive."
+        },
+        "attributeSelector": {
+          "type": "string",
+          "description": "Input parameter for selecting which capacity information (i.e. available, total, reserved and/or allocated capacity) is queried. When not present, all four values are requested."
+        }
+      }
+    },
+    "Filter": {
+      "type": "object",
+      "required": [
+        "filter"
+      ],
+      "properties": {
+        "filter": {
+          "type": "object",
+          "description": "The filter is used to select elements for query purpose."
+        }
+      }
+    },
+    "AllocateComputeRequest": {
+      "type": "object",
+      "required": [
+        "affinityOrAntiAffinityConstraints",
+        "computeFlavourId",
+        "computeName",
+        "interfaceData",
+        "locationConstraints",
+        "metadata",
+        "reservationId",
+        "resourceGroupId",
+        "userData",
+        "vcImageId"
+      ],
+      "properties": {
+        "locationConstraints": {
+          "type": "string",
+          "description": "If present, it defines location constraints for the resource(s) is (are) requested to be allocated, e.g. in what particular Resource Zone."
+        },
+        "reservationId": {
+          "type": "string",
+          "description": "Identifier of the resource reservation applicable to this virtualised resource management operation. Cardinality can be 0 if no resource reservation was used."
+        },
+        "interfaceData": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "ipAddress",
+              "macAddress"
+            ],
+            "properties": {
+              "ipAddress": {
+                "type": "string",
+                "description": "The virtual network interface can be configured with specific IP address(es) associated to the network to be attached to. The cardinality can be 0 in the case that a network interface is created without being attached to any specific network, or when an IP address can be automatically configured, e.g. by DHCP."
+              },
+              "macAddress": {
+                "type": "string",
+                "description": "The MAC address desired for the virtual network interface. The cardinality can be 0 to allow for network interface without specific MAC address configuration."
+              }
+            }
+          },
+          "description": "The data of network interfaces which are specific to a Virtual Compute Resource instance."
+        },
+        "affinityOrAntiAffinityConstraints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "affinityAntiAffinityResourceGroup",
+              "affinityAntiAffinityResourceList",
+              "scope",
+              "type"
+            ],
+            "properties": {
+              "scope": {
+                "type": "string",
+                "description": "Qualifies the scope of the constraint. In case of compute resource: e.g. \"NFVI-PoP\" or \"NFVI Node\". In case of ports: e.g. \"virtual switch or router\" or \"physical NIC\", or \"physical network\" or \"NFVI Node\". In case of networks: e.g. \"physical NIC\", \"physical network\" or \"NFVI Node\". In case of subnets: it should be ignored. Defaults to \"NFVI Node\" if absent."
+              },
+              "type": {
+                "type": "string",
+                "description": "Indicates whether this is an affinity or anti-affinity constraint."
+              },
+              "affinityAntiAffinityResourceList": {
+                "type": "object",
+                "required": [
+                  "resource"
+                ],
+                "description": "Consumer-managed list of identifiers of virtualised resources with which the actual resource is requested to be affine or anti-affine. Either affinityAntiAffinityResourceList or affinityAntiAffinityResourceGroup but not both shall be present.",
+                "properties": {
+                  "resource": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "List of identifiers of virtualised resources."
+                  }
+                }
+              },
+              "affinityAntiAffinityResourceGroup": {
+                "type": "string",
+                "description": "Identifier of the producer-managed group of virtualised resources with which the actual resource is requested to be affine or anti-affine. Either affinityAntiAffinityResourceList or affinityAntiAffinityResourceGroup but not both shall be present."
+              }
+            }
+          },
+          "description": "A list of elements with affinity or anti affinity information of the virtualised compute resource to allocate. There should be a relation between the constraints defined in the different elements of the list."
+        },
+        "userData": {
+          "type": "object",
+          "required": [
+            "content",
+            "method"
+          ],
+          "description": "Element containing user data to customize the virtualised compute resource at boot-time.",
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "String containing the user data to customize a virtualised compute resource at boot-time."
+            },
+            "method": {
+              "type": "string",
+              "description": "Method used as transportation media to convey the content of the UserData to the virtualised compute resource. Possible values: CONFIG-DRIVE."
+            }
+          }
+        },
+        "computeFlavourId": {
+          "type": "string",
+          "description": "Identifier of the Compute Flavour that provides information about the particular memory, CPU and disk resources for virtualised compute resource to allocate. The Compute Flavour is created with Create Compute Flavour operation"
+        },
+        "resourceGroupId": {
+          "type": "string",
+          "description": "Unique identifier of the \"infrastructure resource group\", logical grouping of virtual resources assigned to a tenant within an Infrastructure Domain."
+        },
+        "metadata": {
+          "type": "object",
+          "description": "List of metadata key-value pairs used by the consumer to associate meaningful metadata to the related virtualised resource."
+        },
+        "vcImageId": {
+          "type": "string",
+          "description": "Identifier of the virtualisation container software image (e.g. a virtual machine image). Cardinality can be 0 if an \"empty\" virtualisation container is allocated. "
+        },
+        "computeName": {
+          "type": "string",
+          "description": "Name provided by the consumer for the virtualised compute resource to allocate. It can be used for identifying resources from consumer side."
+        }
+      }
+    },
+    "ComputeIds": {
+      "type": "object",
+      "required": [
+        "networkId"
+      ],
+      "properties": {
+        "networkId": {
+          "type": "string",
+          "description": "Identifier(s) of the virtualised compute resource(s) to be terminated."
+        }
+      }
+    },
+    "ResourceZone": {
+      "type": "object",
+      "required": [
+        "nfviPopId",
+        "zoneId",
+        "zoneName",
+        "zoneProperty",
+        "zoneState"
+      ],
+      "properties": {
+        "zoneId": {
+          "type": "string",
+          "description": "The identifier of the Resource Zone."
+        },
+        "zoneState": {
+          "type": "string",
+          "description": "Information about the current state of the Resource Zone, e.g. if the Resource Zone is available."
+        },
+        "metadata": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "key",
+              "value"
+            ],
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "Other metadata associated to the Resource Zone."
+        },
+        "nfviPopId": {
+          "type": "string",
+          "description": "The identifier of the NFVI-PoP the Resource Zone belongs to."
+        },
+        "zoneProperty": {
+          "type": "string",
+          "description": "Set of properties that define the capabilities associated to the Resource Zone. Examples of capabilities may include: support of certain compute resource types (e.g. low performance, acceleration capabilities, etc. association to certain NFVI-PoP physical segregation (e.g. different power or network sub-systems, availability of redundancy power sub-systems), etc."
+        },
+        "zoneName": {
+          "type": "string",
+          "description": "The name of the Resource Zone."
+        }
+      }
+    },
+    "VirtualNetworkResourceInformation": {
+      "type": "object",
+      "required": [
+        "bandwidth",
+        "networkQoS",
+        "networkResourceTypeId",
+        "networkType"
+      ],
+      "properties": {
+        "networkResourceTypeId": {
+          "type": "string",
+          "description": "Identifier of the network resource type."
+        },
+        "bandwidth": {
+          "type": "number",
+          "description": "Minimum network bandwidth (in Mbps)."
+        },
+        "networkQoS": {
+          "type": "object",
+          "required": [
+            "qosName",
+            "qosValue"
+          ],
+          "description": "Element providing information about Quality of Service attributes that the network shall support.",
+          "properties": {
+            "qosValue": {
+              "type": "string",
+              "description": "Value of the QoS parameter."
+            },
+            "qosName": {
+              "type": "string",
+              "description": "Name given to the QoS parameter."
+            }
+          }
+        },
+        "networkType": {
+          "type": "string",
+          "description": "The type of network that maps to the virtualised network. Examples are: \"local\", \"vlan\", \"vxlan\", \"gre\", etc."
+        }
+      }
+    },
+    "NetworkIds": {
+      "type": "object",
+      "required": [
+        "networkId"
+      ],
+      "properties": {
+        "networkId": {
+          "type": "string",
+          "description": "Identifier of the virtualised network resource(s) to be terminated."
+        }
+      }
+    },
+    "QueryComputeCapacityRequest": {
+      "type": "object",
+      "required": [
+        "attributeSelector",
+        "computeResourceTypeId",
+        "resourceCriteria",
+        "timePeriod",
+        "zoneId"
+      ],
+      "properties": {
+        "zoneId": {
+          "type": "string",
+          "description": "When specified this parameter identifies the resource zone for which the capacity is requested. When not specified the total capacity managed by the VIM instance will be returned."
+        },
+        "timePeriod": {
+          "type": "object",
+          "required": [
+            "startTime",
+            "stopTime"
+          ],
+          "description": "The time interval for which capacity is queried. When omitted, an interval starting \"now\" is used. The time interval can be specified since resource reservations can be made for a specified time interval.",
+          "properties": {
+            "startTime": {
+              "format": "date-time",
+              "type": "string",
+              "description": "Indication when the capacity query period starts."
+            },
+            "stopTime": {
+              "format": "date-time",
+              "type": "string",
+              "description": "Indication when the capacity query period stops."
+            }
+          }
+        },
+        "computeResourceTypeId": {
+          "type": "string",
+          "description": "Identifier of the resource type for which the issuer wants to know the available, total, reserved and/or allocated capacity."
+        },
+        "attributeSelector": {
+          "type": "string",
+          "description": "Input parameter for selecting which capacity information (i.e. available, total, reserved and/or allocated capacity) is queried. When not present, all four values are requested."
+        },
+        "resourceCriteria": {
+          "type": "string",
+          "description": "Input capacity computation parameter for selecting the virtual memory, virtual CPU and acceleration capabilities for which the issuer wants to know the available, total, reserved and/or allocated capacity. Selecting parameters/attributes that shall be used are defined in the VirtualComputeResourceInformation, VirtualCpuResourceInformation, and VirtualMemoryResourceInformation information elements. This information element and the computeResourceTypeId are mutually exclusive."
+        }
+      }
+    },
+    "VirtualCompute": {
+      "type": "object",
+      "required": [
+        "accelerationCapability",
+        "computeId",
+        "computeName",
+        "flavourId",
+        "hostId",
+        "operationalState",
+        "vcImageId",
+        "virtualCpu",
+        "virtualDisks",
+        "virtualMemory",
+        "virtualNetworkInterface",
+        "zoneId"
+      ],
+      "properties": {
+        "virtualCpu": {
+          "type": "object",
+          "required": [
+            "cpuArchitecture",
+            "cpuClock",
+            "numVirtualCpu",
+            "virtualCpuOversubscriptionPolicy",
+            "virtualCpuPinning"
+          ],
+          "description": "The virtual CPU(s) of the virtualised compute.",
+          "properties": {
+            "numVirtualCpu": {
+              "format": "int32",
+              "type": "integer",
+              "description": "Number of virtual CPUs."
+            },
+            "virtualCpuPinning": {
+              "type": "object",
+              "required": [
+                "cpuMap",
+                "cpuPinningPolicy",
+                "cpuPinningRules"
+              ],
+              "description": "The virtual CPU pinning configuration for the virtualised compute resource.",
+              "properties": {
+                "cpuPinningRules": {
+                  "type": "string",
+                  "description": "A list of rules that should be considered during the allocation of the virtual CPUs to physical CPUs in case of \"static\" cpuPinningPolicy."
+                },
+                "cpuPinningPolicy": {
+                  "type": "string",
+                  "description": "The policy can take values of \"static\" or \"dynamic\". In case of \"static\" the virtual CPU cores have been allocated to physical CPU cores according to the rules defined in cpuPinningRules. In case of \"dynamic\" the allocation of virtual CPU cores to physical CPU cores is decided by the VIM."
+                },
+                "cpuMap": {
+                  "type": "string",
+                  "description": "Shows the association of virtual CPU cores to physical CPU cores."
+                }
+              }
+            },
+            "cpuClock": {
+              "type": "number",
+              "description": "Minimum CPU clock rate (e.g. in MHz) available for the virtualised CPU resources."
+            },
+            "cpuArchitecture": {
+              "type": "string",
+              "description": "CPU architecture type. Examples are x86, ARM."
+            },
+            "virtualCpuOversubscriptionPolicy": {
+              "type": "string",
+              "description": "The CPU core oversubscription policy, e.g. the relation of virtual CPU cores to physical CPU cores/threads. The cardinality can be 0 if no policy has been defined during the allocation request."
+            }
+          }
+        },
+        "virtualDisks": {
+          "type": "string",
+          "description": "Element with information of the virtualised storage resources (volumes, ephemeral that are attached to the compute resource.)"
+        },
+        "vcImageId": {
+          "type": "string",
+          "description": "Identifier of the virtualisation container software image (e.g. virtual machine image). Cardinality can be 0 if an \"empty\" virtualisation container is allocated."
+        },
+        "flavourId": {
+          "type": "string",
+          "description": "Identifier of the given compute flavour used to instantiate this virtual compute."
+        },
+        "accelerationCapability": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Selected acceleration capabilities (e.g. crypto, GPU) from the set of capabilities offered by the compute node acceleration resources. The cardinality can be 0, if no particular acceleration capability is provided."
+        },
+        "computeName": {
+          "type": "string",
+          "description": "Name of the virtualised compute resource."
+        },
+        "virtualNetworkInterface": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "accelerationCapability",
+              "bandwidth",
+              "ipAddress",
+              "macAddress",
+              "metadata",
+              "networkId",
+              "networkPortId",
+              "operationalState",
+              "ownerId",
+              "resourceId",
+              "typeConfiguration",
+              "typeVirtualNic"
+            ],
+            "properties": {
+              "networkPortId": {
+                "type": "string",
+                "description": "If the virtual network interface is attached to a specific network port, it identifies such a network port. The cardinality can be 0 in the case that a network interface is created without any specific network port attachment."
+              },
+              "resourceId": {
+                "type": "string",
+                "description": "Identifier of the virtual network interface."
+              },
+              "typeVirtualNic": {
+                "type": "string",
+                "description": "Type of network interface. The type allows for defining how such interface is to be realized, e.g. normal virtual NIC, with direct PCI passthrough, etc."
+              },
+              "typeConfiguration": {
+                "type": "string",
+                "description": "Extra configuration that the virtual network interface supports based on the type of virtual network interface, including support for SR-IOV with configuration of virtual functions (VF)."
+              },
+              "accelerationCapability": {
+                "type": "string",
+                "description": "Shows the acceleration capabilities utilized by the virtual network interface. The cardinality can be 0, if no acceleration capability is utilized."
+              },
+              "metadata": {
+                "type": "string",
+                "description": "List of metadata key-value pairs used by the consumer to associate meaningful metadata to the related virtualised resource."
+              },
+              "macAddress": {
+                "type": "string",
+                "description": "The MAC address of the virtual network interface."
+              },
+              "ownerId": {
+                "type": "string",
+                "description": "Identifier of the owner of the network interface (e.g. a virtualised compute resource). "
+              },
+              "operationalState": {
+                "type": "string",
+                "description": "The operational state of the virtual network interface."
+              },
+              "ipAddress": {
+                "type": "string",
+                "description": "The virtual network interface can be configured with specific IP address(es) associated to the network to be attached to. The cardinality can be 0 in the case that a network interface is created without being attached to any specific network, or when an IP address can be automatically configured, e.g. by DHCP."
+              },
+              "bandwidth": {
+                "type": "string",
+                "description": "The bandwidth of the virtual network interface (in Mbps)."
+              },
+              "networkId": {
+                "type": "string",
+                "description": "In the case when the virtual network interface is attached to the network, it identifies such a network. The cardinality can be 0 in the case that a network interface is created without being attached to any specific network."
+              }
+            }
+          },
+          "description": "Element with information of the instantiated virtual network interfaces of the compute resource."
+        },
+        "zoneId": {
+          "type": "string",
+          "description": "If present, it identifies the Resource Zone where the virtual compute resources have been allocated."
+        },
+        "computeId": {
+          "type": "string",
+          "description": "Identifier of the virtualised compute resource."
+        },
+        "operationalState": {
+          "type": "string",
+          "description": "Operational state of the compute resource."
+        },
+        "virtualMemory": {
+          "type": "object",
+          "required": [
+            "numaEnabled",
+            "virtualMemOversubscriptionPolicy",
+            "virtualMemSize"
+          ],
+          "description": "The virtual memory of the compute.",
+          "properties": {
+            "virtualMemOversubscriptionPolicy": {
+              "type": "string",
+              "description": "The memory core oversubscription policy in terms of virtual memory to physical memory on the platform. The cardinality can be 0 if no policy has been defined during the allocation request."
+            },
+            "numaEnabled": {
+              "type": "boolean",
+              "description": "It specifies the memory allocation to be cognisant of the relevant process/core allocation."
+            },
+            "virtualMemSize": {
+              "type": "number",
+              "description": "Amount of virtual Memory (e.g. in MB)."
+            }
+          }
+        },
+        "hostId": {
+          "type": "string",
+          "description": "Identifier of the host the virtualised compute resource is allocated on."
+        }
+      }
+    },
+    "VirtualNetwork": {
+      "type": "object",
+      "required": [
+        "bandwidth",
+        "isShared",
+        "networkPort",
+        "networkQoS",
+        "networkResourceId",
+        "networkResourceName",
+        "networkType",
+        "operationalState",
+        "segmentType",
+        "sharingCriteria",
+        "subnet",
+        "zoneId"
+      ],
+      "properties": {
+        "networkResourceName": {
+          "type": "string",
+          "description": "Name of the virtualised network resource."
+        },
+        "segmentType": {
+          "type": "string",
+          "description": "The isolated segment for the virtualised network. For instance, for a \"vlan\" networkType, it corresponds to the vlan identifier; and for a \"gre\" networkType, this corresponds to a gre key. The cardinality can be \"0\" to allow for flat networks without any specific segmentation."
+        },
+        "isShared": {
+          "type": "boolean",
+          "description": "It defines whether the virtualised network is shared among consumers."
+        },
+        "subnet": {
+          "type": "string",
+          "description": "Only present if the network provides layer 3 connectivity."
+        },
+        "networkPort": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "attachedResourceId",
+              "networkId",
+              "portType",
+              "resourceId"
+            ],
+            "properties": {
+              "portType": {
+                "type": "string",
+                "description": "Type of network port. Examples of types are access ports (layer 2 or 3), or trunk ports (layer 1) that become transport for multiple layer 2 or layer 3 networks."
+              },
+              "attachedResourceId": {
+                "type": "string",
+                "description": "Identifier of the attached resource to the network port (e.g. a virtualised compute resource, or identifier of the virtual network interface). The cardinality can be \"0\" if there is no specific resource connected to the network port."
+              },
+              "networkId": {
+                "type": "string",
+                "description": "Identifier of the network that the port belongs to. When creating a port, such port needs to be part of a network."
+              },
+              "resourceId": {
+                "type": "string",
+                "description": "Identifier of the virtual network port."
+              }
+            }
+          },
+          "description": "Element providing information of an instantiated virtual network port."
+        },
+        "zoneId": {
+          "type": "string",
+          "description": "If present, it identifies the Resource Zone where the virtual network resources have been allocated."
+        },
+        "networkResourceId": {
+          "type": "string",
+          "description": "Identifier of the virtualised network resource."
+        },
+        "networkType": {
+          "type": "string",
+          "description": "The type of network that maps to the virtualised network. This list is extensible. Examples are: \"local\", \"vlan\", \"vxlan\", \"gre\", \"l3-vpn\", etc. The cardinality can be \"0\" to cover the case where this attribute is not required to create the virtualised network."
+        },
+        "operationalState": {
+          "type": "string",
+          "description": "The operational state of the virtualised network."
+        },
+        "sharingCriteria": {
+          "type": "string",
+          "description": "Only present for shared networks. Indicate the sharing criteria for this network. This criteria might be a list of authorized consumers."
+        },
+        "bandwidth": {
+          "type": "number",
+          "description": "Minimum network bandwidth (in Mbps)."
+        },
+        "networkQoS": {
+          "type": "object",
+          "required": [
+            "qosName",
+            "qosValue"
+          ],
+          "description": "Element providing information about Quality of Service attributes that the network shall support. The cardinality can be \"0\" to allow for networks without any specified QoS requirements.",
+          "properties": {
+            "qosValue": {
+              "type": "string",
+              "description": "Value of the QoS parameter."
+            },
+            "qosName": {
+              "type": "string",
+              "description": "Name given to the QoS parameter."
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/network-resources": {
+      "delete": {
+        "parameters": [
+          {
+            "name": "ids",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/NetworkIds"
+              }
+            },
+            "in": "body",
+            "required": true,
+            "description": "Identifier of the virtualised network resource(s) to be terminated."
+          }
+        ],
+        "operationId": "terminateNetworks",
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/NetworkIds"
+              }
+            },
+            "description": "Identifier(s) of the virtualised network resource(s) successfully terminated."
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "virtualisedNetworkResources"
+        ]
+      },
+      "get": {
+        "parameters": [
+          {
+            "name": "networkQueryFilter",
+            "schema": {
+              "$ref": "#/definitions/Filter"
+            },
+            "in": "body",
+            "required": true,
+            "description": "Query filter based on e.g. name, identifier, meta-data information or status information, expressing the type of information to be retrieved. It can also be used to specify one or more resources to be queried by providing their identifiers."
+          }
+        ],
+        "operationId": "queryNetworks",
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VirtualNetwork"
+              }
+            },
+            "description": "Element containing information about the virtual network resource(s) matching the filter. The cardinality can be 0 if no matching network resources exist."
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "virtualisedNetworkResources"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "name": "params",
+            "schema": {
+              "$ref": "#/definitions/AllocateParameters"
+            },
+            "in": "body",
+            "required": true
+          }
+        ],
+        "operationId": "allocateNetwork",
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "409": {
+            "description": "flavour already added"
+          },
+          "201": {
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifier of the created Compute Flavour."
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "virtualisedNetworkResources"
+        ]
+      }
+    },
+    "/compute-resources": {
+      "delete": {
+        "parameters": [
+          {
+            "name": "ids",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ComputeIds"
+              }
+            },
+            "in": "body",
+            "required": true,
+            "description": "Identifier(s) of the virtualised compute resource(s) to be terminated."
+          }
+        ],
+        "operationId": "terminateResources",
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ComputeIds"
+              }
+            },
+            "description": "Identifier(s) of the virtualised compute resource(s) successfully terminated."
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "virtualisedComputeResources"
+        ]
+      },
+      "get": {
+        "parameters": [
+          {
+            "name": "computeQueryFilter",
+            "schema": {
+              "$ref": "#/definitions/Filter"
+            },
+            "in": "body",
+            "required": true,
+            "description": "Query filter based on e.g. name, identifier, meta-data information or status information, expressing the type of information to be retrieved. It can also be used to specify one or more resources to be queried by providing their identifiers."
+          }
+        ],
+        "operationId": "queryResources",
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VirtualCompute"
+              }
+            },
+            "description": "Element containing information about the virtual compute resource(s) matching the filter. The cardinality can be 0 if no matching compute resources exist."
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "virtualisedComputeResources"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/AllocateComputeRequest"
+            },
+            "in": "body",
+            "required": true
+          }
+        ],
+        "operationId": "allocateCompute",
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "409": {
+            "description": "software image already added"
+          },
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/VirtualCompute"
+            },
+            "description": "Element containing information of the newly instantiated virtualised compute resource."
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "virtualisedComputeResources"
+        ]
+      }
+    },
+    "/compute-resources/capacities": {
+      "get": {
+        "parameters": [
+          {
+            "name": "QueryComputeCapacityRequest",
+            "schema": {
+              "$ref": "#/definitions/QueryComputeCapacityRequest"
+            },
+            "in": "body",
+            "required": true
+          }
+        ],
+        "operationId": "queryComputeCapacity",
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/CapacityInformation"
+            },
+            "description": "The capacity during the requested time period. The scope is according to parameter zoneId of the request during the time interval."
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "virtualisedComputeResources"
+        ]
+      }
+    },
+    "/network-resources/capacities": {
+      "get": {
+        "parameters": [
+          {
+            "name": "QueryNetworkCapacityRequest",
+            "schema": {
+              "$ref": "#/definitions/QueryNetworkCapacityRequest"
+            },
+            "in": "body",
+            "required": true
+          }
+        ],
+        "operationId": "queryNetworkCapacity",
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/CapacityInformation"
+            },
+            "description": "The capacity during the requested time period. The scope is according to parameter zoneId of the request during the time interval."
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "virtualisedNetworkResources"
+        ]
+      }
+    },
+    "/compute-resources/nfvi-pop-compute-information": {
+      "get": {
+        "parameters": [
+          {
+            "name": "NfviPopComputeInformationRequest",
+            "schema": {
+              "$ref": "#/definitions/Filter"
+            },
+            "in": "body",
+            "required": true,
+            "description": "Input filter for selecting information to query."
+          }
+        ],
+        "operationId": "queryNFVIPoPComputeInformation",
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/NfviPop"
+              }
+            },
+            "description": "The filtered information that has been retrieved. The cardinality can be 0 if no matching information exist."
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "virtualisedComputeResources"
+        ]
+      }
+    },
+    "/compute-resources/resource-zones": {
+      "get": {
+        "parameters": [
+          {
+            "name": "QueryComputeResourceZoneRequest",
+            "schema": {
+              "$ref": "#/definitions/Filter"
+            },
+            "in": "body",
+            "required": true,
+            "description": "Input filter for selecting information to query. For instance, based on identifier of the Resource Zone, identifier of the NFVI-PoP, properties of the Resource Zone, or other meta-data."
+          }
+        ],
+        "operationId": "queryComputeResourceZone",
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ResourceZone"
+              }
+            },
+            "description": "The filtered information that has been retrieved about the Resource Zone. The cardinality can be 0 if no matching information exist."
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "virtualisedComputeResources"
+        ]
+      }
+    },
+    "/information": {
+      "get": {
+        "parameters": [
+          {
+            "name": "informationQueryFilter",
+            "schema": {
+              "$ref": "#/definitions/Filter"
+            },
+            "in": "body",
+            "required": true,
+            "description": "Filter defining the information of consumable virtualised resources on which the query applies."
+          }
+        ],
+        "operationId": "queryNetworkInformation",
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VirtualNetworkResourceInformation"
+              }
+            },
+            "description": "Virtualised network resource information in the VIM that satisfies the query condition."
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "virtualisedNetworkResourcesInformation"
+        ]
+      }
+    },
+    "/network-resources/nfvi-pop-network-information": {
+      "get": {
+        "parameters": [
+          {
+            "name": "NfviPopNetworkInformationRequest",
+            "schema": {
+              "$ref": "#/definitions/Filter"
+            },
+            "in": "body",
+            "required": true,
+            "description": "Input filter for selecting information to query."
+          }
+        ],
+        "operationId": "queryNFVIPoPNetworkInformation",
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/NfviPop"
+              }
+            },
+            "description": "The filtered information that has been retrieved. The cardinality can be 0 if no matching information exist."
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "virtualisedNetworkResources"
+        ]
+      }
+    },
+    "/compute-resources/information": {
+      "get": {
+        "parameters": [
+          {
+            "name": "informationQueryFilter",
+            "schema": {
+              "$ref": "#/definitions/Filter"
+            },
+            "in": "body",
+            "required": true,
+            "description": "Filter defining the information of consumable virtualised resources on which the query applies."
+          }
+        ],
+        "operationId": "queryComputeInformation",
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VirtualComputeResourceInformation"
+              }
+            },
+            "description": "Virtualised compute resource information in the VIM that satisfies the query condition."
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "virtualisedComputeResources"
+        ]
+      }
+    }
+  },
+  "swagger": "2.0",
+  "info": {
+    "title": "WIM Manager API",
+    "termsOfService": "/tos",
+    "description": "WIM Manager API",
+    "version": "0.0.3"
+  }
+}

@@ -1,0 +1,715 @@
+{
+	"info": {
+		"_postman_id": "10728ee4-25c3-4530-ab1f-455dcd4f5a5b",
+		"name": "Virtualised Compute Resources",
+		"description": "Virtualised Compute Resources",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://127.0.0.1:8000/v1/compute_resources/flavours/query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"filter\": {}}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/compute_resources/flavours/query",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"compute_resources",
+						"flavours",
+						"query"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"description": "POST/v1/compute_resources/flavours/query"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/compute_resources/flavours/my-flavor-titi",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/compute_resources/flavours/my-flavor-titi",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"compute_resources",
+						"flavours",
+						"my-flavor-titi"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"description": "DELETE/v1/compute_resources/flavours/{id}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/compute_resources/flavours",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"flavourId\": \"my-flavor-titi\", \"virtualMemory\": {\"virtualMemSize\": 2}, \"virtualCpu\": {\"numVirtualCpu\": 1}, \"storageAttributes\": {\"sizeOfStorage\": 1}}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/compute_resources/flavours",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"compute_resources",
+						"flavours"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"description": "/v1/compute_resources/flavours"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/compute_resources/query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"filter\": {}}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/compute_resources/query",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"compute_resources",
+						"query"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"description": "POST/v1/compute_resources/query"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/compute_resources/information/query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"filter\": {}}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/compute_resources/information/query",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"compute_resources",
+						"information",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/compute_resources/nfvi_pop_compute_information/query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"filter\": {}}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/compute_resources/nfvi_pop_compute_information/query",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"compute_resources",
+						"nfvi_pop_compute_information",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/compute_resources/resource_zones/query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"filter\": {}}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/compute_resources/resource_zones/query",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"compute_resources",
+						"resource_zones",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/compute_resources/flavours",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"accelerationCapability\": \"\",  \"flavourId\": \"my-flavour-tity-03\",  \"storageAttributes\":     {      \"flavourId\": \"\",      \"hostId\": \"\",      \"operationalState\": \"\",      \"ownerId\": \"\",      \"sizeOfStorage\": 10,      \"storageId\": \"\",      \"storageName\": \"\",      \"typeOfStorage\": \"\",      \"zoneId\": \"\"    }  ,  \"virtualCpu\":     {      \"cpuArchitecture\": \"\",      \"cpuClock\": 0,      \"numVirtualCpu\": 1,      \"virtualCpuOversubscriptionPolicy\": \"\",      \"virtualCpuPinning\": {        \"cpuMap\": \"\",        \"cpuPinningPolicy\": \"\",        \"cpuPinningRules\": \"\"      }    }  ,  \"virtualMemory\": {    \"numaEnabled\": true,    \"virtualMemOversubscriptionPolicy\": \"null\",    \"virtualMemSize\": 1024  },  \"virtualNetworkInterface\": {}}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/compute_resources/flavours",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"compute_resources",
+						"flavours"
+					]
+				},
+				"description": "We should change the \"[]\" by \"{}\". "
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/compute_resources/query",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/compute_resources/query",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"compute_resources",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/compute_resources?computeId=%2279332b11-f020-4452-96c2-ec1443fb454f%22",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/compute_resources?computeId=%2279332b11-f020-4452-96c2-ec1443fb454f%22&=",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"compute_resources"
+					],
+					"query": [
+						{
+							"key": "computeId",
+							"value": "%2279332b11-f020-4452-96c2-ec1443fb454f%22"
+						},
+						{
+							"key": "",
+							"value": "",
+							"description": "The test is not working for one computeID, and also for table of computeIds"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/compute_resources/capacities/query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"attributeSelector\": \"\",  \"computeResourceTypeId\": \"\",  \"resourceCriteria\": \"\",  \"timePeriod\": {    \"startTime\": \"0\",    \"stopTime\": \"2019-01-25T13:47:45.079Z\"  },  \"zoneId\": \"\"}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/compute_resources/capacities/query",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"compute_resources",
+						"capacities",
+						"query"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "http://127.0.0.1:8000/v1/compute_resources/capacities/query",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"attributeSelector\": \"\",  \"computeResourceTypeId\": \"\",  \"resourceCriteria\": \"\",  \"timePeriod\": {    \"startTime\": \"0\",    \"stopTime\": \"2019-01-25T13:47:45.079Z\"  },  \"zoneId\": \"\"}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/v1/compute_resources/capacities/query",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"compute_resources",
+								"capacities",
+								"query"
+							]
+						}
+					},
+					"status": "INTERNAL SERVER ERROR",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "674"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/0.14.1 Python/3.7.1"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 25 Jan 2019 09:48:56 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 500,\n    \"name\": \"Internal Server Error\",\n    \"description\": \"Unable to establish connection to http://172.29.240.21:35357/services?name=placement: HTTPConnectionPool(host='172.29.240.21', port=35357): Max retries exceeded with url: /services?name=placement (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x049E1E70>: Failed to establish a new connection: [WinError 10060] Une tentative de connexion a échoué car le parti connecté n’a pas répondu convenablement au-delà d’une certaine durée ou une connexion établie a échoué car l’hôte de connexion n’a pas répondu'))\"\n}"
+				}
+			]
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/compute_resources/capacities/query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"attributeSelector\": \"\",  \"computeResourceTypeId\": \"\",  \"resourceCriteria\": \"\",  \"timePeriod\": {    \"startTime\": \"0\",    \"stopTime\": \"\"  },  \"zoneId\": \"\"}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/compute_resources/capacities/query",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"compute_resources",
+						"capacities",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/compute_resources",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"computeName\":\"ifa005AllocateCompute\", \"computeFlavourId\": \"ed755afa-9476-49a1-8759-dc1d1f1b823b\", \"vcImageId\": \"1e368ae6-74cf-4767-9e41-5dc3ba377df3\", \"networkId\": \"6af1407a-a459-4432-bba9-a3ebbf49239a\"}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/compute_resources",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"compute_resources"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "http://127.0.0.1:8000/v1/compute_resources",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"computeName\":\"ifa005AllocateCompute\", \"computeFlavourId\": \"ed755afa-9476-49a1-8759-dc1d1f1b823b\", \"vcImageId\": \"1e368ae6-74cf-4767-9e41-5dc3ba377df3\", \"networkId\": \"6af1407a-a459-4432-bba9-a3ebbf49239a\"}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/v1/compute_resources",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"compute_resources"
+							]
+						}
+					},
+					"status": "CREATED",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "570"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/0.14.1 Python/3.7.1"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 25 Jan 2019 10:08:06 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"accelerationCapability\": \"\",\n    \"computeId\": \"9f70ce96-f9db-49a4-9b1d-178c55b88ebc\",\n    \"computeName\": \"ifa005AllocateCompute\",\n    \"flavourId\": \"ed755afa-9476-49a1-8759-dc1d1f1b823b\",\n    \"hostId\": \"\",\n    \"operationalState\": \"disabled\",\n    \"vcImageId\": \"\",\n    \"virtualCpu\": {\n        \"cpuArchitecture\": \"\",\n        \"cpuClock\": \"\",\n        \"numVirtualCpu\": \"\",\n        \"virtualCpuOversubscriptionPolicy\": \"\",\n        \"virtualCpuPinning\": {\n            \"cpuMap\": \"\",\n            \"cpuPinningPolicy\": \"dynamic\",\n            \"cpuPinningRules\": \"\"\n        }\n    },\n    \"virtualDisks\": \"\",\n    \"virtualMemory\": {\n        \"numaEnabled\": \"\",\n        \"virtualMemOversubscriptionPolicy\": \"\",\n        \"virtualMemSize\": \"\"\n    },\n    \"virtualNetworkInterface\": [],\n    \"zoneId\": \"\"\n}"
+				}
+			]
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/compute_resources",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"affinityOrAntiAffinityConstraints\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"computeFlavourId\": \"ed755afa-9476-49a1-8759-dc1d1f1b823b\",  \"computeName\": \"IFA005AllocateCompute2\",  \"interfaceData\": [    {      \"ipAddress\": \"127.16.4.10\",      \"macAddress\": \"\"    }  ],  \"locationConstraints\": \"\",  \"metadata\": {},  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"userData\": {    \"content\": \"\",    \"method\": \"\"  },  \"vcImageId\": \"1e368ae6-74cf-4767-9e41-5dc3ba377df3\"}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/compute_resources",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"compute_resources"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "http://127.0.0.1:8000/v1/compute_resources",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"affinityOrAntiAffinityConstraints\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"computeFlavourId\": \"ed755afa-9476-49a1-8759-dc1d1f1b823b\",  \"computeName\": \"IFA005AllocateCompute2\",  \"interfaceData\": [    {      \"ipAddress\": \"127.16.4.10\",      \"macAddress\": \"\"    }  ],  \"locationConstraints\": \"\",  \"metadata\": {},  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"userData\": {    \"content\": \"\",    \"method\": \"\"  },  \"vcImageId\": \"1e368ae6-74cf-4767-9e41-5dc3ba377df3\"}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/v1/compute_resources",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"compute_resources"
+							]
+						}
+					},
+					"status": "INTERNAL SERVER ERROR",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "165"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/0.14.1 Python/3.7.1"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 25 Jan 2019 10:12:40 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 500,\n    \"name\": \"Internal Server Error\",\n    \"description\": \"Bad network format: missing 'uuid' (HTTP 400) (Request-ID: req-1810a3d4-711b-41f7-a69a-f1e9ee317be8)\"\n}"
+				}
+			]
+		}
+	]
+}

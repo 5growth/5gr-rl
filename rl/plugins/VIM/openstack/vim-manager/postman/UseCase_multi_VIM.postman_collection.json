@@ -1,0 +1,952 @@
+{
+	"info": {
+		"_postman_id": "6497f49e-b97d-411f-a128-26b990d9b6c2",
+		"name": "UseCase multi VIM",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "VIM1",
+			"item": [
+				{
+					"name": "8001/v1/network_resources/network_admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"affinityOrAntiAffinityConstraints\": \"\",  \"locationConstraints\": \"\",  \"metadata\": [    {      \"key\": \"\",      \"value\": \"\"    }  ],  \"networkResourceName\": \"net-vim1-admin\",  \"networkResourceType\": \"network\",  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"typeNetworkData\": \"\",  \"typeNetworkPortData\": \"\",  \"typeSubnetData\": \"\"}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8001/v1/network_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8001",
+							"path": [
+								"v1",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8001/v1/network_resources/subnet_admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"networkResourceName\": \"subnet-vim1-admin\", \"reservationId\": \"my-subnet\", \"networkResourceType\": \"subnet\", \"typeSubnetData\": {\"networkId\": \"3f0f8f09-4a3e-4eb6-ad37-bb079c1f2fa1\", \"ipVersion\": \"IPv4\", \"cidr\": \"192.168.120.0/24\", \"gatewayIp\": \"192.168.120.1\", \"isDhcpEnabled\": 1, \"metadata\" : [{ \"key\": \"subnet_type\", \"value\": \"admin\" }] }}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8001/v1/network_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8001",
+							"path": [
+								"v1",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8001/v1/network_resources/port_float",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"networkResourceName\": \"net-vim1-admin\", \"reservationId\": \"my-port-id-vim\", \"networkResourceType\": \"network-port\", \"typeNetworkPortData\": { \"networkId\": \"7c256f69-1134-4e68-b525-1fbf32315ef2\", \"metadata\" : [ { \"key\" : \"type\", \"value\" : \"floating_ip\"}, { \"key\" : \"subnet_id\", \"value\" : \"d10a7930-2fbd-4270-a835-21cbf77821da\"} ] }}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8001/v1/network_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8001",
+							"path": [
+								"v1",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8001/v1/network_resources/network_interne",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"affinityOrAntiAffinityConstraints\": \"\",  \"locationConstraints\": \"\",  \"metadata\": [    {      \"key\": \"\",      \"value\": \"\"    }  ],  \"networkResourceName\": \"net-vim1-interne\",  \"networkResourceType\": \"network\",  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"typeNetworkData\": \"\",  \"typeNetworkPortData\": \"\",  \"typeSubnetData\": \"\"}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8001/v1/network_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8001",
+							"path": [
+								"v1",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8001/v1/network_resources/subnet_interne",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"networkResourceName\": \"subnet-vim1-interne\", \"reservationId\": \"my-subnet\", \"networkResourceType\": \"subnet\", \"typeSubnetData\": {\"networkId\": \"4123e7fc-9bac-42a6-b2e7-90d795938b86\", \"ipVersion\": \"IPv4\", \"cidr\": \"172.168.120.0/24\", \"gatewayIp\": \"172.168.120.1\", \"isDhcpEnabled\": 1, \"metadata\" : [] }}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8001/v1/network_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8001",
+							"path": [
+								"v1",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8001/v1/network_resources/port_vtep",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"networkResourceName\": \"net-vim1-admin\", \"reservationId\": \"my-port-id-vim1\", \"networkResourceType\": \"network-port\", \"typeNetworkPortData\": {\"segmentId\": \"1012\", \"metadata\" : [ { \"key\": \"type\", \"value\": \"vtep\" }, { \"key\": \"local_floating_ip\", \"value\": \"10.51.111.35\" },{ \"key\": \"remote_floating_ip\", \"value\": \"10.51.111.31\" }, { \"key\": \"admin_network_id\", \"value\": \"xxxxx\" }, { \"key\": \"internal_network_id\", \"value\": \"xxxxxxxxx\" }, { \"key\": \"internal_ip\", \"value\": \"172.168.120.10\" } ] }}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8001/v1/network_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8001",
+							"path": [
+								"v1",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8001/v1/network_resources(subnet interne)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"networkResourceName\": \"subnet-vim1-interne\", \"reservationId\": \"my-subnet\", \"networkResourceType\": \"subnet\", \"typeSubnetData\": {\"networkId\": \"aef566e5-e7e3-4948-a57b-f030b9e942f4\", \"ipVersion\": \"IPv4\", \"cidr\": \"172.168.120.0/24\", \"gatewayIp\": \"172.168.120.1\", \"isDhcpEnabled\": 1 }}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8001/v1/network_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8001",
+							"path": [
+								"v1",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8001/v1/compute_resources_test_metadata",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"affinityOrAntiAffinityConstraints\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"computeFlavourId\": \"b74c8a98-d710-41e8-90f0-549c5b81f1e9\",  \"computeName\": \"compute-vim-T1-test-fip\",  \"interfaceData\": [ {\"networkId\": \"2aec9619-2ec1-4772-ab31-33ba51a1f440\" } ],  \"locationConstraints\": \"\",  \"metadata\": [ {\"key\": \"key-name\", \"value\": \"vim-manager-key\"}, {\"key\": \"floating-ip\", \"value\": \"10.51.111.125\"}, {\"key\": \"admin-network-name\", \"value\": \"net-vim1-admin\"} ],  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"userData\": {    \"content\": \"\",    \"method\": \"\"  },  \"vcImageId\": \"89e01633-9777-49a3-a377-d269839eb206\"}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8001/v1/compute_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8001",
+							"path": [
+								"v1",
+								"compute_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8001/v1/compute_resources(cirros)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"affinityOrAntiAffinityConstraints\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"computeFlavourId\": \"b74c8a98-d710-41e8-90f0-549c5b81f1e9\",  \"computeName\": \"compute-vim-T1-test-ping\",  \"interfaceData\": [    {      \"ipAddress\": \"172.168.120.121\",      \"macAddress\": \"\", \"networkId\": \"ddcfc568-25d8-4153-8f41-f9b2b501f330\"    }  ],  \"locationConstraints\": \"\",  \"metadata\": {},  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"userData\": {    \"content\": \"\",    \"method\": \"\"  },  \"vcImageId\": \"c91e13f7-badb-41ae-bd58-36ea43a1ed8e\"}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8001/v1/compute_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8001",
+							"path": [
+								"v1",
+								"compute_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8001/v1/compute_resources(ssh_fip)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"affinityOrAntiAffinityConstraints\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"computeFlavourId\": \"b74c8a98-d710-41e8-90f0-549c5b81f1e9\",  \"computeName\": \"compute-vim-T1-test-fip\",  \"interfaceData\": [ {\"networkId\": \"2aec9619-2ec1-4772-ab31-33ba51a1f440\" } ],  \"locationConstraints\": \"\",  \"metadata\": [{ \"key\": \"key-name\", \"value\": \"vim-manager-key\" }, { \"key\": \"floating-ip\", \"value\": \"10.51.111.125\" }, { \"key\": \"admin-network-name\", \"value\": \"net-vim1-admin\" }],  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"userData\": {    \"content\": \"\",    \"method\": \"\"  },  \"vcImageId\": \"89e01633-9777-49a3-a377-d269839eb206\"}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8001/v1/compute_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8001",
+							"path": [
+								"v1",
+								"compute_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8001/v1/compute_resources_vm",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"affinityOrAntiAffinityConstraints\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"computeFlavourId\": \"b74c8a98-d710-41e8-90f0-549c5b81f1e9\",  \"computeName\": \"compute-vim-T1-vm\",  \"interfaceData\": [ {\"ipAddress\": \"172.168.120.121\", \"networkId\": \"4123e7fc-9bac-42a6-b2e7-90d795938b86\" } ],  \"locationConstraints\": \"\",  \"metadata\": [ {\"key\": \"key-name\", \"value\": \"vim-manager-key\"}, {\"key\": \"floating-ip\", \"value\": \"10.51.111.181\"}, {\"key\": \"admin-network-name\", \"value\": \"net-vim1-admin\"} ],  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"userData\": {    \"content\": \"\",    \"method\": \"\"  },  \"vcImageId\": \"89e01633-9777-49a3-a377-d269839eb206\"}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8001/v1/compute_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8001",
+							"path": [
+								"v1",
+								"compute_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://192.168.68.101:8001/v1/compute_resources_vlan10",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"affinityOrAntiAffinityConstraints\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"computeFlavourId\": \"b74c8a98-d710-41e8-90f0-549c5b81f1e9\",  \"computeName\": \"test2-vlan-vim1-lan10\",  \"interfaceData\": [ {\"networkId\": \"2aec9619-2ec1-4772-ab31-33ba51a1f440\" }, {\"networkId\": \"ddcfc568-25d8-4153-8f41-f9b2b501f330\" } ],  \"locationConstraints\": \"\",  \"metadata\": { \"key-name\": \"vim-manager-key\", \"vlan-id\" : \"10\", \"ip-address\" : \"172.168.10.12\" },  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"userData\": {    \"content\": \"\",    \"method\": \"\"  },  \"vcImageId\": \"89e01633-9777-49a3-a377-d269839eb206\"}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8001/v1/compute_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8001",
+							"path": [
+								"v1",
+								"compute_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8001/v1/network_resources?subnet_delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://192.168.68.101:8001/v1/network_resources?networkResourceId=687a0b17-300a-4e96-af25-55ce1d3ec840",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8001",
+							"path": [
+								"v1",
+								"network_resources"
+							],
+							"query": [
+								{
+									"key": "networkResourceId",
+									"value": "687a0b17-300a-4e96-af25-55ce1d3ec840"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8001/v1/compute_resources?computeId=",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://192.168.68.101:8001/v1/compute_resources?computeId=5272c556-d263-4ab1-88e4-5d90a86363bd&=",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8001",
+							"path": [
+								"v1",
+								"compute_resources"
+							],
+							"query": [
+								{
+									"key": "computeId",
+									"value": "5272c556-d263-4ab1-88e4-5d90a86363bd"
+								},
+								{
+									"key": "",
+									"value": "",
+									"description": "The test is not working for one computeID, and also for table of computeIds"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "VIM2",
+			"item": [
+				{
+					"name": "8002/v1/network_resources/network_admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"affinityOrAntiAffinityConstraints\": \"\",  \"locationConstraints\": \"\",  \"metadata\": [    {      \"key\": \"\",      \"value\": \"\"    }  ],  \"networkResourceName\": \"net-vim2-admin\",  \"networkResourceType\": \"network\",  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"typeNetworkData\": \"\",  \"typeNetworkPortData\": \"\",  \"typeSubnetData\": \"\"}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8002/v1/network_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8002",
+							"path": [
+								"v1",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8002/v1/network_resources/subnet_admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"networkResourceName\": \"subnet-vim2-admin\", \"reservationId\": \"my-subnet\", \"networkResourceType\": \"subnet\", \"typeSubnetData\": {\"networkId\": \"ab12d65e-23ca-4e79-928e-ea6ad9569b58\", \"ipVersion\": \"IPv4\", \"cidr\": \"192.168.120.0/24\", \"gatewayIp\": \"192.168.120.1\", \"isDhcpEnabled\": 1, \"metadata\" : [{ \"key\": \"subnet_type\", \"value\": \"admin\" }] }}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8002/v1/network_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8002",
+							"path": [
+								"v1",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8002/v1/network_resources/network_interne",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"affinityOrAntiAffinityConstraints\": \"\",  \"locationConstraints\": \"\",  \"metadata\": [    {      \"key\": \"\",      \"value\": \"\"    }  ],  \"networkResourceName\": \"net-vim2-interne\",  \"networkResourceType\": \"network\",  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"typeNetworkData\": \"\",  \"typeNetworkPortData\": \"\",  \"typeSubnetData\": \"\"}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8002/v1/network_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8002",
+							"path": [
+								"v1",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8002/v1/network_resources/subnet_interne",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"networkResourceName\": \"subnet-vim2-interne\", \"reservationId\": \"my-subnet\", \"networkResourceType\": \"subnet\", \"typeSubnetData\": {\"networkId\": \"537fc569-390d-4160-ba93-c10934dff345\", \"ipVersion\": \"IPv4\", \"cidr\": \"172.168.120.0/24\", \"gatewayIp\": \"172.168.120.1\", \"isDhcpEnabled\": 1, \"metadata\" : [] }}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8002/v1/network_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8002",
+							"path": [
+								"v1",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8002/v1/network_resources/port_float",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"networkResourceName\": \"net-vim2-admin\", \"reservationId\": \"my-port-id-vim\", \"networkResourceType\": \"network-port\", \"typeNetworkPortData\": { \"networkId\": \"7c256f69-1134-4e68-b525-1fbf32315ef2\", \"metadata\" : [ { \"key\" : \"type\", \"value\" : \"floating_ip\"}, { \"key\" : \"subnet_id\", \"value\" : \"d10a7930-2fbd-4270-a835-21cbf77821da\"} ] }}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8002/v1/network_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8002",
+							"path": [
+								"v1",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8002/v1/network_resources/port_vtep",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"networkResourceName\": \"net-vim2-admin\", \"reservationId\": \"my-port-id-vim2\", \"networkResourceType\": \"network-port\", \"typeNetworkPortData\": {\"segmentId\": \"1012\", \"metadata\" : [ { \"key\": \"type\", \"value\": \"vtep\" }, { \"key\": \"local_floating_ip\", \"value\": \"10.51.111.163\" },{ \"key\": \"remote_floating_ip\", \"value\": \"10.51.111.177\" }, { \"key\": \"admin_network_id\", \"value\": \"7197c337-32f5-4aed-99aa-f00a5ab7ddf3\" }, { \"key\": \"internal_network_id\", \"value\": \"537fc569-390d-4160-ba93-c10934dff345\" }, { \"key\": \"internal_ip\", \"value\": \"172.168.120.12\" } ] }}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8002/v1/network_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8002",
+							"path": [
+								"v1",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8002/v1/compute_resources",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"affinityOrAntiAffinityConstraints\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"computeFlavourId\": \"b74c8a98-d710-41e8-90f0-549c5b81f1e9\",  \"computeName\": \"compute-vim-T2-test\",  \"interfaceData\": [    {      \"ipAddress\": \"172.168.120.20\",      \"macAddress\": \"\", \"networkId\": \"4fc5ae14-a64f-45b5-9850-1d9e8af16c4c\" } ],  \"locationConstraints\": \"\",  \"metadata\": [{ \"key\": \"key-name\", \"value\": \"vim-manager-key\" }],  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"userData\": {    \"content\": \"\",    \"method\": \"\"  },  \"vcImageId\": \"89e01633-9777-49a3-a377-d269839eb206\"}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8002/v1/compute_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8002",
+							"path": [
+								"v1",
+								"compute_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8002/v1/compute_resources(cirros)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"affinityOrAntiAffinityConstraints\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"computeFlavourId\": \"b74c8a98-d710-41e8-90f0-549c5b81f1e9\",  \"computeName\": \"compute-vim-T2-test-ping\",  \"interfaceData\": [    {      \"ipAddress\": \"172.168.120.122\",      \"macAddress\": \"\", \"networkId\": \"2c913f8e-282e-43c4-957b-cbebc3b28e3e\"    }  ],  \"locationConstraints\": \"\",  \"metadata\": [ { \"key\": \"\", \"value\": \"\" } ],  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"userData\": {    \"content\": \"\",    \"method\": \"\"  },  \"vcImageId\": \"c91e13f7-badb-41ae-bd58-36ea43a1ed8e\"}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8002/v1/compute_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8002",
+							"path": [
+								"v1",
+								"compute_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8002/v1/compute_resources(test-key)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"affinityOrAntiAffinityConstraints\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"computeFlavourId\": \"b74c8a98-d710-41e8-90f0-549c5b81f1e9\",  \"computeName\": \"compute-vim-T2-test\",  \"interfaceData\": [    {      \"ipAddress\": \"172.168.120.122\",      \"macAddress\": \"\", \"networkId\": \"15c18948-a5b0-4f35-b995-174fa0438d1d\"    }  ],  \"locationConstraints\": \"\",  \"metadata\": [ { \"key\": \"\", \"value\": \"\" } ],  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"userData\": {    \"content\": \"\",    \"method\": \"\"  },  \"vcImageId\": \"c91e13f7-badb-41ae-bd58-36ea43a1ed8e\"}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8002/v1/compute_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8002",
+							"path": [
+								"v1",
+								"compute_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8002/v1/compute_resources(ssh_fip)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"affinityOrAntiAffinityConstraints\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"computeFlavourId\": \"b74c8a98-d710-41e8-90f0-549c5b81f1e9\",  \"computeName\": \"compute-vim-T2-test-fip\",  \"interfaceData\": [ {\"networkId\": \"15ae040a-1d7c-4e03-8ae8-afa2ea7120d5\" } ],  \"locationConstraints\": \"\",  \"metadata\": [ { \"key-name\": \"vim-manager-key\", \"floating-ip\" : \"10.51.111.125\", \"admin-network-name\" : \"net-vim2-admin\" } ] ,  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"userData\": {    \"content\": \"\",    \"method\": \"\"  },  \"vcImageId\": \"89e01633-9777-49a3-a377-d269839eb206\"}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8002/v1/compute_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8002",
+							"path": [
+								"v1",
+								"compute_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8002/v1/compute_resources_vm",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"affinityOrAntiAffinityConstraints\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"computeFlavourId\": \"b74c8a98-d710-41e8-90f0-549c5b81f1e9\",  \"computeName\": \"compute-vim-T2-vm\",  \"interfaceData\": [ {\"ipAddress\": \"172.168.120.86\", \"networkId\": \"537fc569-390d-4160-ba93-c10934dff345\" }, { \"networkId\": \"7197c337-32f5-4aed-99aa-f00a5ab7ddf3\" } ],  \"locationConstraints\": \"\",  \"metadata\": [ {\"key\": \"key-name\", \"value\": \"vim-manager-key\"}, {\"key\": \"floating-ip\", \"value\": \"10.51.111.86\"}, {\"key\": \"admin-network-name\", \"value\": \"net-vim2-admin\"} ],  \"reservationId\": \"\",  \"resourceGroupId\": \"\",  \"userData\": {    \"content\": \"\",    \"method\": \"\"  },  \"vcImageId\": \"89e01633-9777-49a3-a377-d269839eb206\"}"
+						},
+						"url": {
+							"raw": "http://192.168.68.101:8002/v1/compute_resources",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8002",
+							"path": [
+								"v1",
+								"compute_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8002/v1/compute_resources?computeId=",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://192.168.68.101:8002/v1/compute_resources?computeId=1b757f6f-a78a-4e2e-ac7e-e4619c60e45c",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8002",
+							"path": [
+								"v1",
+								"compute_resources"
+							],
+							"query": [
+								{
+									"key": "computeId",
+									"value": "1b757f6f-a78a-4e2e-ac7e-e4619c60e45c"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8002/v1/network_resources?networkResourceId=",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://192.168.68.101:8002/v1/network_resources?networkResourceId=8e74c8cb-4b12-4611-91ae-500f46f64d47",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"68",
+								"101"
+							],
+							"port": "8002",
+							"path": [
+								"v1",
+								"network_resources"
+							],
+							"query": [
+								{
+									"key": "networkResourceId",
+									"value": "8e74c8cb-4b12-4611-91ae-500f46f64d47"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

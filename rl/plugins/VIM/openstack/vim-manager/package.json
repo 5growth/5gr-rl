@@ -1,0 +1,25 @@
+{
+  "name": "vim-manager",
+  "version": "1.0.0",
+  "description": "=============== vim-manager ===============",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "dependencies": {
+    "styled-components": "3.4.9",
+    "mobx": "5.0.3",
+    "redoc": "2.0.0-alpha.39",
+    "redoc-cli": "0.5.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://review.b-com.com:29418/falcon/app/vim-manager"
+  },
+  "author": "CLC",
+  "license": "b<>com"
+}

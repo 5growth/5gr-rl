@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VIM>
+    <Server>
+        <Port>54000</Port>
+        <KubernetesConfig>kube.conf</KubernetesConfig>
+        <URLprefix>/kubernetes</URLprefix>
+    </Server>
+<DomainInfo>
+    <NVFIPopList>
+        <NfviPop>
+            <networkConnectivityEndpoint>192.168.3.30</networkConnectivityEndpoint>
+            <geographicalLocationInfo>Pisa</geographicalLocationInfo>
+            <nfviPopId>11</nfviPopId>
+            <vimId>1</vimId>
+        </NfviPop>
+    </NVFIPopList>
+    <Zonelist>
+        <Zone>
+            <metadata></metadata>
+            <zoneId>10</zoneId>
+            <nfviPopId>11</nfviPopId>
+            <zoneName>Kubernetes VIM1</zoneName>
+            <zoneState>enable</zoneState>
+            <zoneProperty>power</zoneProperty>
+        </Zone>
+    </Zonelist>
+</DomainInfo>
+</VIM>

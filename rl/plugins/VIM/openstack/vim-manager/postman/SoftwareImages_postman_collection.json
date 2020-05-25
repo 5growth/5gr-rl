@@ -1,0 +1,196 @@
+{
+	"info": {
+		"_postman_id": "d1a8c7bf-bded-4e3e-a18a-6029602402e7",
+		"name": "Software Images",
+		"description": "Software Images",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://127.0.0.1:8000/v1/software_images/f1d11ba0-6752-419c-98b4-c0f46cd415c1",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/software_images/f1d11ba0-6752-419c-98b4-c0f46cd415c1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"software_images",
+						"f1d11ba0-6752-419c-98b4-c0f46cd415c1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/software_images/query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"filter\": {}}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/software_images/query",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"software_images",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/software_images/86666683-7db1-469d-94b5-84606af7a783",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/software_images/86666683-7db1-469d-94b5-84606af7a783",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"software_images",
+						"86666683-7db1-469d-94b5-84606af7a783"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/software_images",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "softwareImage",
+							"value": "@/home/fmessaoudi/ImageTest.iso",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "ImageTestFrancky",
+							"type": "text"
+						},
+						{
+							"key": "visibility",
+							"value": "private",
+							"type": "text"
+						},
+						{
+							"key": "version",
+							"value": "v3",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/software_images",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"software_images"
+					]
+				},
+				"description": "A problem with request occurs: \"No file part\". I think it is because PostMan could not find the location of the software image in the /home/fmessaoudi directory. However, the same request is working through a command line. "
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/software_images",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"name\": \"ImageTestFrancky02\",  \"provider\": \"\",  \"resourceGroupId\": \"01212423\",  \"softwareImage\": \"/home/fmessaoudi/ImageTest.iso\",  \"userMetadata\": [    {      \"key\": \"015247632315\",      \"value\": \"1\"    }  ],  \"version\": \"v3\",  \"visibility\": \"private\"}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/software_images",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"software_images"
+					]
+				},
+				"description": "This request is not working due to IMO, the path wherein the software image is saved. both the command line and PstMan return the same error: \"No file part\"."
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<MTPConfig>
+    <Domains> 
+        <Domain>
+            <Type>RADIO</Type>
+            <Name>radiodummy</Name>
+            <Id>1</Id>
+            <MecId>-1</MecId>
+            <Ip>127.0.0.1</Ip>
+            <Port>51000</Port>
+        </Domain>
+        <Domain>
+            <Type>T-WIM</Type>
+            <Name>wimdummy</Name>
+            <Id>3</Id>
+            <MecId>-1</MecId>
+            <Ip>127.0.0.1</Ip>
+            <Port>53000</Port>
+        </Domain>
+        <Domain>
+            <Type>VIM</Type>
+            <Name>vimdummy</Name>
+            <Id>2</Id>
+            <MecId>-1</MecId>
+            <Ip>127.0.0.1</Ip>
+            <Port>52000</Port>
+        </Domain>
+    </Domains>
+
+    <LocalPAConfig>
+        <Compute>
+            <Status>disable</Status>
+            <Name>PAalg1</Name>
+            <Ip>127.0.0.1</Ip>
+            <Port>81000</Port>
+        </Compute>
+        <Network>
+            <Status>disable</Status>
+            <Name>PAalg2</Name>
+            <Ip>127.0.0.1</Ip>
+            <Port>82000</Port>
+        </Network>
+    </LocalPAConfig>
+    
+    <MonitoringConfig>
+        <Name>Prometheus</Name>
+        <Ip>127.0.0.1</Ip>
+        <Port>91000</Port>
+    </MonitoringConfig>
+
+    <AppDConfig> 
+
+
+    </AppDConfig>
+</MTPConfig>

@@ -1,0 +1,198 @@
+{
+	"info": {
+		"_postman_id": "a96a747d-a60c-4ac1-a0bb-70269c0a7875",
+		"name": "Virtualised Resource Reservation",
+		"description": "Virtualised Resource Reservation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://127.0.0.1:8000/v1/reservations/compute_resources",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"affinityConstraint\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"antiAffinityConstraint\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"computePoolReservation\": {    \"computeAttributes\": {      \"accelerationCapability\": \"\",      \"cpuArchitecture\": \"\",      \"virtualCpuOversubscriptionPolicy\": \"\"    },    \"numCpuCores\": 2,    \"numVcInstances\": 2,    \"virtualMemSize\": 4096  },  \"endTime\": \"2019-01-25T15:53:34.082Z\",  \"expiryTime\": \"2019-01-25T15:53:34.082Z\",  \"locationConstraints\": \"\",  \"resourceGroupId\": \"9f16230284044eaba08bd8eacb1e5550\",  \"startTime\": \"\",  \"virtualisationContainerReservation\": [    {      \"containerFlavour\": {        \"accelerationCapability\": \"\",        \"flavourId\": \"ed755afa-9476-49a1-8759-dc1d1f1b823b\",        \"storageAttributes\": [          {            \"flavourId\": \"\",            \"hostId\": \"\",            \"operationalState\": \"\",            \"ownerId\": \"\",            \"sizeOfStorage\": 0,            \"storageId\": \"\",            \"storageName\": \"\",            \"typeOfStorage\": \"\",            \"zoneId\": \"\"          }        ],        \"virtualCpu\": [          {            \"cpuArchitecture\": \"\",            \"cpuClock\": 0,            \"numVirtualCpu\": 0,            \"virtualCpuOversubscriptionPolicy\": \"\",            \"virtualCpuPinning\": {              \"cpuMap\": \"\",              \"cpuPinningPolicy\": \"\",              \"cpuPinningRules\": \"\"            }          }        ],        \"virtualMemory\": {          \"numaEnabled\": true,          \"virtualMemOversubscriptionPolicy\": \"\",          \"virtualMemSize\": 0        },        \"virtualNetworkInterface\": {          \"accelerationCapability\": \"\",          \"bandwidth\": \"\",          \"ipAddress\": \"\",          \"macAddress\": \"\",          \"metadata\": \"\",          \"networkId\": \"\",          \"networkPortId\": \"\",          \"operationalState\": \"\",          \"ownerId\": \"\",          \"resourceId\": \"\",          \"typeConfiguration\": \"\",          \"typeVirtualNic\": \"\"        }      },      \"containerId\": \"\"    }  ]}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/reservations/compute_resources",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"reservations",
+						"compute_resources"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/reservations/compute_resources/query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"filter\": {}}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/reservations/compute_resources/query",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"reservations",
+						"compute_resources",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/reservations/network_resources/query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"filter\": {}}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/reservations/network_resources/query",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"reservations",
+						"network_resources",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/reservations/network_resources/query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"filter\": {}}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/reservations/network_resources/query",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"reservations",
+						"network_resources",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/v1/reservations/network_resources",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"affinityConstraint\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"antiAffinityConstraint\": [    {      \"affinityAntiAffinityResourceGroup\": \"\",      \"affinityAntiAffinityResourceList\": {        \"resource\": [          \"\"        ]      },      \"scope\": \"\",      \"type\": \"\"    }  ],  \"endTime\": \"\",  \"expiryTime\": \"\",  \"locationConstraints\": \"\",  \"networkReservation\": {    \"networkAttributes\": {      \"bandwidth\": 0,      \"isShared\": true,      \"metadata\": [        {          \"key\": \"\",          \"value\": \"\"        }      ],      \"networkType\": \"vxlan\",      \"segmentType\": \"128\"    },    \"networkPorts\": [      {        \"bandwidth\": 0,        \"metadata\": [          {            \"key\": \"string\",            \"value\": \"string\"          }        ],        \"portId\": 0,        \"portType\": \"string\",        \"segmentId\": \"string\"      }    ],    \"numPublicIps\": 0  },  \"resourceGroupId\": \"string\",  \"startTime\": \"2019-01-25T14:54:53.643Z\"}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/reservations/network_resources",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"reservations",
+						"network_resources"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

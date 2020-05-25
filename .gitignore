@@ -1,0 +1,9 @@
+/rl/plugins/VIM/XenVIMPlugin/target/
+/rl/plugins/WIM/OpticalWIMPlugin/target/
+/rl/plugins/WIM/SDNWIMPlugin/target/
+/rl/plugins/RADIO/RadioPlugin/target/
+/rl/plugins/WIM/DummyWIMPlugin/target/
+/rl/plugins/VIM/DummyVIMPlugin/target/
+/rl/plugins/MEC/MECdummy/target/
+/rl/plugins/WIM/CrosshaulWIMPlugin/target/
+/rl/rl/target/

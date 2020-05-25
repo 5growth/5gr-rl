@@ -1,0 +1,48 @@
+{
+	"info": {
+		"_postman_id": "fe423f3e-8b03-4266-bded-77329b47e7c8",
+		"name": "Virtualised Network Resources Information",
+		"description": "Virtualised Network Resources Information",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://127.0.0.1:8000/v1/information/query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"filter\": {}}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/v1/information/query",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"information",
+						"query"
+					]
+				},
+				"description": "The filter needs to be filled"
+			},
+			"response": []
+		}
+	]
+}
