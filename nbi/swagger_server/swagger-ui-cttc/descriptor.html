@@ -1,0 +1,193 @@
+{% extends "layout.html" %}
+{% block content %}
+<link type="text/css" rel="stylesheet" href="/static/css/force2.css"/>
+<div class="container-fluid">
+    {% if descriptor_type == 'vnfd' or descriptor_type == 'nsd' %}
+    {% if descriptor_type == 'vnfd' %}
+    {% set catalog = 'vnfd:vnfd-catalog'%}
+    {% else %}
+    {% set catalog = 'nsd:nsd-catalog' %}
+    {% endif %}
+    {% if yaml_network|length > 0 %}
+    {% set desc = yaml_dict[catalog][descriptor_type][0] %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">Representation of {{ descriptor_type.capitalize() }}:  <i>{{ desc['name'] }}</i></h3>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="chartd3" id="chartd3"></div>
+            <script type="text/javascript" src="/static/js/osm_descriptor_d3.js"></script>
+            <script type="text/javascript">
+                representation({{ yaml_network | tojson }});
+            </script>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-12">
+            <div>
+                <button class="btn btn-success" data-toggle="modal" data-target="#yaml_osm_Modal">OSM YAML descriptor</button>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#yaml_ifa_Modal">IFA YAML descriptor</button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table">
+                <thead>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">Name</th>
+                    <td><i>{{ desc['name'] }}</i></td>
+                </tr>
+                <tr>
+                    <th scope="row">ID</th>
+                    <td><i>{{ desc['id'] }}</i></td>
+                </tr>
+                <tr>
+                    <th scope="row">Description</th>
+                    <td><i>{{desc['description']}}</i></td>
+                </tr>
+                {% if descriptor_type == 'vnfd'%}
+                <tr>
+                    <th scope="row">Connection Point</th>
+                    <td>
+                        Number of Connection Point in VNF: <i>{{ desc['connection-point']|length}}</i><br>
+                        {% for cp in desc['connection-point'] %}
+                        &emsp;<i>{{cp['name']}}</i><br>
+                        {% endfor%}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">VDU</th>
+                    <td>
+                        Number of VDU in VNF: <i>{{desc['vdu']|length}}</i><br>
+                        {% for vdu in desc['vdu']%}
+                        &emsp;Name: <i>{{ vdu['name'] }}</i><br>
+                        &emsp;Image: <i>{{ vdu['image'] }}</i><br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">MGMT interface</th>
+                    <td>
+                        <i>{{ desc['mgmt-interface']['cp'] }}</i>
+                    </td>
+                </tr>
+
+
+                {% else %}
+                <tr>
+                    <th scope="row">Constituent Vnfd</th>
+                    <td>
+                        Number of Constituent VNFs in NS: <i>{{ desc['constituent-vnfd']|length}}</i><br>
+                        {% for constituent_vnfd in desc['constituent-vnfd'] %}
+                        &emsp;{{constituent_vnfd['vnfd-id-ref']}}: {{constituent_vnfd['member-vnf-index']}}<br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">VLD</th>
+                    <td>
+                        Number of VLD in NS: {{ desc['vld']|length }}<br>
+                        {% for vld in desc['vld'] %}
+                        &emsp;Name: <i>{{ vld['name'] }}{% if vld['mgmt-network'] == 'true' %}*{% endif %}</i><br>
+                        {% if vld['vim-network-name'] %}&emsp;<b>Vim-Network-Name: <i>{{
+                        vld['vim-network-name']}}</i></b><br> {% endif %}
+                        &emsp;Vnfd connected: {{ vld['vnfd-connection-point-ref']|length}}<br>
+                        {% for vnfd_connected in vld['vnfd-connection-point-ref']%}
+                        &emsp;&emsp;{{ vnfd_connected['vnfd-id-ref']}}: {{vnfd_connected['member-vnf-index-ref']}}<br>
+                        {% endfor %}
+                        {% endfor %}
+                        <i>* Management Network</i>
+                    </td>
+                </tr>
+                {% endif %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+            {% endif %}
+    {%else %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">YAML not valid for OSM</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    {% endif %}
+
+</div>
+<!-- /.container-fluid -->
+<!-- Modal OSM Descriptor-->
+<div class="modal fade" id="yaml_osm_Modal" tabindex="-1" role="dialog" aria-labelledby="yaml_osm_ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="yaml_osm_ModalLabel">OSM YAML Descriptor</h4>
+            </div>
+            <div class="modal-body">
+                <textarea id="to_clip" class="form-control" rows="20" style="resize:none">{{ yaml_osm_descriptor }}</textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="clipboard">Copy to clipboard</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- Modal IFA Descriptor-->
+<div class="modal fade" id="yaml_ifa_Modal" tabindex="-1" role="dialog" aria-labelledby="yaml_ifa_ModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="yaml_ifa_ModalLabel">IFA YAML Descriptor</h4>
+            </div>
+            <div class="modal-body">
+                <textarea id="to_clip_ifa" class="form-control" rows="20" style="resize:none">{{ yaml_ifa_descriptor }}</textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="ifa_clipboard">Copy to clipboard</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<script type="text/javascript">
+window.currentChild = false;
+$('#openyaml').click(function(){
+    if (currentChild) currentChild.close();
+    currentChild = window.open("{{ url_for('display_yaml_file', json_file=yaml_dict) }}",
+    "YAML Descriptor", "left=200,top=200,width=700,height=500,toolbar=no,resizable=0,location=no");
+});
+
+var input  = document.getElementById("to_clip");
+var button = document.getElementById("clipboard");
+
+button.addEventListener("click", function (event) {
+    event.preventDefault();
+    input.select();
+    document.execCommand("copy");
+});
+</script>
+{% endblock %}

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="LV">
+    <title>CTTC RL - {{ html_title }}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!--<script src="/static/js/bootstrap.min.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+
+    <!-- MetisMenu CSS -->
+    <link href="/static/css/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/static/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>-->
+            <a class="navbar-brand" href="http://www.cttc.es" target="_blank">
+                <img src="/static/images/Logo_cttc_horizontal.jpg" class="img-thumbnail" alt="CTTC" style="height: 30px;"/>
+            </a>
+
+        </div>
+        <!-- /.navbar-header -->
+        <ul class="nav navbar-top-links navbar-right">
+            <li><a href="/ui"><i class="fa fa-cube" aria-hidden="true"></i> RL</a></li>
+            {% if session['logged_in'] %}
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#"><i class="fa fa-user fa-fw"></i> {{ session['user'] }}</a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-key fa-fw"></i> {{ session['role'] }}</a>
+                    <!--</li>
+                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                    </li>-->
+                    <li class="divider"></li>
+                    <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+            {% endif %}
+        </ul>
+        <!-- /.navbar-top-links -->
+
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav navbar-collapse">
+                <ul class="nav" id="side-menu">
+                    <!--<li class="sidebar-search">
+                        <div class="input-group custom-search-form">
+                            <input type="text" class="form-control" placeholder="Search...">
+                            <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                        </div>
+                        &lt;!&ndash; /input-group &ndash;&gt;
+                    </li>-->
+                    <li>
+                        <a href="/ifa_converter"><i class="fa fa-clone"></i> IFA Converter</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="/5gt/mtp/v1/ui/"><!--<span class="fa fa-globe"></span>--><img
+                                src="/static/images/favicon-32x32.png" height="20" width="20"/> NBI</a>
+                    </li>
+                    <li>
+                        <a href="/abs_view"><i class="fa fa-image fa-fw"></i> Abstract View</a>
+                    </li>
+                    <li>
+                        <a href="/res_view"><i class="fa fa-cloud fa-fw"></i> Resource View</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-database fa-fw"></i>  Databases<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="/databases/domain"> Domain List</a>
+                            </li>
+                            <li>
+                                <a href="/databases/nfvipops"> NFVI-PoPs List</a>
+                            </li>
+                            <li>
+                                <a href="/databases/res_attr"> Resource Attributes List</a>
+                            </li>
+                            <li>
+                                <a href="/databases/loglinks"> Logical Links List</a>
+                            </li>
+                            <li>
+                                <a href="/databases/serviceid"> ServiceId List</a>
+                            </li>
+                            <li>
+                                <a href="/databases/stitch"> Stitching List</a>
+                            </li>
+                            <li>
+                                <a href="/databases/users"> User List</a>
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="/logs"><i class="fa fa-database fa-fw"></i> Logs</a>
+                    </li>
+                    <li>
+                        <a href="#" id="openlog"><i class="fa fa-database fa-fw"></i> Logs_popup</a>
+                    </li>
+                    {% if session['role'] == 'Admin' %}
+                    <li>
+                        <a href="/static/pages/tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
+                    </li>
+                    <li>
+                        <a href="/static/pages/forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="/static/pages/panels-wells.html">Panels and Wells</a>
+                            </li>
+                            <li>
+                                <a href="/static/pages/buttons.html">Buttons</a>
+                            </li>
+                            <li>
+                                <a href="/static/pages/notifications.html">Notifications</a>
+                            </li>
+                            <li>
+                                <a href="/static/pages/typography.html">Typography</a>
+                            </li>
+                            <li>
+                                <a href="/static/pages/icons.html"> Icons</a>
+                            </li>
+                            <li>
+                                <a href="/static/pages/grid.html">Grid</a>
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span
+                                class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="#">Second Level Item</a>
+                            </li>
+                            <li>
+                                <a href="#">Second Level Item</a>
+                            </li>
+                            <li>
+                                <a href="#">Third Level <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="/blank">Blank Page</a>
+                            </li>
+                            <li>
+                                <a href="/login">Login Page</a>
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    {% endif %}
+                    <li style="bottom: 0; position: fixed; overlay: none;">
+                        <img src="/static/images/Transformer_full.png" class="img-thumbnail" alt="5Growth" style="width:15%; border:1px solid #ddd;
+  margin: 10px 10px 10px 20px"/>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.sidebar-collapse -->
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+
+    <div id="page-wrapper">
+        <br>
+        <br>
+        <br>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->             {% if messages
+        %} {% for category, message in messages %}
+        <div class="alert alert-{{category}} alert-dismissible fade in"> {{ message|safe }}
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        </div>
+        {% endfor %} {% endif %} {% endwith %}
+        {% block content %}{% endblock %}
+        <p class="text-center"> Copyright <a href="http://www.cttc.es" target="_blank">CTTC</a>/<a
+                href="http://cerca.cat/" target="_blank">CERCA</a> <script>document.write(new Date().getFullYear())</script>. All rights reserved. </p>
+    </div>
+    <!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- Script for log-->
+<script type="text/javascript">
+window.currentChild = false;
+console.log(currentChild);
+$('#openlog').click(function(){
+    if (currentChild) currentChild.close();
+    currentChild = window.open("{{ url_for('display_logs_popup') }}",
+    "RL Logs", "left=200,top=200,width=800,height=600,toolbar=0,resizable=0");
+
+
+});
+
+</script>
+<!-- jQuery -->
+<script src="/static/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/static/js/bootstrap.min.js"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="/static/js/metisMenu.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+<script src="/static/js/sb-admin-2.js"></script>
+
+</body>
+
+</html>

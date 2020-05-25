@@ -1,0 +1,1270 @@
+---
+swagger: "2.0"
+info:
+  description: "REST-API server for the North Bound Interface (NBI) of the 5GT-SO.\
+    \ Find more at http://5g-transformer.eu"
+  version: "1.7"
+  title: "5GT-MTP NBI"
+  termsOfService: "/tos"
+  contact:
+    email: "cnd@lists.cttc.es"
+host: "localhost:8090"
+basePath: "/5gt/mtp/v1"
+paths:
+  /abstract-resources:
+    get:
+      tags:
+      - "abstractResources"
+      summary: "Retrieve aggregated Cloud NFVI-PoP and Inter-NFVI-PoP Connectivity"
+      description: "Retrieve aggregated Cloud NFVI-PoP and Inter-NFVI-PoP Connectivity"
+      operationId: "collect_rl_cloud_network_resource_information"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "object"
+            properties:
+              NfviPops:
+                $ref: "#/definitions/NfviPops"
+              logicalLinkInterNfviPops:
+                $ref: "#/definitions/logicalLinkInterNfviPops"
+        400:
+          description: "Bad request"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+      x-swagger-router-controller: "swagger_server.controllers.abstract_resources_controller"
+  /abstract-federated-resources:
+    get:
+      tags:
+      - "abstractResources"
+      summary: "Retrieve aggregated Cloud NFVI-PoP and Inter-NFVI-PoP Connectivity\
+        \ for Federation"
+      description: "Retrieve aggregated Cloud NFVI-PoP and Inter-NFVI-PoP Connectivity\
+        \ for Federation"
+      operationId: "collect_rl_federated_cloud_network_resource_information"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "object"
+            properties:
+              NfviPops:
+                $ref: "#/definitions/NfviPops"
+              logicalLinkInterNfviPops:
+                $ref: "#/definitions/logicalLinkInterNfviPops"
+        400:
+          description: "Bad request"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+      x-swagger-router-controller: "swagger_server.controllers.abstract_resources_controller"
+  /abstract-network-resources:
+    post:
+      tags:
+      - "abstractResources"
+      summary: "Create inter-NFVI-PoP connectivity"
+      description: ""
+      operationId: "create_inter_nfvi_po_p_connectivity"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Create inter-NfviPop Connectivity"
+        required: true
+        schema:
+          $ref: "#/definitions/interNfviPopConnectivityRequest"
+      responses:
+        201:
+          description: "Successful operation"
+          schema:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                interNfviPopConnnectivityId:
+                  $ref: "#/definitions/interNfviPopConnnectivityId"
+                interNfviPopNetworkSegmentType:
+                  $ref: "#/definitions/interNfviPopNetworkSegmentType"
+              required:
+              - "interNfviPopConnnectivityId"
+              - "interNfviPopNetworkSegmentType"
+        400:
+          description: "Bad request"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+      x-swagger-router-controller: "swagger_server.controllers.abstract_resources_controller"
+    delete:
+      tags:
+      - "abstractResources"
+      summary: "Delete inter-NFVI-PoP connectivity"
+      description: ""
+      operationId: "delete_inter_nfvi_po_p_connectivity"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Delete inter-NfviPop Connectivity"
+        required: true
+        schema:
+          $ref: "#/definitions/deleteInterNfviPopConnectivityRequest"
+      responses:
+        204:
+          description: "Successful operation"
+        400:
+          description: "Bad request"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+      x-swagger-router-controller: "swagger_server.controllers.abstract_resources_controller"
+  /network_resources:
+    get:
+      tags:
+      - "virtualisedNetworkResources"
+      operationId: "vi_mquery_networks"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "networkQueryFilter"
+        description: "Query filter based on e.g. name, identifier, meta-data information\
+          \ or status information, expressing the type of information to be retrieved.\
+          \ It can also be used to specify one or more resources to be queried by\
+          \ providing their identifiers."
+        required: true
+        schema:
+          $ref: "#/definitions/Filter"
+      responses:
+        200:
+          description: "Element containing information about the virtual network resource(s)\
+            \ matching the filter. The cardinality can be 0 if no matching network\
+            \ resources exist."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/VirtualNetwork"
+        400:
+          description: "Bad request"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+      x-swagger-router-controller: "swagger_server.controllers.virtualised_network_resources_controller"
+    post:
+      tags:
+      - "virtualisedNetworkResources"
+      operationId: "vi_mallocate_network"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "params"
+        required: true
+        schema:
+          $ref: "#/definitions/AllocateNetworkRequest"
+      responses:
+        201:
+          description: "Identifier of the created Compute Flavour."
+          schema:
+            $ref: "#/definitions/AllocateNetworkResult"
+        400:
+          description: "Bad request"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        409:
+          description: "network already added"
+      x-swagger-router-controller: "swagger_server.controllers.virtualised_network_resources_controller"
+    delete:
+      tags:
+      - "virtualisedNetworkResources"
+      operationId: "vi_mterminate_networks"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "networkResourceId"
+        in: "query"
+        description: "Identifier of the virtualised network resource(s) to be terminated."
+        required: true
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "Identifier(s) of the virtualised network resource(s) successfully\
+            \ terminated."
+          schema:
+            type: "array"
+            items:
+              type: "string"
+        400:
+          description: "Bad request"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+      x-swagger-router-controller: "swagger_server.controllers.virtualised_network_resources_controller"
+definitions:
+  NfviPops:
+    type: "array"
+    items:
+      $ref: "#/definitions/NfviPops_inner"
+  networkLayer:
+    type: "string"
+    description: "5GT - Describes the network layer capabilities of the Gw Layer 2\
+      \ (L2) or Layer 3 (L3), i.e. Ethernet, IP, IP/MPLS -- see ETSI NFV-IFA 022 6.4.5.3."
+  interNfviPopNetworkType:
+    type: "string"
+    description: "5GT - Describes the network connectivity types, e.g., L2-VPN, EoMPLS,\
+      \ VXLAN, MPLS over GRE, ... -- see ETSI NFV-IFA 022 6.4.5.3."
+  interNfviPopNetworkTopology:
+    type: "string"
+    description: "5GT - Describes the network connectivity topology, i.e., p2p, mesh,\
+      \ tree -- see ETSI NFV-IFA 022 6.4.5.2."
+  logicalLinkInterNfviPops:
+    type: "array"
+    items:
+      $ref: "#/definitions/logicalLinkInterNfviPops_inner"
+  interNfviPopConnectivityRequest:
+    type: "object"
+    required:
+    - "interNfviPopNetworkType"
+    - "logicalLinkPathList"
+    - "metaData"
+    - "networkLayer"
+    properties:
+      logicalLinkPathList:
+        $ref: "#/definitions/logicalLinkPathList"
+      networkLayer:
+        $ref: "#/definitions/networkLayer"
+      interNfviPopNetworkType:
+        $ref: "#/definitions/interNfviPopNetworkType"
+      metaData:
+        $ref: "#/definitions/metaData"
+  metaData:
+    type: "array"
+    description: "metaData information used to carry ionformat metadata."
+    items:
+      $ref: "#/definitions/metaData_inner"
+  interNfviPopNetworkSegmentType:
+    type: "string"
+    description: "5GT - provides the selected segment id, e.g., VLAN Id, VXLAN Id,\
+      \ ... -- see ETSI NFV-IFA 022 6.4.5.2."
+  deleteInterNfviPopConnectivityRequest:
+    type: "object"
+    required:
+    - "interNfviPopConnnectivityIdList"
+    - "metaData"
+    properties:
+      interNfviPopConnnectivityIdList:
+        $ref: "#/definitions/interNfviPopConnnectivityIdList"
+      metaData:
+        $ref: "#/definitions/metaData"
+  interNfviPopConnnectivityId:
+    type: "string"
+    description: "Identifier provided by the RL to identify the inter-Nfvi-Pop connectivity."
+  logicalLinkAttributes:
+    type: "object"
+    required:
+    - "dstGwIpAddress"
+    - "localLinkId"
+    - "logicalLinkId"
+    - "remoteLinkId"
+    - "srcGwIpAddress"
+    properties:
+      logicalLinkId:
+        type: "string"
+        description: "(numbered) Identifier of the logical link"
+      srcGwIpAddress:
+        type: "string"
+        description: "5GT - Source NFVI-PoP Gw IPv4 Address in terms of A.B.C.D (/32)."
+      localLinkId:
+        type: "integer"
+        format: "uint32"
+        description: "Local Logical Link Id."
+      dstGwIpAddress:
+        type: "string"
+        description: "5GT - Destination NFVI-PoP Gw IPv4 Address in terms of A.B.C.D\
+          \ (/32)."
+      remoteLinkId:
+        type: "integer"
+        format: "uint32"
+        description: "Remote Logical Link Id."
+    description: "5GT - inter-Nfvi-Pop connectivity link."
+  logicalLinkPathList:
+    type: "array"
+    items:
+      $ref: "#/definitions/logicalLinkPathList_inner"
+  interNfviPopConnnectivityIdList:
+    type: "array"
+    items:
+      $ref: "#/definitions/interNfviPopConnnectivityIdList_inner"
+  VirtualNetwork:
+    type: "object"
+    required:
+    - "bandwidth"
+    - "isShared"
+    - "networkPort"
+    - "networkQoS"
+    - "networkResourceId"
+    - "networkResourceName"
+    - "networkType"
+    - "operationalState"
+    - "segmentType"
+    - "sharingCriteria"
+    - "subnet"
+    - "zoneId"
+    properties:
+      bandwidth:
+        type: "number"
+        description: "Minimum network bandwidth (in Mbps)."
+      isShared:
+        type: "boolean"
+        description: "It defines whether the virtualised network is shared among consumers."
+      networkPort:
+        type: "array"
+        description: "Element providing information of an instantiated virtual network\
+          \ port."
+        items:
+          $ref: "#/definitions/VirtualNetwork_networkPort"
+      networkQoS:
+        type: "array"
+        description: "Element providing information about Quality of Service attributes\
+          \ that the network shall support. The cardinality can be \"0\" to allow\
+          \ for networks without any specified QoS requirements."
+        items:
+          $ref: "#/definitions/VirtualNetwork_networkQoS"
+      networkResourceId:
+        type: "string"
+        description: "Identifier of the virtualised network resource."
+      networkResourceName:
+        type: "string"
+        description: "Name of the virtualised network resource."
+      networkType:
+        type: "string"
+        description: "The type of network that maps to the virtualised network. This\
+          \ list is extensible. Examples are: \"local\", \"vlan\", \"vxlan\", \"gre\"\
+          , \"l3-vpn\", etc. The cardinality can be \"0\" to cover the case where\
+          \ this attribute is not required to create the virtualised network."
+      operationalState:
+        type: "string"
+        description: "The operational state of the virtualised network."
+      segmentType:
+        type: "string"
+        description: "The isolated segment for the virtualised network. For instance,\
+          \ for a \"vlan\" networkType, it corresponds to the vlan identifier; and\
+          \ for a \"gre\" networkType, this corresponds to a gre key. The cardinality\
+          \ can be \"0\" to allow for flat networks without any specific segmentation."
+      sharingCriteria:
+        type: "string"
+        description: "Only present for shared networks. Indicate the sharing criteria\
+          \ for this network. This criteria might be a list of authorized consumers."
+      subnet:
+        type: "string"
+        description: "Only present if the network provides layer 3 connectivity."
+      zoneId:
+        type: "string"
+        description: "If present, it identifies the Resource Zone where the virtual\
+          \ network resources have been allocated."
+    example:
+      subnet: "subnet"
+      networkResourceName: "networkResourceName"
+      bandwidth: 0.80082819046101150206595775671303272247314453125
+      networkQoS:
+      - qosName: "qosName"
+        qosValue: "qosValue"
+      - qosName: "qosName"
+        qosValue: "qosValue"
+      zoneId: "zoneId"
+      networkResourceId: "networkResourceId"
+      operationalState: "operationalState"
+      networkType: "networkType"
+      networkPort:
+      - portType: "portType"
+        metadata:
+        - value: "value"
+          key: "key"
+        - value: "value"
+          key: "key"
+        resourceId: "resourceId"
+        bandwidth: 6.02745618307040320615897144307382404804229736328125
+        segmentId: "segmentId"
+        networkId: "networkId"
+        operationalState: "operationalState"
+        attachedResourceId: "attachedResourceId"
+      - portType: "portType"
+        metadata:
+        - value: "value"
+          key: "key"
+        - value: "value"
+          key: "key"
+        resourceId: "resourceId"
+        bandwidth: 6.02745618307040320615897144307382404804229736328125
+        segmentId: "segmentId"
+        networkId: "networkId"
+        operationalState: "operationalState"
+        attachedResourceId: "attachedResourceId"
+      isShared: true
+      segmentType: "segmentType"
+      sharingCriteria: "sharingCriteria"
+  Filter:
+    type: "object"
+    required:
+    - "filter"
+    properties:
+      filter:
+        type: "object"
+        description: "The filter is used to select elements for query purpose."
+        properties: {}
+    example:
+      filter: "{}"
+  AllocateNetworkRequest:
+    type: "object"
+    required:
+    - "affinityOrAntiAffinityConstraints"
+    - "locationConstraints"
+    - "metadata"
+    - "networkResourceName"
+    - "networkResourceType"
+    - "reservationId"
+    - "resourceGroupId"
+    - "typeNetworkData"
+    - "typeNetworkPortData"
+    - "typeSubnetData"
+    properties:
+      affinityOrAntiAffinityConstraints:
+        type: "string"
+        description: "The binary software image file."
+      locationConstraints:
+        type: "string"
+        description: "Controls the visibility of the image. In case of \"private\"\
+          \ value the image is available only for the tenant assigned to the provided\
+          \ resourceGroupId and the administrator tenants of the VIM while in case\
+          \ of \"public\" value, all tenants of the VIM can use the image."
+      metadata:
+        type: "array"
+        description: "The binary software image file."
+        items:
+          $ref: "#/definitions/metaData_inner"
+      networkResourceName:
+        type: "string"
+        description: "Name provided by the consumer for the virtualised network resource\
+          \ to allocate. It can be used for identifying resources from consumer side."
+      networkResourceType:
+        type: "string"
+        description: "Type of virtualised network resource. Possible values are: \"\
+          network\", \"subnet\" or network-port."
+      reservationId:
+        type: "string"
+        description: "Identifier of the resource reservation applicable to this virtualised\
+          \ resource management operation."
+      resourceGroupId:
+        type: "string"
+        description: "Unique identifier of the \"infrastructure resource group\",\
+          \ logical grouping of virtual resources assigned to a tenant within an Infrastructure\
+          \ Domain."
+      typeNetworkData:
+        type: "string"
+        description: "The network data provides information about the particular virtual\
+          \ network resource to create. Cardinality can be \"0\" depending on the\
+          \ value of networkResourceType."
+      typeNetworkPortData:
+        type: "string"
+        description: "The binary software image file."
+      typeSubnetData:
+        $ref: "#/definitions/SubnetData"
+    example:
+      networkResourceType: "networkResourceType"
+      metadata:
+      - value: "value"
+        key: "key"
+      - value: "value"
+        key: "key"
+      typeSubnetData:
+        resourceId: "resourceId"
+        metadata: ""
+        ipVersion: "ipVersion"
+        isDhcpEnabled: true
+        addressPool:
+        - 0
+        - 0
+        networkId: "networkId"
+        gatewayIp: "gatewayIp"
+        cidr: "cidr"
+      networkResourceName: "networkResourceName"
+      affinityOrAntiAffinityConstraints: "affinityOrAntiAffinityConstraints"
+      reservationId: "reservationId"
+      typeNetworkPortData: "typeNetworkPortData"
+      locationConstraints: "locationConstraints"
+      resourceGroupId: "resourceGroupId"
+      typeNetworkData: "typeNetworkData"
+  AllocateNetworkResult:
+    type: "object"
+    required:
+    - "networkData"
+    - "networkPortData"
+    - "subnetData"
+    properties:
+      networkData:
+        $ref: "#/definitions/AllocateNetworkResult_networkData"
+      networkPortData:
+        $ref: "#/definitions/AllocateNetworkResult_networkPortData"
+      subnetData:
+        $ref: "#/definitions/AllocateNetworkResult_subnetData"
+    example:
+      networkData:
+        subnet:
+        - "subnet"
+        - "subnet"
+        metadata:
+        - value: "value"
+          key: "key"
+        - value: "value"
+          key: "key"
+        bandwidth: 0.80082819046101150206595775671303272247314453125
+        networkResourceName: "networkResourceName"
+        networkQoS:
+        - qosName: "qosName"
+          qosValue: "qosValue"
+        - qosName: "qosName"
+          qosValue: "qosValue"
+        zoneId: "zoneId"
+        networkResourceId: "networkResourceId"
+        operationalState: "operationalState"
+        networkType: "networkType"
+        networkPort:
+        - portType: "portType"
+          metadata:
+          - value: "value"
+            key: "key"
+          - value: "value"
+            key: "key"
+          resourceId: "resourceId"
+          bandwidth: 6.02745618307040320615897144307382404804229736328125
+          segmentId: "segmentId"
+          networkId: "networkId"
+          operationalState: "operationalState"
+          attachedResourceId: "attachedResourceId"
+        - portType: "portType"
+          metadata:
+          - value: "value"
+            key: "key"
+          - value: "value"
+            key: "key"
+          resourceId: "resourceId"
+          bandwidth: 6.02745618307040320615897144307382404804229736328125
+          segmentId: "segmentId"
+          networkId: "networkId"
+          operationalState: "operationalState"
+          attachedResourceId: "attachedResourceId"
+        isShared: true
+        segmentType: "segmentType"
+        sharingCriteria: "sharingCriteria"
+      subnetData:
+        metadata:
+        - value: "value"
+          key: "key"
+        - value: "value"
+          key: "key"
+        resourceId: "resourceId"
+        ipVersion: "ipVersion"
+        isDhcpEnabled: true
+        addressPool:
+        - 1
+        - 1
+        cidr: "cidr"
+        gatewayIp: "gatewayIp"
+        networkId: "networkId"
+        operationalState: "operationalState"
+      networkPortData:
+        portType: "portType"
+        metadata:
+        - value: "value"
+          key: "key"
+        - value: "value"
+          key: "key"
+        resourceId: "resourceId"
+        bandwidth: 6.02745618307040320615897144307382404804229736328125
+        segmentId: "segmentId"
+        networkId: "networkId"
+        operationalState: "operationalState"
+        attachedResourceId: "attachedResourceId"
+  SubnetData:
+    type: "object"
+    required:
+    - "addressPool"
+    - "cidr"
+    - "gatewayIp"
+    - "ipVersion"
+    - "isDhcpEnabled"
+    - "metadata"
+    - "networkId"
+    - "resourceId"
+    properties:
+      resourceId:
+        type: "string"
+        description: "Identifiers of the network Resource"
+      networkId:
+        type: "string"
+        description: "Network identifier the subnetwork Resource"
+      ipVersion:
+        type: "string"
+        description: "IP version of the subnetwork Resource"
+      gatewayIp:
+        type: "string"
+        description: "gateway of the subnetwork Resource"
+      cidr:
+        type: "string"
+        description: "cidr of the subnetwork Resource"
+      isDhcpEnabled:
+        type: "boolean"
+        description: "enable if dhcp of the network Resource"
+      addressPool:
+        type: "array"
+        description: "Address Pool format as range of valid address"
+        items:
+          type: "integer"
+      metadata:
+        $ref: "#/definitions/metaData"
+    example:
+      resourceId: "resourceId"
+      metadata: ""
+      ipVersion: "ipVersion"
+      isDhcpEnabled: true
+      addressPool:
+      - 0
+      - 0
+      networkId: "networkId"
+      gatewayIp: "gatewayIp"
+      cidr: "cidr"
+  inline_response_200:
+    properties:
+      NfviPops:
+        $ref: "#/definitions/NfviPops"
+      logicalLinkInterNfviPops:
+        $ref: "#/definitions/logicalLinkInterNfviPops"
+    example:
+      NfviPops: ""
+      logicalLinkInterNfviPops: ""
+  inline_response_201:
+    required:
+    - "interNfviPopConnnectivityId"
+    - "interNfviPopNetworkSegmentType"
+    properties:
+      interNfviPopConnnectivityId:
+        $ref: "#/definitions/interNfviPopConnnectivityId"
+      interNfviPopNetworkSegmentType:
+        $ref: "#/definitions/interNfviPopNetworkSegmentType"
+  NfviPops_inner_nfviPopAttributes_networkConnectivityEndpoint:
+    required:
+    - "netGwIpAddress"
+    properties:
+      netGwIpAddress:
+        type: "string"
+        description: "5GT - Reachable Gw IPv4 Address in terms of A.B.C.D (/32)."
+    description: "Information about network connectivity endpoints to the NFVI-PoP\
+      \ that the VIM manages which helps build topology information relative to NFVI-PoP\
+      \ connectivity to other NFVI-PoP or N-PoP."
+  NfviPops_inner_nfviPopAttributes_memoryResourceAttributes:
+    required:
+    - "allocatedCapacity"
+    - "availableCapacity"
+    - "reservedCapacity"
+    - "totalCapacity"
+    properties:
+      availableCapacity:
+        type: "string"
+        description: "The free capacity available for allocation and reservation of\
+          \ memory resources."
+      reservedCapacity:
+        type: "string"
+        description: "The reserved capacity of   memory resources."
+      totalCapacity:
+        type: "string"
+        description: "The total capacity of memory resources."
+      allocatedCapacity:
+        type: "string"
+        description: "The allocated capacity of memory resources."
+  NfviPops_inner_nfviPopAttributes_cpuResourceAttributes:
+    required:
+    - "allocatedCapacity"
+    - "availableCapacity"
+    - "reservedCapacity"
+    - "totalCapacity"
+    properties:
+      availableCapacity:
+        type: "string"
+        description: "The free capacity available for allocation and reservation of\
+          \ CPU resources."
+      reservedCapacity:
+        type: "string"
+        description: "The reserved capacity of   CPU resources."
+      totalCapacity:
+        type: "string"
+        description: "The total capacity of CPU resources."
+      allocatedCapacity:
+        type: "string"
+        description: "The allocated capacity of CPU resources."
+  NfviPops_inner_nfviPopAttributes_storageResourceAttributes:
+    required:
+    - "allocatedCapacity"
+    - "availableCapacity"
+    - "reservedCapacity"
+    - "totalCapacity"
+    properties:
+      availableCapacity:
+        type: "string"
+        description: "The free capacity available for allocation and reservation of\
+          \ storage resources."
+      reservedCapacity:
+        type: "string"
+        description: "The reserved capacity of storage resources."
+      totalCapacity:
+        type: "string"
+        description: "The total capacity of storage resources."
+      allocatedCapacity:
+        type: "string"
+        description: "The allocated capacity of storage resources."
+  NfviPops_inner_nfviPopAttributes_resourceZoneAttributes:
+    required:
+    - "cpuResourceAttributes"
+    - "memoryResourceAttributes"
+    - "metadata"
+    - "storageResourceAttributes"
+    - "zoneId"
+    - "zoneName"
+    - "zoneProperty"
+    - "zoneState"
+    properties:
+      zoneId:
+        type: "string"
+        description: "The identifier of the Resource Zone."
+      zoneName:
+        type: "string"
+        description: "The name of the Resource Zone."
+      zoneState:
+        type: "string"
+        description: "Information about the current state of the Resource Zone, e.g.\
+          \ if the Resource Zone is available."
+      zoneProperty:
+        type: "string"
+        description: "Set of properties that define the capabilities associated to\
+          \ the Resource Zone. Examples of capabilities may include: support of certain\
+          \ compute resource types (e.g. low performance, acceleration capabilities,\
+          \ etc. association to certain NFVI-PoP physical segregation (e.g. different\
+          \ power or network sub-systems, availability of redundancy power sub-systems),\
+          \ etc."
+      metadata:
+        type: "string"
+        description: "List of metadata key-value pairs used to associate meaningful\
+          \ metadata to the NFVI-PoP Zone."
+      memoryResourceAttributes:
+        $ref: "#/definitions/NfviPops_inner_nfviPopAttributes_memoryResourceAttributes"
+      cpuResourceAttributes:
+        $ref: "#/definitions/NfviPops_inner_nfviPopAttributes_cpuResourceAttributes"
+      storageResourceAttributes:
+        $ref: "#/definitions/NfviPops_inner_nfviPopAttributes_storageResourceAttributes"
+  NfviPops_inner_nfviPopAttributes:
+    required:
+    - "federatedVimId"
+    - "geographicalLocationInfo"
+    - "networkConnectivityEndpoint"
+    - "nfviPopId"
+    - "resourceZoneAttributes"
+    - "vimId"
+    properties:
+      geographicalLocationInfo:
+        type: "string"
+        description: "It provides information about the geographic location (e.g.\
+          \ geographic coordinates or address of the building, etc.) of the NFVI resources\
+          \ that the VIM manages."
+      vimId:
+        type: "string"
+        description: "Identification of the VIM."
+      federatedVimId:
+        type: "string"
+        description: "Identification of the Federated VIM."
+      networkConnectivityEndpoint:
+        type: "array"
+        items:
+          $ref: "#/definitions/NfviPops_inner_nfviPopAttributes_networkConnectivityEndpoint"
+      nfviPopId:
+        type: "string"
+        description: "Identification of the NFVI-PoP."
+      resourceZoneAttributes:
+        type: "array"
+        items:
+          $ref: "#/definitions/NfviPops_inner_nfviPopAttributes_resourceZoneAttributes"
+  NfviPops_inner:
+    required:
+    - "nfviPopAttributes"
+    properties:
+      nfviPopAttributes:
+        $ref: "#/definitions/NfviPops_inner_nfviPopAttributes"
+  logicalLinkInterNfviPops_inner_logicalLinks_networkQoS:
+    required:
+    - "linkCost"
+    - "linkCostValue"
+    - "linkDelay"
+    - "linkDelayValue"
+    properties:
+      linkCostValue:
+        type: "number"
+        description: "5GT - Value of Link Cost"
+      linkCost:
+        type: "string"
+        description: "5GT - Link cost name ."
+      linkDelayValue:
+        type: "number"
+        description: "5GT - Value of Link Delay (expressed in ms)"
+      linkDelay:
+        type: "string"
+        description: "5GT - Link delay name."
+    description: "5GT - Element providing information about Quality of Service attributes\
+      \ (cost and delay) that the network shall support."
+  logicalLinkInterNfviPops_inner_logicalLinks:
+    required:
+    - "availableBandwidth"
+    - "dstGwIpAddress"
+    - "interNfviPopNetworkTopology"
+    - "interNfviPopNetworkType"
+    - "localLinkId"
+    - "logicalLinkId"
+    - "networkLayer"
+    - "networkQoS"
+    - "remoteLinkId"
+    - "srcGwIpAddress"
+    - "totalBandwidth"
+    properties:
+      logicalLinkId:
+        type: "string"
+        description: "(numbered) Identifier of the logical link"
+      totalBandwidth:
+        type: "number"
+        description: "Total bandwidth capacity supported by the logical link (in Mbps)."
+      availableBandwidth:
+        type: "number"
+        description: "Available bandwidth capacity supported by the logical link (in\
+          \ Mbps)."
+      networkQoS:
+        $ref: "#/definitions/logicalLinkInterNfviPops_inner_logicalLinks_networkQoS"
+      srcGwIpAddress:
+        type: "string"
+        description: "5GT - Source NFVI-PoP Gw IPv4 Address in terms of A.B.C.D (/32)."
+      localLinkId:
+        type: "integer"
+        format: "uint32"
+        description: "Local Logical Link Id."
+      dstGwIpAddress:
+        type: "string"
+        description: "5GT - Destination NFVI-PoP Gw IPv4 Address in terms of A.B.C.D\
+          \ (/32)."
+      remoteLinkId:
+        type: "integer"
+        format: "uint32"
+        description: "Remote Logical Link Id."
+      networkLayer:
+        $ref: "#/definitions/networkLayer"
+      interNfviPopNetworkType:
+        $ref: "#/definitions/interNfviPopNetworkType"
+      interNfviPopNetworkTopology:
+        $ref: "#/definitions/interNfviPopNetworkTopology"
+    description: "5GT - Element providing information the attributes related to particular\
+      \ logical links between pair of NFVI-PoPs."
+  logicalLinkInterNfviPops_inner:
+    required:
+    - "logicalLinks"
+    properties:
+      logicalLinks:
+        $ref: "#/definitions/logicalLinkInterNfviPops_inner_logicalLinks"
+  metaData_inner:
+    required:
+    - "key"
+    - "value"
+    properties:
+      key:
+        type: "string"
+      value:
+        type: "string"
+    example:
+      value: "value"
+      key: "key"
+  logicalLinkPathList_inner:
+    required:
+    - "logicalLinkAttributes"
+    - "reqBandwidth"
+    - "reqLatency"
+    properties:
+      logicalLinkAttributes:
+        $ref: "#/definitions/logicalLinkAttributes"
+      reqBandwidth:
+        type: "number"
+        description: "requested bandwidth (in Mbps)."
+      reqLatency:
+        type: "number"
+        description: "5GT - requested maximum end-to-end latency (expressed in ms)"
+      metaData:
+        $ref: "#/definitions/metaData"
+  interNfviPopConnnectivityIdList_inner:
+    required:
+    - "interNfviPopConnnectivityId"
+    properties:
+      interNfviPopConnnectivityId:
+        $ref: "#/definitions/interNfviPopConnnectivityId"
+  VirtualNetwork_networkPort:
+    required:
+    - "attachedResourceId"
+    - "bandwidth"
+    - "networkId"
+    - "operationalState"
+    - "portType"
+    - "resourceId"
+    - "segmentId"
+    properties:
+      attachedResourceId:
+        type: "string"
+        description: "Identifier of the attached resource to the network port (e.g.\
+          \ a virtualised compute resource, or identifier of the virtual network interface).\
+          \ The cardinality can be \"0\" if there is no specific resource connected\
+          \ to the network port."
+      bandwidth:
+        type: "number"
+        description: "The bandwidth of the virtual network port (in Mbps). Cardinality\
+          \ can be \"0\" for virtual network ports without any specific allocated\
+          \ bandwidth."
+      metadata:
+        type: "array"
+        description: "List of metadata key-value pairs used by the consumer to associate\
+          \ meaningful metadata to the related virtualised resource."
+        items:
+          $ref: "#/definitions/metaData_inner"
+      networkId:
+        type: "string"
+        description: "Identifier of the network that the port belongs to. When creating\
+          \ a port, such port needs to be part of a network."
+      operationalState:
+        type: "string"
+        description: "The operational state of the virtual network port."
+      portType:
+        type: "string"
+        description: "Type of network port. Examples of types are access ports (layer\
+          \ 2 or 3), or trunk ports (layer 1) that become transport for multiple layer\
+          \ 2 or layer 3 networks."
+      resourceId:
+        type: "string"
+        description: "Identifier of the virtual network port."
+      segmentId:
+        type: "string"
+        description: "The isolated segment the network port belongs to. For instance,\
+          \ for a \"vlan\", it corresponds to the vlan identifier; and for a \"gre\"\
+          , this corresponds to a gre key. The cardinality can be \"0\" for flat networks\
+          \ without any specific segmentation."
+    example:
+      portType: "portType"
+      metadata:
+      - value: "value"
+        key: "key"
+      - value: "value"
+        key: "key"
+      resourceId: "resourceId"
+      bandwidth: 6.02745618307040320615897144307382404804229736328125
+      segmentId: "segmentId"
+      networkId: "networkId"
+      operationalState: "operationalState"
+      attachedResourceId: "attachedResourceId"
+  VirtualNetwork_networkQoS:
+    required:
+    - "qosName"
+    - "qosValue"
+    properties:
+      qosName:
+        type: "string"
+        description: "Name given to the QoS parameter."
+      qosValue:
+        type: "string"
+        description: "Value of the QoS parameter."
+    example:
+      qosName: "qosName"
+      qosValue: "qosValue"
+  AllocateNetworkResult_networkData:
+    required:
+    - "bandwidth"
+    - "isShared"
+    - "metadata"
+    - "networkPort"
+    - "networkQoS"
+    - "networkResourceId"
+    - "networkResourceName"
+    - "networkType"
+    - "operationalState"
+    - "segmentType"
+    - "sharingCriteria"
+    - "subnet"
+    - "zoneId"
+    properties:
+      bandwidth:
+        type: "number"
+        description: "Minimum network bandwidth (in Mbps)."
+      isShared:
+        type: "boolean"
+        description: "It defines whether the virtualised network is shared among consumers."
+      networkPort:
+        type: "array"
+        description: "Element providing information of an instantiated virtual network\
+          \ port."
+        items:
+          $ref: "#/definitions/VirtualNetwork_networkPort"
+      networkQoS:
+        type: "array"
+        description: "Element providing information about Quality of Service attributes\
+          \ that the network shall support. The cardinality can be \"0\" to allow\
+          \ for networks without any specified QoS requirements."
+        items:
+          $ref: "#/definitions/VirtualNetwork_networkQoS"
+      networkResourceId:
+        type: "string"
+        description: "Identifier of the virtualised network resource."
+      networkResourceName:
+        type: "string"
+        description: "Name of the virtualised network resource."
+      networkType:
+        type: "string"
+        description: "The type of network that maps to the virtualised network. This\
+          \ list is extensible. Examples are: \"local\", \"vlan\", \"vxlan\", \"gre\"\
+          , \"l3-vpn\", etc. The cardinality can be \"0\" to cover the case where\
+          \ this attribute is not required to create the virtualised network."
+      operationalState:
+        type: "string"
+        description: "The operational state of the virtualised network."
+      segmentType:
+        type: "string"
+        description: "The isolated segment for the virtualised network. For instance,\
+          \ for a \"vlan\" networkType, it corresponds to the vlan identifier; and\
+          \ for a \"gre\" networkType, this corresponds to a gre key. The cardinality\
+          \ can be \"0\" to allow for flat networks without any specific segmentation."
+      sharingCriteria:
+        type: "string"
+        description: "Only present for shared networks. Indicate the sharing criteria\
+          \ for this network. This criteria might be a list of authorized consumers."
+      subnet:
+        type: "array"
+        description: "Only present if the network provides layer 3 connectivity."
+        items:
+          type: "string"
+      zoneId:
+        type: "string"
+        description: "If present, it identifies the Resource Zone where the virtual\
+          \ network resources have been allocated."
+      metadata:
+        type: "array"
+        description: "List of metadata key-value pairs used by the consumer to\n \
+          \ associate meaningful metadata to the related virtualised resource."
+        items:
+          $ref: "#/definitions/metaData_inner"
+    description: "If network types are created satisfactorily, it contains the data\
+      \ relative to the instantiated virtualised network resource. Cardinality can\
+      \ be \"0\" if the request did not include creation of such type of resource."
+    example:
+      subnet:
+      - "subnet"
+      - "subnet"
+      metadata:
+      - value: "value"
+        key: "key"
+      - value: "value"
+        key: "key"
+      bandwidth: 0.80082819046101150206595775671303272247314453125
+      networkResourceName: "networkResourceName"
+      networkQoS:
+      - qosName: "qosName"
+        qosValue: "qosValue"
+      - qosName: "qosName"
+        qosValue: "qosValue"
+      zoneId: "zoneId"
+      networkResourceId: "networkResourceId"
+      operationalState: "operationalState"
+      networkType: "networkType"
+      networkPort:
+      - portType: "portType"
+        metadata:
+        - value: "value"
+          key: "key"
+        - value: "value"
+          key: "key"
+        resourceId: "resourceId"
+        bandwidth: 6.02745618307040320615897144307382404804229736328125
+        segmentId: "segmentId"
+        networkId: "networkId"
+        operationalState: "operationalState"
+        attachedResourceId: "attachedResourceId"
+      - portType: "portType"
+        metadata:
+        - value: "value"
+          key: "key"
+        - value: "value"
+          key: "key"
+        resourceId: "resourceId"
+        bandwidth: 6.02745618307040320615897144307382404804229736328125
+        segmentId: "segmentId"
+        networkId: "networkId"
+        operationalState: "operationalState"
+        attachedResourceId: "attachedResourceId"
+      isShared: true
+      segmentType: "segmentType"
+      sharingCriteria: "sharingCriteria"
+  AllocateNetworkResult_networkPortData:
+    required:
+    - "attachedResourceId"
+    - "bandwidth"
+    - "networkId"
+    - "operationalState"
+    - "portType"
+    - "resourceId"
+    - "segmentId"
+    properties:
+      attachedResourceId:
+        type: "string"
+        description: "Identifier of the attached resource to the network port (e.g.\
+          \ a virtualised compute resource, or identifier of the virtual network interface).\
+          \ The cardinality can be \"0\" if there is no specific resource connected\
+          \ to the network port."
+      bandwidth:
+        type: "number"
+        description: "The bandwidth of the virtual network port (in Mbps). Cardinality\
+          \ can be \"0\" for virtual network ports without any specific allocated\
+          \ bandwidth."
+      metadata:
+        type: "array"
+        description: "List of metadata key-value pairs used by the consumer to associate\
+          \ meaningful metadata to the related virtualised resource."
+        items:
+          $ref: "#/definitions/metaData_inner"
+      networkId:
+        type: "string"
+        description: "Identifier of the network that the port belongs to. When creating\
+          \ a port, such port needs to be part of a network."
+      operationalState:
+        type: "string"
+        description: "The operational state of the virtual network port."
+      portType:
+        type: "string"
+        description: "Type of network port. Examples of types are access ports (layer\
+          \ 2 or 3), or trunk ports (layer 1) that become transport for multiple layer\
+          \ 2 or layer 3 networks."
+      resourceId:
+        type: "string"
+        description: "Identifier of the virtual network port."
+      segmentId:
+        type: "string"
+        description: "The isolated segment the network port belongs to. For instance,\
+          \ for a \"vlan\", it corresponds to the vlan identifier; and for a \"gre\"\
+          , this corresponds to a gre key. The cardinality can be \"0\" for flat networks\
+          \ without any specific segmentation."
+    description: "If network types are created satisfactorily, it contains the data\
+      \ relative to the instantiated virtualised network resource. Cardinality can\
+      \ be \"0\" if the request did not include creation of such type of resource."
+    example:
+      portType: "portType"
+      metadata:
+      - value: "value"
+        key: "key"
+      - value: "value"
+        key: "key"
+      resourceId: "resourceId"
+      bandwidth: 6.02745618307040320615897144307382404804229736328125
+      segmentId: "segmentId"
+      networkId: "networkId"
+      operationalState: "operationalState"
+      attachedResourceId: "attachedResourceId"
+  AllocateNetworkResult_subnetData:
+    required:
+    - "addressPool"
+    - "cidr"
+    - "gatewayIp"
+    - "ipVersion"
+    - "isDhcpEnabled"
+    - "networkId"
+    - "operationalState"
+    - "resourceId"
+    properties:
+      addressPool:
+        type: "array"
+        description: "Address pools for the network/subnetwork. The cardinality can\
+          \ be 0 when VIM is allowed to allocate all addresses in the CIDR except\
+          \ for the address of the network/subnetwork gateway."
+        items:
+          type: "integer"
+      cidr:
+        type: "string"
+        description: "The CIDR of the network/subnetwork, i.e. network address and\
+          \ subnet mask."
+      gatewayIp:
+        type: "string"
+        description: "The IP address of the network/subnetwork gateway."
+      ipVersion:
+        type: "string"
+        description: "The IP version of the network/subnetwork."
+      isDhcpEnabled:
+        type: "boolean"
+        description: "True when DHCP is enabled for this network/subnetwork, or false\
+          \ otherwise."
+      metadata:
+        type: "array"
+        description: "List of metadata key-value pairs used by the consumer to associate\
+          \ meaningful metadata to the related virtualised resource."
+        items:
+          $ref: "#/definitions/metaData_inner"
+      networkId:
+        type: "string"
+        description: "The identifier of the virtualised network that the virtualised\
+          \ sub-network is attached to. The cardinality can be 0 to cover the case\
+          \ where this type is used to describe the L3 attributes of a network rather\
+          \ than a subnetwork."
+      operationalState:
+        type: "string"
+        description: "The operational state of the virtualised sub-network."
+      resourceId:
+        type: "string"
+        description: "Identifier of the virtualised sub-network."
+    description: "If subnet types are created satisfactorily, it contains the data\
+      \ relative to the allocated subnet. Cardinality can be \"0\" if the request\
+      \ did not include creation of such type of resource."
+    example:
+      metadata:
+      - value: "value"
+        key: "key"
+      - value: "value"
+        key: "key"
+      resourceId: "resourceId"
+      ipVersion: "ipVersion"
+      isDhcpEnabled: true
+      addressPool:
+      - 1
+      - 1
+      cidr: "cidr"
+      gatewayIp: "gatewayIp"
+      networkId: "networkId"
+      operationalState: "operationalState"

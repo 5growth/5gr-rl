@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+</head>
+<body>
+<div align="center">YAML of descriptor</div>
+<div align="center">
+    <textarea class="form-control" id="yaml_textarea" name="yaml_textarea" cols="60" rows="10">{{ test_editor }}
+    </textarea>
+</div>
+
+<br>
+<div align="center">
+    <button id="close" type="button" class="btn btn-secondary">Close</button>
+</div>
+</body>
+<script>
+
+    $('#close').click(function () {
+        window.close();
+    });
+
+</script>
+</html>

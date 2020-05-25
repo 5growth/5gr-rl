@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Input/Output of RL</h1>
+            <!--<div class="panel-body">
+                <pre style="height: 600px;"><code style="white-space: pre; overflow-x: auto; display: inline-block; min-width: 100%;">{{ logs }}</code>
+                </pre>
+            </div>-->
+
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Body Input of RL
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                            <pre style="height: 600px;"><code
+                                    style="white-space: pre; overflow-x: auto; display: inline-block; min-width: 100%;">{{ input }}</code>
+                </pre>
+                </div>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Body Ouput of RL
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                            <pre style="height: 600px;"><code
+                                    style="white-space: pre; overflow-x: auto; display: inline-block; min-width: 100%;">{{ output }}</code>
+                </pre>
+                </div>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+</div>
+<!-- /.col-lg-6 -->
+<!-- /.col-lg-6 -->
+</div>
+</div>
+<!-- /.container-fluid -->
+{% endblock %}

@@ -1,0 +1,1887 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">RL Databases</h1>
+    </div>
+</div>
+{% if table_name == 'domain'%}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Domains
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <table width="100%" class="table table-striped table-bordered table-hover">
+                    <thead>
+                    {% if list_domain %}
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Domain Id</th>
+                        <th>Account Type</th>
+                        <th>IP Address</th>
+                        <th>Port</th>
+                        <th>URL</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Tenant Name</th>
+                        <th>Monitoring Endpoint</th>
+                        <th></th>
+                    </tr>
+                    {% endif %}
+                    </thead>
+                    <tbody>
+                    {% for dict_item in list_domain %}
+                    <tr {% if dict_item.type == "WIM" %} class="info" {% endif %}>
+                        <td>{{ dict_item.name }}</td>
+                        <td >{{ dict_item.type }}</td>
+                        <td>{{ dict_item.domain_id }}</td>
+                        <td>{{ dict_item.account_type }}</td>
+                        <td>{{ dict_item.ip }}</td>
+                        <td>{{ dict_item.port }}</td>
+                        <td>{{ dict_item.url }}</td>
+                        <td>{{ dict_item.username }}</td>
+                        <td>************</td>
+                        <td>{{ dict_item.tenantName }}</td>
+                        <td>{{ dict_item.monitoringEndpoint }}</td>
+                        <td>
+                            <button class="btn btn-default" data-toggle="modal"
+                                    data-target="#domainModal{{ dict_item.id }}" title="Modify Domain Entry"><span
+                                    class="fa fa-edit"></span></button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <!-- /.table-responsive -->
+                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#newDomainModal">New Entry
+                </button>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endif %}
+
+{% if table_name == 'users'%}
+<div class="row">
+    <div class="col-lg-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                Users
+                <h4 class="pull-right panel-title">
+                    <a data-toggle="collapse" href="#collapseOne"><i class="fa fa-toggle-down"></i></a>
+                </h4>
+            </div>
+            <!-- /.panel-heading -->
+            <div id="collapseOne" class="panel-collapse collapse in">
+                <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        {% if list_users %}
+                        <tr>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Role</th>
+                            <th></th>
+                            <!--<th></th>-->
+                        </tr>
+                        {% endif %}
+                        </thead>
+                        <tbody>
+                        {% for dict_item in list_users %}
+                        <tr>
+                            <td>{{ dict_item.username }}</td>
+                            <td> ************</td>
+                            <td>{{ dict_item.role }}</td>
+                            <td>
+                                <button class="btn btn-default" data-toggle="modal"
+                                        data-target="#userModal{{ dict_item.id }}" title="Modify User"><span
+                                        class="fa fa-edit"></span></button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-6 -->
+    <div class="col-lg-6">
+    </div>
+</div>
+{% endif %}
+
+{% if table_name == 'serviceid'%}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-yellow">
+            <div class="panel-heading">
+                ServiceId
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                {% if list_connectivity %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>ServiceId</th>
+                            <th>InterNfvi PoP Connectivity Id</th>
+                            <th>CallId Involved</th>
+                            <th>Logical Link Id</th>
+                            <th>Req BW (MB)</th>
+                            <th>Req Latency</th>
+                            <th>Involved WIM</th>
+                            {% if session['role'] == 'Admin' %}
+                            <th></th>
+                            {% endif %}
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for dict_item in list_connectivity %}
+                        {% set calls_list = [] %}
+                        {% for key, value in dict_item.callIdInvolved.items() %}
+                        {{ calls_list.append(key)|default("", True) }}
+                        {% endfor %}
+                        <tr>
+                            <td>{{ dict_item.serviceId }}</td>
+                            <td>{{ dict_item.interNfviPopConnectivityId }}</td>
+                            <td>{{ calls_list|join(', ') }}
+                                </td>
+                            <td>{{ dict_item.logicalLinkId }}</td>
+                            <td>{{ dict_item.reqBandwidth }}</td>
+                            <td>{{ dict_item.reqLatency }}</td>
+                            <td>{{ dict_item.wimInvolved }}</td>
+                            {% if session['role'] == 'Admin' %}
+                            <td>
+                                <button class="btn btn-default" data-toggle="modal"
+                                        data-target="#connectivityModal{{ dict_item.id }}" title="Modify Connectivity">
+                                    <span class="fa fa-edit"></span></button>
+                            </td>
+                            {% endif %}
+                            <td>
+                                <a href="/call_view/{{ dict_item.interNfviPopConnectivityId }}" onclick="
+                                window.open(this.href, 'Call View', 'left=200,top=200,width=800,height=600,toolbar=0,resizable=0');
+                                return false;" class="btn btn-primary" role="button" title="Show details">
+                                    <span class="fa fa-eye"></span>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+                {% if session['role'] == 'Admin' %}
+                <div class="btn-toolbar">
+                    <form id="delete_all_serviceids" action="{{ url_for('remove_all_elements') }}" method="POST">
+                        <input type="hidden" name="table_to_choose" value="internfvipopconnectivity">
+                        <button type="button" class="btn btn-danger pull-right" data-toggle="modal" data-target="#deleteAllServiceIdsModal">Delete all rows</button>
+                    </form>
+                </div>
+                {% endif%}
+                {% endif %}
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endif %}
+
+{% if table_name == 'nfvipops'%}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                NFVI-PoPs
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        {% if list_nfvipops %}
+                        <tr>
+                            <th>Geo Location</th>
+                            <th>NfviPop Id</th>
+                            <th>VimId / Federated VimId</th>
+                            <th>Federated</th>
+                            <th>Network Connection Endpoint</th>
+                            <th></th>
+                        </tr>
+                        {% endif %}
+                        </thead>
+                        <tbody>
+                        {% for dict_item in list_nfvipops %}
+                        <tr{% if dict_item.federated == True %} class="danger" {% endif %}>
+                            <td>{{ dict_item.geographicalLocationInfo }}</td>
+                            <td>{{ dict_item.nfviPopId }}</td>
+                            {% if dict_item.federated == True %}
+                            <td>{{ dict_item.federatedVimId }}</td>
+                            {% else %}
+                            <td>{{ dict_item.vimId }}</td>
+                            {% endif %}
+                            <td>{{ dict_item.federated }}</td>
+                            <td>{{ dict_item.networkCE }}</td>
+                            <td>
+                                <button class="btn btn-default" data-toggle="modal"
+                                        data-target="#popsModal{{ dict_item.id }}" title="Modify PoPs"><span
+                                        class="fa fa-edit"></span></button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#newPopModal">New Entry
+                </button>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-8 -->
+</div>
+{% endif %}
+
+{% if table_name == 'loglinks'%}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-yellow">
+            <div class="panel-heading">
+                Logical Links
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        {% if list_lls %}
+                        <tr>
+                            <th>Logical Link Id</th>
+                            <th>Total BW (MB)</th>
+                            <th>Available BW (MB)</th>
+                            <th>Link Cost Value</th>
+                            <th>Link Cost</th>
+                            <th>Link Delay Value</th>
+                            <th>Link Delay</th>
+                            <th>SRC GW</th>
+                            <th>Local Link Id</th>
+                            <th>DST GW</th>
+                            <th>Remote Link Id</th>
+                            <th>Network Layer</th>
+                            <th>InterNfviPoP Network Type</th>
+                            <th>InterNfviPoP Network Topology</th>
+                            {% if session['role'] == 'Admin' %}
+                            <th></th>
+                            <th></th>
+                            {% endif %}
+                        </tr>
+                        {% endif %}
+                        </thead>
+                        <tbody>
+                        {% for dict_item in list_lls %}
+                        <tr>
+                            <td>{{ dict_item.logicalLinkId }}</td>
+                            <td>{{ "{:.1f}".format(dict_item.totalBandwidth|int) }}</td>
+                            <td>{{ "{:.1f}".format(dict_item.availableBandwidth|int) }}</td>
+                            <td>{{ "{:.1f}".format(dict_item.linkCostValue|int) }}</td>
+                            <td>{{ dict_item.linkCost }}</td>
+                            <td>{{ "{:.2f}".format(dict_item.linkDelayValue) }}</td>
+                            <td>{{ dict_item.linkDelay }}</td>
+                            <td>{{ dict_item.srcGwIpAddress }}</td>
+                            <td>{{ dict_item.localLinkId }}</td>
+                            <td>{{ dict_item.dstGwIpAddress }}</td>
+                            <td>{{ dict_item.remoteLinkId }}</td>
+                            <td>{{ dict_item.networkLayer }}</td>
+                            <td>{{ dict_item.interNfviPopNetworkType }}</td>
+                            <td>{{ dict_item.interNfviPopNetworkTopology }}</td>
+                            {% if session['role'] == 'Admin' %}
+                            <td>
+                                <button class="btn btn-default" data-toggle="modal"
+                                        data-target="#llsModal{{ dict_item.id }}" title="Modify the LL"><span
+                                        class="fa fa-edit"></span></button>
+                            </td>
+                            <td>
+                                <button class="btn btn-success" data-toggle="modal"
+                                        data-target="#instantiateLlsModal{{ dict_item.id }}" title="Instantiate the LL"><span
+                                        class="fa fa-play"></span></button>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+                <div class="btn-toolbar">
+                    <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#newLLModal">New Entry
+                    </button>
+                    <form id="delete_all_lls" action="{{ url_for('remove_all_elements') }}" method="POST">
+                        <input type="hidden" name="table_to_choose" value="llinternfvipops">
+                        <button type="button" class="btn btn-danger pull-right" data-toggle="modal" data-target="#deleteAllLLsModal">Delete all LLs</button>
+                    </form>
+                </div>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-8 -->
+</div>
+<div class="row">
+    <div class="col-lg-4">
+        <div class="well">
+            <div class="form-group">
+                <label> Upload a Logical Links file</label>
+                <form action="{{ url_for('add_element_from_file') }}" method="POST" enctype="multipart/form-data">
+                    <div class="form-row">
+                        <input type="file" class="form-control-file" name="file_to_add" required>
+                        <input type="hidden" name="table_to_choose" value="llinternfvipops">
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if table_name == 'res_attr'%}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Resource Attributes
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        {% if list_resources %}
+                        <tr>
+                            <th>NfviPoP Id</th>
+                            <th>Zone Id</th>
+                            <th>Zone Name</th>
+                            <th>Zone State</th>
+                            <th>Zone Property</th>
+                            <th>Metadata</th>
+                            <th>Ava/Res/All/Tot Memory [MB]</th>
+                            <th>Ava/Res/All/Tot Nr. of CPU</th>
+                            <th>Ava/Res/All/Tot Storage [GB]</th>
+                            <th></th>
+                        </tr>
+                        {% endif %}
+                        </thead>
+                        <tbody>
+                        {% for dict_item in list_resources %}
+                        <tr>
+                            <td>{{ dict_item.nfviPopId}}</td>
+                            <td>{{ dict_item.zoneId }}</td>
+                            <td>{{ dict_item.zoneName }}</td>
+                            <td>{{ dict_item.zoneState }}</td>
+                            <td>{{ dict_item.zoneProperty }}</td>
+                            <td>{{ dict_item.metadata_resourceattributes }}</td>
+                            <td>{{ dict_item.availableMemory }}/{{ dict_item.reservedMemory }}/{{
+                                dict_item.allocatedMemory }}/{{ dict_item.totalMemory }}
+                            </td>
+                            <td>{{ dict_item.availableCpu }}/{{ dict_item.reservedCpu }}/{{ dict_item.allocatedCpu }}/{{
+                                dict_item.totalCpu }}
+                            </td>
+                            <td>{{ dict_item.availableStorage }}/{{ dict_item.reservedStorage }}/{{
+                                dict_item.allocatedStorage }}/{{ dict_item.totalStorage }}
+                            </td>
+                            <td>
+                                <button class="btn btn-default" data-toggle="modal"
+                                        data-target="#resattrsModal{{ dict_item.id }}"
+                                        title="Modify Resource Attributes"><span
+                                        class="fa fa-edit"></span></button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#newResourceAttModal">New
+                    Entry
+                </button>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-8 -->
+</div>
+{% endif %}
+
+{% if table_name == 'stitch'%}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Stitching
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        {% if list_stitching %}
+                        <tr>
+                            <th>InElement Id</th>
+                            <th>InElement Add</th>
+                            <th>aLink Id</th>
+                            <th>OutElement Id</th>
+                            <th>OutElement Add</th>
+                            <th>zLink Id</th>
+                            <th>Link Cost</th>
+                            <th>Link Delay</th>
+                            <th>Link Av. BW (MB)</th>
+                            <th></th>
+                        </tr>
+                        {% endif %}
+                        </thead>
+                        <tbody>
+                        {% for dict_item in list_stitching %}
+                        <tr>
+                            <td>{{ dict_item.ingressElementId }}</td>
+                            <td>{{ dict_item.ingressElementAddress }}</td>
+                            <td>{{ dict_item.aLinkId }}</td>
+                            <td>{{ dict_item.egressElementId }}</td>
+                            <td>{{ dict_item.egressElementAddress }}</td>
+                            <td>{{ dict_item.zLinkId }}</td>
+                            <td>{{ dict_item.linkCost }}</td>
+                            <td>{{ dict_item.linkDelay }}</td>
+                            <td>{{ dict_item.linkAvailBw }}</td>
+                            <td>
+                                <button class="btn btn-default" data-toggle="modal"
+                                        data-target="#stitchModal{{ dict_item.id }}" title="Modify Stitching Link"><span
+                                        class="fa fa-edit"></span></button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="btn-toolbar">
+                    <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#newStitchingModal">New
+                        Entry
+                    </button>
+                    <form id="delete_all_stitchings" action="{{ url_for('remove_all_elements') }}" method="POST">
+                        <input type="hidden" name="table_to_choose" value="stitching">
+                        <button type="button" class="btn btn-danger pull-right" data-toggle="modal" data-target="#deleteAllStitchingsModal">Delete all rows</button>
+                    </form>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-8 -->
+</div>
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="well">
+            <div class="form-group">
+                <label> Upload a Stitching file</label>
+                <form action="{{ url_for('add_element_from_file') }}" method="POST" enctype="multipart/form-data">
+                    <div class="form-row">
+                        <input type="file" class="form-control-file" name="file_to_add" required>
+                        <input type="hidden" name="table_to_choose" value="stitching">
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if table_name == 'virlinks'%}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Virtual Links
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        {% if list_vls %}
+                        <tr>
+                            <th>Service Id</th>
+                            <th>Name</th>
+                            {% if session['role'] == 'Admin' %}<th>Net ID</th>{% endif %}
+                            <th>Vim Id</th>
+                            <th>Floating IP</th>
+                            <th>CIDR</th>
+                            <th>VLAN ID</th>
+                            <th>Pool</th>
+                            {% if session['role'] == 'Admin' %}
+                            <th></th>
+                            {% endif %}
+                        </tr>
+                        {% endif %}
+                        </thead>
+                        <tbody>
+                        {% for dict_item in list_vls %}
+                        <tr>
+                            <td>{{ dict_item.serviceId }}</td>
+                            <td>{{ dict_item.vlName }}</td>
+                            {% if session['role'] == 'Admin' %}<td>{{ dict_item.networkId }}</td>{% endif %}
+                            <td>{{ dict_item.vimId }}</td>
+                            <td>{{ dict_item.floatingIp }}</td>
+                            <td>192.168.{{ dict_item.cidr }}.0/24</td>
+                            <td>{{ dict_item.vlanId }}</td>
+                            <td>{{ dict_item.pool }} ({% if dict_item.pool == 0 %}2{% else %}{{1 + 20 *dict_item.pool}}{% endif%}-{% if dict_item.pool == 12 %}254{% else %}{{20 *dict_item.pool+20}}{% endif%})</td>
+                            {% if session['role'] == 'Admin' %}
+                            <td>
+                                <button class="btn btn-default" data-toggle="modal"
+                                        data-target="#VLsModal{{ dict_item.id }}" title="Modify Virtual Links"><span
+                                        class="fa fa-edit"></span></button>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+                {% if session['role'] == 'Admin' %}
+                <!--<button class="btn btn-primary pull-right" data-toggle="modal" data-target="#newVLModal">New
+                    Entry
+                </button>-->
+                {% endif %}
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-8 -->
+</div>
+{% endif %}
+
+{% if table_name == 'users'%}
+<!-- Modals for users -->
+{% for dict_item in list_users %}
+<div class="modal fade" id="userModal{{ dict_item.id }}" tabindex="-1" role="dialog" aria-labelledby="userModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="userModalLabel">Modify User Fields</h4>
+            </div>
+            <form role="form" action="{{ url_for('modify_element') }}" method="post">
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input class="form-control" name="username" value="{{ dict_item.username }}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input class="form-control" name="password" type="password" value="******" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Role</label>
+                                <select class="form-control" name="role">
+                                    <option{% if dict_item.role==
+                                    'Admin' %} selected {% endif %}>Admin</option>
+                                    <option{% if dict_item.role==
+                                    'Member' %} selected {% endif %}>Member</option>
+                                </select>
+                            </div>
+                            <input type="hidden" name="id" value="{{ dict_item.id }}">
+                            <input type="hidden" name="table_to_choose" value="users">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-danger" formaction="{{ url_for('delete_element') }}">Delete
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+{% endfor %}
+{% endif %}
+
+{% if table_name == 'domain'%}
+<!-- Modals for domain list -->
+{% for dict_item in list_domain %}
+<div class="modal fade" id="domainModal{{ dict_item.id }}" tabindex="-1" role="dialog"
+     aria-labelledby="domainModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="domainModalLabel">Modify Domain Element #{{ dict_item.domain_id }}</h4>
+            </div>
+            <form role="form" action="{{ url_for('modify_element') }}" method="post">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input class="form-control" name="name" value="{{ dict_item.name }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Domain Id</label>
+                                <input class="form-control" name="name" value="{{ dict_item.domain_id }}" disabled>
+                            </div>
+                            {% if session['role'] == 'Admin' %}
+                            <div class="form-group">
+                                <label>Type</label>
+                                <select class="form-control" name="type">
+                                    <option {% if dict_item.type==
+                                    'VIM' %} selected {% endif %}>VIM</option>
+                                    <option {% if dict_item.type==
+                                    'WIM' %} selected {% endif %}>WIM</option>
+                                </select>
+                            </div>
+                            {% else %}
+                            <div class="form-group">
+                                <label>Type</label>
+                                <input class="form-control" name="type" value="{{ dict_item.type }}" disabled>
+                            </div>
+                            {% endif %}
+                            <div class="form-group">
+                                <label>Account Type</label>
+                                <input class="form-control" name="account_type" value="{{ dict_item.account_type }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>IP Address</label>
+                                <input class="form-control" name="ip" value="{{ dict_item.ip }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Port</label>
+                                <input class="form-control" name="port" value="{{ dict_item.port }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Url</label>
+                                <input class="form-control" name="url" value="{{ dict_item.url }}">
+                            </div>
+                            <div class="form-group">
+                                <label>User Name</label>
+                                <input class="form-control" name="username" value="{{ dict_item.username }}">
+                            </div>
+                            <div class="form-group">
+                                <label>User Password</label>
+                                <input class="form-control" id="password-field{{ dict_item.id }}" name="userpassword" type="password"
+                                       value="{{ dict_item.userpassword }}">
+                                <span data-toggle="#password-field{{ dict_item.id }}" class="fa fa-fw fa-eye toggle-password{{ dict_item.id }}" style="float: right; margin-right: 8px; margin-top: -23px; position: relative; z-index: 2; cursor:pointer;"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Tenant Name</label>
+                                <input class="form-control" name="tenantName" value="{{ dict_item.tenantName }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Monitoring Endpoint</label>
+                                <input class="form-control" name="monitoringEndpoint" value="{{ dict_item.monitoringEndpoint }}">
+                            </div>
+                            <input type="hidden" name="id" value="{{ dict_item.id }}">
+                            <input type="hidden" name="table_to_choose" value="domainlist">
+                            <!--<div class="form-group">
+                                <label>Role</label>
+                                <input class="form-control" value="{{ dict_item.role }}">
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-danger" formaction="{{ url_for('delete_element') }}">
+                        Delete
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+$(".toggle-password{{ dict_item.id }}").click(function() {
+  $(this).toggleClass("fa-eye fa-eye-slash");
+  var input = $($(this).attr("data-toggle"));
+  if (input.attr("type") == "password") {
+    input.attr("type", "text");
+  } else {
+    input.attr("type", "password");
+  }
+});
+</script>
+{% endfor %}
+{% endif %}
+
+{% if table_name == 'serviceid'%}
+<!-- Modals for interNfviPop Connectivity -->
+{% for dict_item in list_connectivity %}
+<div class="modal fade" id="connectivityModal{{ dict_item.id }}" tabindex="-1" role="dialog"
+     aria-labelledby="connectivityModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="connectivityModalLabel">Modify InterNfviPoP Connectivity Fields</h4>
+            </div>
+            <form role="form" action="{{ url_for('modify_element') }}" method="post">
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Service Id</label>
+                                <input class="form-control" name="serviceId" value="{{ dict_item.serviceId}}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Inter NfviPop Connectivity Id</label>
+                                <input class="form-control" name="interNfviPopConnectivityId"
+                                       value="{{ dict_item.interNfviPopConnectivityId }}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>CallId Involved</label>
+                                <input class="form-control" name="callIdInvolved"
+                                       value="{{ dict_item.callIdInvolved }}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Logical Link Id</label>
+                                <input class="form-control" name="logicalLinkId" value="{{ dict_item.logicalLinkId }}"
+                                       disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Required Bandwidth (MB)</label>
+                                <input class="form-control" name="reqBandwidth" value="{{ dict_item.reqBandwidth }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Required Latency</label>
+                                <input class="form-control" name="reqLatency" value="{{ dict_item.reqLatency }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Involved WIM</label>
+                                <input class="form-control" name="wimInvolved" value="{{ dict_item.wimInvolved }}"
+                                       disabled>
+                            </div>
+                            <input type="hidden" name="id" value="{{ dict_item.id }}">
+                            <input type="hidden" name="table_to_choose" value="internfvipopconnectivity">
+                            <!--<div class="form-group">
+                                <label>Role</label>
+                                <input class="form-control" value="{{ dict_item.role }}">
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    Delete Button does not call the WIMs involved, just erase the ServiceId from DB
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-danger" formaction="{{ url_for('delete_element') }}">
+                        Delete
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+{% endfor %}
+{% endif %}
+
+{% if table_name == 'nfvipops'%}
+<!-- Modals for Pops -->
+{% for dict_item in list_nfvipops %}
+<div class="modal fade" id="popsModal{{ dict_item.id }}" tabindex="-1" role="dialog" aria-labelledby="popsModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="popsModalLabel">Modify PoP Fields</h4>
+            </div>
+            <form role="form" action="{{ url_for('modify_element') }}" method="post">
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Geographical Location Info</label>
+                                <input class="form-control" name="geographicalLocationInfo"
+                                       value="{{ dict_item.geographicalLocationInfo }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Nfvi PoP Id</label>
+                                <input class="form-control" name="nfviPopId" value="{{ dict_item.nfviPopId }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Vim Id</label>
+                                <input class="form-control" name="vimId" value="{{ dict_item.vimId }}" id="input_vimId_{{dict_item.id}}">
+                            </div>
+                            <div class="form-group">
+                                <label>Federated Vim Id</label>
+                                <input class="form-control" name="federatedVimId" value="{{ dict_item.federatedVimId }}" id="input_federatedVimId_{{dict_item.id}}">
+                            </div>
+                            <div class="form-group">
+                                <label>Federated</label>
+                                <select class="form-control" name="federated" id="select_federated_{{dict_item.id}}">
+                                    <option {% if dict_item.federated == True %} selected {% endif %} value="True">True</option>
+                                    <option {% if dict_item.federated == False %} selected {% endif %} value="False">False</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Network Connection EndPoint</label>
+                                <input class="form-control" name="networkCE"
+                                       value="{{ dict_item.networkCE|join(' ') }}"
+                                       title="Network Connection EndPoint should be listed with a space among the addresses.">
+                                <p class="form-text text-muted">Network Connection EndPoint
+                                    should be listed with a space among the addresses.</p>
+                            </div>
+                            <input type="hidden" name="id" value="{{ dict_item.id }}">
+                            <input type="hidden" name="table_to_choose" value="nfvipops">
+                            <!--<div class="form-group">
+                                <label>Role</label>
+                                <input class="form-control" value="{{ dict_item.role }}">
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-danger" formaction="{{ url_for('delete_element') }}">
+                        Delete
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    $(function() {
+        $('#select_federated_{{dict_item.id}}').on('change', function() {
+            $('#input_vimId_{{dict_item.id}}').prop('disabled', this.value != 'False');
+            $('#input_federatedVimId_{{dict_item.id}}').prop('disabled', this.value == 'False');
+        })
+        .change();
+    });
+</script>
+{% endfor %}
+{% endif %}
+
+{% if table_name == 'loglinks'%}
+<!-- Modals for editing LLs entry -->
+{% for dict_item in list_lls %}
+<div class="modal fade" id="llsModal{{ dict_item.id }}" tabindex="-1" role="dialog" aria-labelledby="llsModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="llsModalLabel">Modify LL Fields</h4>
+            </div>
+            <form role="form" action="{{ url_for('modify_element') }}" method="post">
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Logical Link Id</label>
+                                <input class="form-control" name="logicalLinkId" value="{{ dict_item.logicalLinkId }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Total Bandwidth (MB)</label>
+                                <input class="form-control" name="totalBandwidth"
+                                       value="{{ dict_item.totalBandwidth }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Available Bandwidth (MB)</label>
+                                <input class="form-control" name="availableBandwidth"
+                                       value="{{ dict_item.availableBandwidth }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Link Cost Value</label>
+                                <input class="form-control" name="linkCostValue" value="{{ dict_item.linkCostValue }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Link Cost</label>
+                                <input class="form-control" name="linkCost" value="{{ dict_item.linkCost }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Link Delay Value</label>
+                                <input class="form-control" name="linkDelayValue"
+                                       value="{{ dict_item.linkDelayValue }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Link Delay</label>
+                                <input class="form-control" name="linkDelay" value="{{ dict_item.linkDelay }}">
+                            </div>
+                            <div class="form-group">
+                                <label>SRC Gateway IP Address</label>
+                                <input class="form-control" name="srcGwIpAddress"
+                                       value="{{ dict_item.srcGwIpAddress }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Local Link Id</label>
+                                <input class="form-control" name="localLinkId" value="{{ dict_item.localLinkId }}">
+                            </div>
+                            <div class="form-group">
+                                <label>DST Gateway IP Address</label>
+                                <input class="form-control" name="dstGwIpAddress"
+                                       value="{{ dict_item.dstGwIpAddress }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Remote Link Id</label>
+                                <input class="form-control" name="remoteLinkId" value="{{ dict_item.remoteLinkId }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Network Layer</label>
+                                <input class="form-control" name="networkLayer" value="{{ dict_item.networkLayer }}">
+                            </div>
+                            <div class="form-group">
+                                <label>InterNfvi PoP Network Type</label>
+                                <input class="form-control" name="interNfviPopNetworkType"
+                                       value="{{ dict_item.interNfviPopNetworkType }}">
+                            </div>
+                            <div class="form-group">
+                                <label>InterNfvi PoP Network Topology</label>
+                                <input class="form-control" name="interNfviPopNetworkTopology"
+                                       value="{{ dict_item.interNfviPopNetworkTopology }}">
+                            </div>
+                            {% if session['role'] == 'Admin' %}
+                            <div class="form-group">
+                                <label>pathLL</label>
+                                <input class="form-control" name="pathLL"
+                                       value="{{ dict_item.pathLL }}" disabled>
+                            </div>
+                            {% endif %}
+                            <input type="hidden" name="id" value="{{ dict_item.id }}">
+                            <input type="hidden" name="table_to_choose" value="llinternfvipops">
+                            <!--<div class="form-group">
+                                <label>Role</label>
+                                <input class="form-control" value="{{ dict_item.role }}">
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-danger" formaction="{{ url_for('delete_element') }}">
+                        Delete
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+{% endfor %}
+{% endif %}
+
+{% if table_name == 'res_attr'%}
+<!-- Modals for Resource Attribute -->
+{% for dict_item in list_resources %}
+<div class="modal fade" id="resattrsModal{{ dict_item.id }}" tabindex="-1" role="dialog"
+     aria-labelledby="resattrsModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="resattrsModalLabel">Modify Resource Attributes Fields</h4>
+            </div>
+            <form role="form" action="{{ url_for('modify_element') }}" method="post">
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>NfviPoP Id</label>
+                                <input class="form-control" name="nfviPopId" value="{{ dict_item.nfviPopId }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Zone Id</label>
+                                <input class="form-control" name="zoneId" value="{{ dict_item.zoneId }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Zone Name</label>
+                                <input class="form-control" name="zoneName" value="{{ dict_item.zoneName }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Zone State</label>
+                                <input class="form-control" name="zoneState" value="{{ dict_item.zoneState }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Zone Property</label>
+                                <input class="form-control" name="zoneProperty" value="{{ dict_item.zoneProperty }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Metadata</label>
+                                <input class="form-control" name="metadata_resourceattributes"
+                                       value="{{ dict_item.metadata_resourceattributes }}">
+                            </div>
+                            <input type="hidden" name="id" value="{{ dict_item.id }}">
+                            <input type="hidden" name="table_to_choose" value="resourceattributes">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-danger" formaction="{{ url_for('delete_element') }}">
+                        Delete
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+{% endfor %}
+{% endif %}
+
+{% if table_name == 'stitch'%}
+<!-- Modals for Stitching -->
+{% for dict_item in list_stitching %}
+<div class="modal fade" id="stitchModal{{ dict_item.id }}" tabindex="-1" role="dialog"
+     aria-labelledby="stitchModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="stitchModalLabel">Modify Stitching Link Fields</h4>
+            </div>
+            <form role="form" action="{{ url_for('modify_element') }}" method="post">
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Ingress Element Id</label>
+                                <input class="form-control" name="ingressElementId"
+                                       value="{{ dict_item.ingressElementId }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Ingress Element Address</label>
+                                <input class="form-control" name="ingressElementAddress"
+                                       value="{{ dict_item.ingressElementAddress }}">
+                            </div>
+                            <div class="form-group">
+                                <label>aLink Id</label>
+                                <input class="form-control" name="aLinkId" value="{{ dict_item.aLinkId }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Egress Element Id</label>
+                                <input class="form-control" name="egressElementId"
+                                       value="{{ dict_item.egressElementId }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Egress Element Address</label>
+                                <input class="form-control" name="egressElementAddress"
+                                       value="{{ dict_item.egressElementAddress }}">
+                            </div>
+                            <div class="form-group">
+                                <label>zLink Id</label>
+                                <input class="form-control" name="zLinkId" value="{{ dict_item.zLinkId }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Link Cost</label>
+                                <input class="form-control" name="linkCost" value="{{ dict_item.linkCost }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Link Delay</label>
+                                <input class="form-control" name="linkDelay" value="{{ dict_item.linkDelay }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Link Available BW (MB)</label>
+                                <input class="form-control" name="linkAvailBw" value="{{ dict_item.linkAvailBw }}">
+                            </div>
+                            <input type="hidden" name="id" value="{{ dict_item.id }}">
+                            <input type="hidden" name="table_to_choose" value="stitching">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-danger" formaction="{{ url_for('delete_element') }}">Delete
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+{% endfor %}
+{% endif %}
+
+{% if table_name == 'virlinks'%}
+<!-- Modals for Virtual Links -->
+{% for dict_item in list_vls %}
+<div class="modal fade" id="VLsModal{{ dict_item.id }}" tabindex="-1" role="dialog"
+     aria-labelledby="VLsModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="VLsModalLabel">Modify Virtual Links Fields</h4>
+            </div>
+            <form role="form" action="{{ url_for('modify_element') }}" method="post">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Service Id</label>
+                                <input class="form-control" name="serviceId" value="{{ dict_item.serviceId }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input class="form-control" name="vlName" value="{{ dict_item.vlName }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Vim Id</label>
+                                <input class="form-control" name="vimId" value="{{ dict_item.vimId }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Floating IP</label>
+                                <select class="form-control" name="floatingIp">
+                                    <option {% if dict_item.floatingIp == True %} selected {% endif %}>True</option>
+                                    <option {% if dict_item.floatingIp == False %} selected {% endif %}>False</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>CIDR</label>
+                                <input class="form-control" name="cidr" value="{{ dict_item.cidr }}">
+                                <p id="CIDRHelpBlock" class="form-text text-muted">Only change xxx values in CIDR: 192.168.xxx.0/24</p>
+                            </div>
+                            <div class="form-group">
+                                <label>VLAN Id</label>
+                                <input class="form-control" name="vlanId" value="{{ dict_item.vlanId }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Pool</label>
+                                <input class="form-control" name="pool" value="{{ dict_item.pool }}">
+                                <p id="PoolHelpBlock" class="form-text text-muted">Valid values among 0-12</p>
+                            </div>
+                            <input type="hidden" name="id" value="{{ dict_item.id }}">
+                            <input type="hidden" name="table_to_choose" value="virtuallinks">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-danger" formaction="{{ url_for('delete_element') }}">Delete
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+{% endfor %}
+{% endif %}
+
+
+<!--Modals for New Entry-->
+
+{% if table_name == 'domain'%}
+<!-- Modal for new domain list -->
+<div class="modal fade" id="newDomainModal" tabindex="-1" role="dialog" aria-labelledby="newDomainModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="newDomainModalLabel">Create new Domain Entry</h4>
+            </div>
+            <form role="form" action="{{ url_for('create_element') }}" method="post">
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input class="form-control" name="name">
+                            </div>
+                            <div class="form-group">
+                                <label>Domain Id</label>
+                                <input class="form-control" name="domain_id" type="number">
+                            </div>
+                            <!--<div class="form-group">
+                                <label>Type</label>
+                                <input class="form-control" name="type">
+                            </div>-->
+                            <div class="form-group">
+                                <label>Type</label>
+                                <select class="form-control" name="type">
+                                    <option>VIM</option>
+                                    <option>WIM</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Account Type</label>
+                                <input class="form-control" name="account_type" required>
+                            </div>
+                            <div class="form-group">
+                                <label>IP Address</label>
+                                <input class="form-control" name="ip">
+                            </div>
+                            <div class="form-group">
+                                <label>Port</label>
+                                <input class="form-control" name="port">
+                            </div>
+                            <div class="form-group">
+                                <label>Url</label>
+                                <input class="form-control" name="url">
+                            </div>
+                            <div class="form-group">
+                                <label>User Name</label>
+                                <input class="form-control" name="username">
+                            </div>
+                            <div class="form-group">
+                                <label>User Password</label>
+                                <input id="password-field" class="form-control" name="userpassword" type="password" >
+                                <span data-toggle="#password-field" class="fa fa-fw fa-eye toggle-password" style="float: right; margin-right: 8px; margin-top: -23px; position: relative; z-index: 2; cursor:pointer;"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Tenant Name</label>
+                                <input class="form-control" name="tenantName">
+                            </div>
+                            <div class="form-group">
+                                <label>Monitoring EndPoint</label>
+                                <input class="form-control" name="monitoringEndpoint">
+                            </div>
+                            <input type="hidden" name="table_to_choose" value="domainlist">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+$(".toggle-password").click(function() {
+  $(this).toggleClass("fa-eye fa-eye-slash");
+  var input = $($(this).attr("data-toggle"));
+  if (input.attr("type") == "password") {
+    input.attr("type", "text");
+  } else {
+    input.attr("type", "password");
+  }
+});
+</script>
+{% endif %}
+
+{% if table_name == 'nfvipops'%}
+<!-- Modals for new Pop -->
+<div class="modal fade" id="newPopModal" tabindex="-1" role="dialog" aria-labelledby="newPopModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="newPopModalLabel">Create a new PoP</h4>
+            </div>
+            <form role="form" action="{{ url_for('create_element') }}" method="post">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Geographical Location Info</label>
+                                <input class="form-control" name="geographicalLocationInfo">
+                            </div>
+                            <div class="form-group">
+                                <label>Nfvi PoP Id</label>
+                                <input class="form-control" name="nfviPopId" type="number">
+                            </div>
+                            <div class="form-group">
+                                <label>Federated</label>
+                                <select class="form-control" name="federated" id="select_new_federated">
+                                    <option value="False">False</option>
+                                    <option value="True">True</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Vim Id</label>
+                                <input class="form-control" name="vimId" id="input_new_vimId" type="number">
+                            </div>
+                            <div class="form-group">
+                                <label>Federated Vim Id</label>
+                                <input class="form-control" name="federatedVimId" id="input_new_federatedVimId"
+                                type="number">
+                            </div>
+                            <div class="form-group">
+                                <label>Network Connection Endpoint</label>
+                                <input class="form-control" name="networkCE">
+                                <p class="form-text text-muted">Network Connection EndPoint
+                                    should be listed with a space among the addresses.</p>
+                            </div>
+                            <input type="hidden" name="table_to_choose" value="nfvipops">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    $(function() {
+        $('#select_new_federated').on('change', function() {
+            $('#input_new_vimId').prop('disabled', this.value != 'False');
+            $('#input_new_federatedVimId').prop('disabled', this.value == 'False');
+        })
+        .change();
+    });
+</script>
+{% endif %}
+
+{% if table_name == 'loglinks'%}
+<!-- Modals for creating a new LL entry in the table -->
+<div class="modal fade" id="newLLModal" tabindex="-1" role="dialog" aria-labelledby="newLLModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="newLLModalLabel">Create Logical Link</h4>
+            </div>
+            <form role="form" action="{{ url_for('create_element') }}" method="post">
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Logical Link Id</label>
+                                <input class="form-control" name="logicalLinkId">
+                            </div>
+                            <div class="form-group">
+                                <label>Total Bandwidth (MB)</label>
+                                <input class="form-control" name="totalBandwidth" type="number">
+                            </div>
+                            <div class="form-group">
+                                <label>Available Bandwidth (MB)</label>
+                                <input class="form-control" name="availableBandwidth" type="number">
+                            </div>
+                            <div class="form-group">
+                                <label>Link Cost Value</label>
+                                <input class="form-control" name="linkCostValue" type="number">
+                            </div>
+                            <div class="form-group">
+                                <label>Link Cost</label>
+                                <input class="form-control" name="linkCost">
+                            </div>
+                            <div class="form-group">
+                                <label>Link Delay Value</label>
+                                <input class="form-control" name="linkDelayValue" type="number">
+                            </div>
+                            <div class="form-group">
+                                <label>Link Delay</label>
+                                <input class="form-control" name="linkDelay">
+                            </div>
+                            <div class="form-group">
+                                <label>SRC Gateway IP Address</label>
+                                <input class="form-control" name="srcGwIpAddress">
+                            </div>
+                            <div class="form-group">
+                                <label>Local Link Id</label>
+                                <input class="form-control" name="localLinkId">
+                            </div>
+                            <div class="form-group">
+                                <label>DST Gateway IP Address</label>
+                                <input class="form-control" name="dstGwIpAddress">
+                            </div>
+                            <div class="form-group">
+                                <label>Remote Link Id</label>
+                                <input class="form-control" name="remoteLinkId">
+                            </div>
+                            <div class="form-group">
+                                <label>Network Layer</label>
+                                <input class="form-control" name="networkLayer">
+                            </div>
+                            <div class="form-group">
+                                <label>InterNfvi PoP Network Type</label>
+                                <input class="form-control" name="interNfviPopNetworkType">
+                            </div>
+                            <div class="form-group">
+                                <label>InterNfvi PoP Network Topology</label>
+                                <input class="form-control" name="interNfviPopNetworkTopology">
+                            </div>
+                            <input type="hidden" name="table_to_choose" value="llinternfvipops">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+{% endif %}
+
+{% if table_name == 'res_attr'%}
+<!-- Modals for new Resource Attribute -->
+<div class="modal fade" id="newResourceAttModal" tabindex="-1" role="dialog" aria-labelledby="newResourceAttModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="newResourceAttModalLabel">Create a Resource Attributes</h4>
+            </div>
+            <form role="form" action="{{ url_for('create_element') }}" method="post">
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>NfviPoP Id</label>
+                                <input class="form-control" name="nfviPopId" type="number">
+                            </div>
+                            <div class="form-group">
+                                <label>Zone Id</label>
+                                <input class="form-control" name="zoneId" type="number">
+                            </div>
+                            <div class="form-group">
+                                <label>Zone Name</label>
+                                <input class="form-control" name="zoneName">
+                            </div>
+                            <div class="form-group">
+                                <label>Zone State</label>
+                                <input class="form-control" name="zoneState">
+                            </div>
+                            <div class="form-group">
+                                <label>Zone Property</label>
+                                <input class="form-control" name="zoneProperty">
+                            </div>
+                            <div class="form-group">
+                                <label>Metadata</label>
+                                <input class="form-control" name="metadata_resourceattributes">
+                            </div>
+                            <input type="hidden" name="table_to_choose" value="resourceattributes">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+{% endif %}
+
+{% if table_name == 'stitch'%}
+<!-- Modals for new Stitching link-->
+<div class="modal fade" id="newStitchingModal" tabindex="-1" role="dialog" aria-labelledby="newStitchingModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="newStitchingModalLabel">Create Stitching Link</h4>
+            </div>
+            <form role="form" action="{{ url_for('create_element') }}" method="post">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Ingress Element Id</label>
+                                <input class="form-control" name="ingressElementId">
+                            </div>
+                            <div class="form-group">
+                                <label>Ingress Element Address</label>
+                                <input class="form-control" name="ingressElementAddress">
+                            </div>
+                            <div class="form-group">
+                                <label>aLink Id</label>
+                                <input class="form-control" name="aLinkId">
+                            </div>
+                            <div class="form-group">
+                                <label>Egress Element Id</label>
+                                <input class="form-control" name="egressElementId">
+                            </div>
+                            <div class="form-group">
+                                <label>Egress Element Address</label>
+                                <input class="form-control" name="egressElementAddress">
+                            </div>
+                            <div class="form-group">
+                                <label>zLink Id</label>
+                                <input class="form-control" name="zLinkId">
+                            </div>
+                            <div class="form-group">
+                                <label>Link Cost</label>
+                                <input class="form-control" name="linkCost" type="number">
+                            </div>
+                            <div class="form-group">
+                                <label>Link Delay</label>
+                                <input class="form-control" name="linkDelay" type="number">
+                            </div>
+                            <div class="form-group">
+                                <label>Link Available BW (MB)</label>
+                                <input class="form-control" name="linkAvailBw" type="number">
+                            </div>
+                            <input type="hidden" name="table_to_choose" value="stitching">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+{% endif %}
+
+
+{% if table_name == 'virlinks'%}
+<!-- Modals for new Virtual Link-->
+<div class="modal fade" id="newVLModal" tabindex="-1" role="dialog" aria-labelledby="newVLModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="newVLModalLabel">Create Virtual Link</h4>
+            </div>
+            <form role="form" action="{{ url_for('create_element') }}" method="post">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Service Id</label>
+                                <input class="form-control" name="serviceId" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input class="form-control" name="vlName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Network ID</label>
+                                <input class="form-control" name="networkId" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Vim Id</label>
+                                <input class="form-control" name="vimId" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Floating IP</label>
+                                <select class="form-control" name="floatingIp">
+                                    <option>False</option>
+                                    <option>True</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>CIDR</label>
+                                <input class="form-control" name="cidr" required>
+                            </div>
+                            <div class="form-group">
+                                <label>VLAN Id</label>
+                                <input class="form-control" name="vlanId" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Pool</label>
+                                <input class="form-control" name="pool" required>
+                            </div>
+                            <input type="hidden" name="table_to_choose" value="virtuallinks">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    Create a new Virtual Links only in the DB! (Not an actual Intra-PoP Network)
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+{% endif %}
+
+{% if table_name == 'stitch'%}
+<!-- Modals for deleting all the rows of Stitching List-->
+<div class="modal fade" id="deleteAllStitchingsModal" tabindex="-1" role="dialog" aria-labelledby="deleteAllStitchingsModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteAllStitchingsModalLabel">Delete confirmation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure to delete all the Stitching in the table?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ok" data-dismiss="modal">Close</button>
+        <button id="del_stitchings" type="button" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    $('#del_stitchings').click(function(){
+      $('#delete_all_stitchings').submit();
+    });
+</script>
+{% endif %}
+
+{% if table_name == 'loglinks'%}
+<!-- Modals for deleting all the logical link-->
+<div class="modal fade" id="deleteAllLLsModal" tabindex="-1" role="dialog" aria-labelledby="deleteAllLLsModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteAllLLsModalLabel">Delete confirmation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure to delete all the Logical Link in the table?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ok" data-dismiss="modal">Close</button>
+        <button id="del_lls" type="button" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    $('#del_lls').click(function(){
+      $('#delete_all_lls').submit();
+    });
+</script>
+{% endif %}
+
+{% if table_name == 'serviceid'%}
+<!-- Modals for deleting all the rows of the ServiceId List-->
+<div class="modal fade" id="deleteAllServiceIdsModal" tabindex="-1" role="dialog" aria-labelledby="deleteAllServiceIdsModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteAllServiceIdsModalLabel">Delete confirmation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure to delete all the rows in the Service Id table?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ok" data-dismiss="modal">Close</button>
+        <button id="del_serviceids" type="button" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    $('#del_serviceids').click(function(){
+      $('#delete_all_serviceids').submit();
+    });
+</script>
+{% endif %}
+
+
+{% if session['role'] == 'Admin' and table_name == 'loglinks'%}
+<!-- Modals for instantiate LLs -->
+{% for dict_item in list_lls %}
+<div class="modal fade" id="instantiateLlsModal{{ dict_item.id }}" tabindex="-1" role="dialog" aria-labelledby="instantiateLlsModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="instantiateLlsModalLabel">Instantiate one LL "{{ dict_item.logicalLinkId }}"</h4>
+            </div>
+            <form role="form" action="{{ url_for('instantiate_ll') }}" method="POST">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Logical Link Id</label>
+                                <input class="form-control" name="logicalLinkId"
+                                       value="{{ dict_item.logicalLinkId }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>SRC Gateway IP Address</label>
+                                <input class="form-control" name="srcGwIpAddress"
+                                       value="{{ dict_item.srcGwIpAddress }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Local Link Id</label>
+                                <input class="form-control" name="localLinkId"
+                                       value="{{ dict_item.localLinkId }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>DST Gateway IP Address</label>
+                                <input class="form-control" name="dstGwIpAddress"
+                                       value="{{ dict_item.dstGwIpAddress }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Remote Link Id</label>
+                                <input class="form-control" name="remoteLinkId"
+                                       value="{{ dict_item.remoteLinkId }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Requested Bandwidth (MB)</label>
+                                <input class="form-control" name="reqBandwidth"
+                                       type="number" max="{{ dict_item.availableBandwidth }}"
+                                       value="{{ dict_item.availableBandwidth }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Requested Latency</label>
+                                <input class="form-control" name="reqLatency"
+                                       type="number" min="{{ dict_item.linkDelayValue }}"
+                                       value="{{ dict_item.linkDelayValue }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>metaData</label>
+                                <textarea class="form-control" name="metaData" rows="10" required>
+[
+  {
+    "key": "srcVnfIpAddress",
+    "value": "192.168.21.3"
+  },
+  {
+    "key": "dstVnfIpAddress",
+    "value": "192.168.21.23"
+  },
+  {
+    "key": "srcVnfMacAddress",
+    "value": "aa:aa:aa:aa:aa:aa"
+  },
+  {
+    "key": "dstVnfMacAddress",
+    "value": "bb:bb:bb:bb:bb:bb"
+  }
+]                                </textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Network Layer</label>
+                                <input class="form-control" name="networkLayer" value="vlan" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>InterNfvi PoP Network Type</label>
+                                <input class="form-control" name="interNfviPopNetworkType"
+                                       value="p2p" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>ServiceId in Metadata</label>
+                                <input class="form-control" name="metadata_serviceId"
+                                       value="Ns_name" required>
+                            </div>
+                            <!--<input type="hidden" name="metadata_serviceId" value="Ns_name">-->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Instantiate</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+{% endfor %}
+{% endif %}
+
+{% endblock %}
