@@ -2,17 +2,17 @@
 This folder contains the REST API definition of interfaces used by Resource Layer. These files are used to generate client & server REST module
 
 
-##MONIF
+## MONIF
 It describes the monitoring interface
 
 
-##NBI
+## NBI
 It describes the northbound interface
 
 
-##SBI
+## SBI
 It describes the southbound interface
 
 
-##PAIF
+## PAIF
 It describes the placement algorithm interface to enforce the resource selection logic. It is also used for RA algorithm

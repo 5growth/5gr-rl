@@ -5,7 +5,7 @@ This repository contains the code for the Resource Layer developed in the 5Growt
 The repository is divided in three folders:
 
 ### 1. RL 
-This folder contains the code of the RL core. Please refer to the [RL README](rl/README.md) for instruction details
+This folder contains the code of the RL core. Please refer to the [RL README](../doc/INSTALL.rtf) for instruction details
 
 ### 2. dependencies
 This folder contains dependencies libraries used to build the RL core.  Please refer to the [DEPENDECIES README](dependencies/README.md) for instruction details
