@@ -39,6 +39,7 @@
 #include "rl_ra_server_cjson.h"
 #include "rl_ra_server_ra_CSA.h"
 #include "rl_ra_server_ra_InA.h"
+#include "rl_ra_server_ra_GCO.h"
 #include "rl_ra_server_restapi.h"
 
 #define ISspace(x) isspace((int)(x))
@@ -52,9 +53,11 @@ GList *rapi_tcp_client_list = NULL;
 guint CLIENT_ID = 0;
 guint32 paId_req = 0;
 
+// Global variables
 struct request_list_t *reqList;
 struct rl_topology_t *rlTopo;
 gchar raId[MAX_RAID_LENGTH];
+struct anomalyEventList_t *anomalyEventList;
 gboolean syncPath = FALSE;
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -99,18 +102,18 @@ gint rapi_send_message (GIOChannel *channel, char *buf)
 {
 	gsize nbytes, buffersize;
 
-	DEBUG_RL_RA ("Msg prepared to be sent REST API RESPONSE ");
+	//DEBUG_RL_RA ("Msg prepared to be sent REST API RESPONSE ");
     gint len = strlen ((const char*) buf);
-    DEBUG_RL_RA ("Targeted Length of the buffer: %d", len);       
+    //DEBUG_RL_RA ("Targeted Length of the buffer: %d", len);       
 
     buffersize = g_io_channel_get_buffer_size (channel);
-    DEBUG_RL_RA ("GIOChannel with Buffer Size: %d", buffersize);
+    //DEBUG_RL_RA ("GIOChannel with Buffer Size: %d", (gint)buffersize);
     
     gsize newBufferSize = MAX_GIO_CHANNEL_BUFFER_SIZE;
     g_io_channel_set_buffer_size (channel, newBufferSize);
     
     buffersize = g_io_channel_get_buffer_size (channel);
-    DEBUG_RL_RA ("GIOChannel with Buffer Size: %d", buffersize);
+    //DEBUG_RL_RA ("GIOChannel with Buffer Size: %d", (gint)buffersize);
     
 	/** Send message.  */
     GError *error = NULL;
@@ -127,11 +130,12 @@ gint rapi_send_message (GIOChannel *channel, char *buf)
             return (-1);
         }
         
-        DEBUG_RL_RA ("Sent %d bytes", nbytes);        
+        //DEBUG_RL_RA ("Sent %d bytes", (gint)nbytes);        
         nleft = nleft - nbytes;
-        DEBUG_RL_RA ("Remaining to be sent %d", nleft);
+        //DEBUG_RL_RA ("Remaining to be sent %d", nleft);
         ptr += nbytes;        
     } 
+	DEBUG_RL_RA("RESPONSE MSG SENT");
 	return 0;
 }
 
@@ -241,8 +245,7 @@ gint found_interWanLink_topology (struct routeElement_t routeElement)
 			return ret;
 		} 
 	 	continue;	
-	}
-   	
+	}   	
 	return ret;
 }
 
@@ -314,7 +317,7 @@ gint found_edge_wan (struct routeElement_t routeElement)
 	gint ret = -1;		
 	for (gint i = 0; i < rlTopo->numAbsWanTopo; i++)
 	{
-		DEBUG_RL_RA ("Exploring WimId: %s", rlTopo->absWanTop[i].WimId);
+		//DEBUG_RL_RA ("Exploring WimId: %s", rlTopo->absWanTop[i].WimId);
 		
 		for (gint j = 0; j < rlTopo->absWanTop[i].numEdges; j++)
 		{
@@ -322,9 +325,9 @@ gint found_edge_wan (struct routeElement_t routeElement)
 			(memcmp (routeElement.zNodeId.nodeId, rlTopo->absWanTop[i].edges[j].zNodeId.nodeId, sizeof (rlTopo->absWanTop[i].edges[j].zNodeId.nodeId)) == 0) &&
 			(routeElement.aLinkId == rlTopo->absWanTop[i].edges[j].aLinkId) && (routeElement.zLinkId == rlTopo->absWanTop[i].edges[j].zLinkId))
 			{	
-				DEBUG_RL_RA ("routeElement [aNodeId: %s (%u)---> zNodeId: %s (%u)] is within WAN (wimId: %s)", routeElement.aNodeId.nodeId, routeElement.aLinkId,			
-																																			routeElement.zNodeId.nodeId, routeElement.zLinkId,
-																																			rlTopo->absWanTop[i].WimId);
+				//DEBUG_RL_RA ("routeElement [aNodeId: %s (%u)---> zNodeId: %s (%u)] is within WAN (wimId: %s)", routeElement.aNodeId.nodeId, routeElement.aLinkId,			
+				//																															routeElement.zNodeId.nodeId, routeElement.zLinkId,
+				//																															rlTopo->absWanTop[i].WimId);
 				ret = i;			
 				return ret;		
 			}	
@@ -355,13 +358,13 @@ void retrieve_compRoute_segments_per_WAN (struct wansTopo_t *wanSet, struct comp
  	{
  		// Find the WAN (within rlTopo->absWanTopo) associated to every explored edge/link forming the computed path 		 
  		indexWan = found_edge_wan (path->routeElement[i]);
-		DEBUG_RL_RA ("indexWan: %d", indexWan);
+		//DEBUG_RL_RA ("indexWan: %d", indexWan);
 		
  		if (indexWan > -1)
  		{				
- 			DEBUG_RL_RA ("Edge (%s ---> %s) within WAN (WimId: %s)", path->routeElement[i].aNodeId.nodeId,
- 																						path->routeElement[i].zNodeId.nodeId, 
-																						rlTopo->absWanTop[indexWan].WimId);
+ 			//DEBUG_RL_RA ("Edge (%s ---> %s) within WAN (WimId: %s)", path->routeElement[i].aNodeId.nodeId,
+ 			//																			path->routeElement[i].zNodeId.nodeId, 
+			//																			rlTopo->absWanTop[indexWan].WimId);
 			struct absWanTopo_t *newWanTopo = &(wanSet->absWanTop[wanSet->numAbsWanTopo]);
 			struct absWanTopo_t *refWanTopo = &(rlTopo->absWanTop[indexWan]);
 																						
@@ -370,7 +373,7 @@ void retrieve_compRoute_segments_per_WAN (struct wansTopo_t *wanSet, struct comp
 				memcpy (newWanTopo->WimId, refWanTopo->WimId, sizeof (refWanTopo->WimId));
 				newWanTopo->numEdges = 0; 				
  				wanSet->numAbsWanTopo = wanSet->numAbsWanTopo + 1;
- 				DEBUG_RL_RA ("WIMID: %s is added with numEdges: %d", newWanTopo->WimId, newWanTopo->numEdges);
+ 				//DEBUG_RL_RA ("WIMID: %s is added with numEdges: %d", newWanTopo->WimId, newWanTopo->numEdges);
  			}
  			else 
  			{
@@ -380,7 +383,7 @@ void retrieve_compRoute_segments_per_WAN (struct wansTopo_t *wanSet, struct comp
 				{
 					if (memcmp (wanSet->absWanTop[k].WimId, refWanTopo->WimId, sizeof (refWanTopo->WimId)) == 0)
 					{
-							DEBUG_RL_RA ("wanSet[k].WimId: %s not added so far ... added as traversed domain", wanSet->absWanTop[k].WimId);
+							//DEBUG_RL_RA ("wanSet[%d].WimId: %s not added so far ... added as traversed domain", k, wanSet->absWanTop[k].WimId);
 							found = TRUE;
 							break;				
 					}				
@@ -406,18 +409,18 @@ void retrieve_compRoute_segments_per_WAN (struct wansTopo_t *wanSet, struct comp
  			//memcpy (wanSet->absWanTop[wanSet->numAbsWanTopo -1].edges[indexWanEdges].zNodeId.nodeId, path->routeElement[i].zNodeId.nodeId, sizeof (path->routeElement[i].zNodeId.nodeId));
 			e->aLinkId = re->aLinkId;
 			e->zLinkId = re->zLinkId; 					
- 			DEBUG_RL_RA ("Edge [within wimId (%s)] %s (%u) --> %s (%u)-- Added", wanSet->absWanTop[wanSet->numAbsWanTopo -1].WimId, 
- 																						e->aNodeId.nodeId,
-																						e->aLinkId,
- 																						e->zNodeId.nodeId,
-																						e->zLinkId);
+ 			//DEBUG_RL_RA ("Edge [within wimId (%s)] %s (%u) --> %s (%u)-- Added", wanSet->absWanTop[wanSet->numAbsWanTopo -1].WimId, 
+ 			//																			e->aNodeId.nodeId,
+			//																			e->aLinkId,
+ 			//																			e->zNodeId.nodeId,
+			//																			e->zLinkId);
 		 	wanSet->absWanTop[wanSet->numAbsWanTopo -1].numEdges++;
-		 	DEBUG_RL_RA ("Num Edges within wimId: %s: %d", wanSet->absWanTop[wanSet->numAbsWanTopo -1].WimId, 
-																	wanSet->absWanTop[wanSet->numAbsWanTopo -1].numEdges);
+		 	//DEBUG_RL_RA ("Num Edges within wimId: %s: %d", wanSet->absWanTop[wanSet->numAbsWanTopo -1].WimId, 
+			//														wanSet->absWanTop[wanSet->numAbsWanTopo -1].numEdges);
  		}  
  		else 
  		{
- 			DEBUG_RL_RA ("Explored link does not belong to a WAN");
+ 			//DEBUG_RL_RA ("Explored link does not belong to a WAN");
  			continue;
  		} 					
  	} 	
@@ -439,7 +442,7 @@ void retrieve_compRoute_segments_per_WAN (struct wansTopo_t *wanSet, struct comp
 /////////////////////////////////////////////////////////////////////////////////////////
 void add_compRouteOutput_json_WAN_paths (struct compRouteOutputItem_t *route, cJSON *Object)
 {
-	DEBUG_RL_RA ("Add path segment on per WAN basis");
+	//DEBUG_RL_RA ("Add path segment on per WAN basis");
 	// Add specific path segments for each traversed WAN 
 	struct wansTopo_t *compRouteWan = g_malloc0 (sizeof (struct wansTopo_t));
 	if (compRouteWan == NULL)
@@ -475,11 +478,10 @@ void add_compRouteOutput_json_WAN_paths (struct compRouteOutputItem_t *route, cJ
 			cJSON_AddItemToObject (wanEdgeObject, "zLinkId", cJSON_CreateNumber(compRouteWan->absWanTop[k].edges[e].zLinkId));		
 		}
 	}
-    DEBUG_RL_RA ("JSON Body Response DONE");
+    //DEBUG_RL_RA ("JSON Body Response DONE");
 	g_free (compRouteWan);	
 	return;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////
 /**
@@ -542,7 +544,7 @@ void rapi_response_json_contents (char *body, gint *length, struct compRouteOutp
 {
     char *buftmp;    
     cJSON *root = cJSON_CreateObject();     
-	DEBUG_RL_RA ("Creating the JSON body of the response"); 
+	//DEBUG_RL_RA ("Creating the JSON body of the response"); 
 
 	// Create response-list array
 	cJSON *responseListArray = cJSON_CreateArray();
@@ -599,15 +601,14 @@ void rapi_response_json_contents (char *body, gint *length, struct compRouteOutp
 		}	
 	}
 	
-    DEBUG_RL_RA ("JSON Body Response DONE");
-	
+    //DEBUG_RL_RA ("JSON Body Response DONE");	
     buftmp = (char *)cJSON_Print(root);
     strcat (body, (const char*) buftmp);
-    *length = strlen ((const char*)body);
-    
-    DEBUG_RL_RA ("JSON Body (length: %d)", *length);
-    DEBUG_RL_RA ("%s", body);    
-	cJSON_Delete (root);    
+    *length = strlen ((const char*)body);    
+    //DEBUG_RL_RA ("JSON Body (length: %d)", *length);
+    //DEBUG_RL_RA ("%s", body);    
+	cJSON_Delete (root);
+	g_free(buftmp);
     return;
 }
 
@@ -628,7 +629,7 @@ void rapi_response_ok (GIOChannel *source, gint httpCode, struct compRouteOutput
 {
     gint ret = 0;
     
-    DEBUG_RL_RA ("Creating the JSON Body and sending the response of the computed Route List");
+    //DEBUG_RL_RA ("Creating the JSON Body and sending the response of the computed Route List");
     
     guchar buftmp[1024];
     char * buf = g_malloc0 (sizeof (char) * 2048000); 
@@ -650,7 +651,7 @@ void rapi_response_ok (GIOChannel *source, gint httpCode, struct compRouteOutput
     char buff_length[16];
     
     sprintf(buff_length, "%d", length);
-    DEBUG_RL_RA ("Buffer Length (JSON BODY): %d Added to the Content Length", length);
+    //DEBUG_RL_RA ("Buffer Length (JSON BODY): %d Added to the Content Length", length);
     
     sprintf ((char *)buftmp, "Content-Length: ");
     strcat ((char *)buftmp, (const char *)buff_length);
@@ -664,14 +665,12 @@ void rapi_response_ok (GIOChannel *source, gint httpCode, struct compRouteOutput
     strcat ((char *)buf, (const char *)buftmp);
 		
 	strcat ((char *)buf, (const char *)jsonBody);		
-	DEBUG_RL_RA ("Complete Message: %s", buf);
-	    
+	//DEBUG_RL_RA ("%s", buf);	    
     ret = rapi_send_message (source, buf);    
     g_free (buf);
     memset (buftmp, '\0', sizeof ( buftmp));    
     g_free (jsonBody);
-    (void)ret;
-    
+    (void)ret;    
     return;
 }
 
@@ -689,8 +688,7 @@ void rapi_response_ok (GIOChannel *source, gint httpCode, struct compRouteOutput
 /////////////////////////////////////////////////////////////////////////////////////////
 void rapi_response (GIOChannel *source, gint error)
 {
-	 int ret = 0;
-	
+	 int ret = 0;	
 	 guchar buftmp[1024];
 	 char * buf = g_malloc0 (sizeof (char) * 2048000);
 	 if (error == HTTP_RETURN_CODE_BAD_REQUEST)
@@ -717,7 +715,7 @@ void rapi_response (GIOChannel *source, gint error)
 	     
 	 sprintf((char *)buftmp, "\r\n");
 	 strcat ((char *)buf, (const char *)buftmp);
-	 
+	 // Print the prepared message
 	 DEBUG_RL_RA ("%s", buf);
 	 
 	 // Send the message
@@ -741,8 +739,7 @@ void rapi_response (GIOChannel *source, gint error)
 /////////////////////////////////////////////////////////////////////////////////////////
 void parsing_json_obj_interWanLinks (cJSON *interWanLinksArray)
 {
-    DEBUG_RL_RA ("Parsing the JSON for the interWanLinks: %d", (gint)cJSON_GetArraySize(interWanLinksArray));
-    
+    //DEBUG_RL_RA ("Parsing the JSON for the interWanLinks: %d", (gint)cJSON_GetArraySize(interWanLinksArray));    
     gint i = 0, index = 0;
     
     if (rlTopo == NULL)
@@ -750,11 +747,11 @@ void parsing_json_obj_interWanLinks (cJSON *interWanLinksArray)
         DEBUG_RL_RA ("weird");   
         exit (-1);
     }
-    DEBUG_RL_RA ("rlTopo num InterWanLinks: %d", rlTopo->numInterWanLinks); 
+    //DEBUG_RL_RA ("rlTopo num InterWanLinks: %d", rlTopo->numInterWanLinks); 
     
     gint numberInterWanLinks = 0;
     numberInterWanLinks = (gint)cJSON_GetArraySize(interWanLinksArray);
-    DEBUG_RL_RA ("numberInterWanLinks: %d", numberInterWanLinks);
+    //DEBUG_RL_RA ("numberInterWanLinks: %d", numberInterWanLinks);
        
     for (i = 0; i < numberInterWanLinks; i++)
     {
@@ -856,8 +853,7 @@ void parsing_json_obj_interWanLinks (cJSON *interWanLinksArray)
 /////////////////////////////////////////////////////////////////////////////////////////
 void parsing_json_obj_absWanTopo (cJSON *absWanTopoArray)
 {
-	DEBUG_RL_RA ("Parsing the JSON for the Abstracted WAN Topologies");	
-	
+	//DEBUG_RL_RA ("Parsing the JSON for the Abstracted WAN Topologies");	
 	for (gint i = 0; i < cJSON_GetArraySize(absWanTopoArray); i++)
 	{
 		rlTopo->numAbsWanTopo++;
@@ -872,14 +868,14 @@ void parsing_json_obj_absWanTopo (cJSON *absWanTopoArray)
 		if (cJSON_IsString(WimId))
 		{
 			memcpy(t->WimId, WimId->valuestring, strlen (WimId->valuestring));
-			DEBUG_RL_RA ("Abs WAN Topo for WimId: %s", t->WimId);        
+			//DEBUG_RL_RA ("Abs WAN Topo for WimId: %s", t->WimId);        
 		}
 			
 		// Get the abstracted set of nodes within the WAN
 		cJSON *nodeWanArray = cJSON_GetObjectItemCaseSensitive (item, "nodes");
 		gint numNodesWan = 0;
 		numNodesWan = (gint)cJSON_GetArraySize (nodeWanArray); 
-		DEBUG_RL_RA ("WAN (WIM: %s) has %d Nodes", t->WimId, numNodesWan);
+		//DEBUG_RL_RA ("WAN (WIM: %s) %d Nodes", t->WimId, numNodesWan);
 		for (gint j = 0; j < numNodesWan; j++)
 		{
 			t->numNodes++;
@@ -890,9 +886,9 @@ void parsing_json_obj_absWanTopo (cJSON *absWanTopoArray)
 			cJSON *nodeId = cJSON_GetObjectItem(itemNode, "nodeId");
 			if (cJSON_IsString(nodeId))
 			{
-				DEBUG_RL_RA ("Print the NodeId --- before %s", t->nodes[indexNodes].nodeId);
+				//DEBUG_RL_RA ("Print the NodeId --- before %s", t->nodes[indexNodes].nodeId);
 				memcpy(t->nodes[indexNodes].nodeId, nodeId->valuestring, strlen (nodeId->valuestring));
-				DEBUG_RL_RA ("Abs WAN Topo - Adding NodeId: %s", t->nodes[indexNodes].nodeId);        
+				//DEBUG_RL_RA ("Abs WAN Topo - Adding NodeId: %s", t->nodes[indexNodes].nodeId);        
 			}                
 		}    
 			
@@ -910,7 +906,7 @@ void parsing_json_obj_absWanTopo (cJSON *absWanTopoArray)
 			if (cJSON_IsString(aNodeId))
 			{
 				memcpy(t->edges[indexEdges].aNodeId.nodeId, aNodeId->valuestring, strlen (aNodeId->valuestring));
-				DEBUG_RL_RA ("Abs WAN Topo - Adding Edge aNodeId: %s", t->edges[indexEdges].aNodeId.nodeId);        
+				//DEBUG_RL_RA ("Abs WAN Topo - Adding Edge aNodeId: %s", t->edges[indexEdges].aNodeId.nodeId);        
 			}
 
 			//Get the zNodeId
@@ -918,7 +914,7 @@ void parsing_json_obj_absWanTopo (cJSON *absWanTopoArray)
 			if (cJSON_IsString(zNodeId))
 			{
 				memcpy(t->edges[indexEdges].zNodeId.nodeId, zNodeId->valuestring, strlen (zNodeId->valuestring));
-				DEBUG_RL_RA ("Abs WAN Topo - Adding Edge zNodeId: %s", t->edges[indexEdges].zNodeId.nodeId);        
+				//DEBUG_RL_RA ("Abs WAN Topo - Adding Edge zNodeId: %s", t->edges[indexEdges].zNodeId.nodeId);        
 			}
 
 			// Get the aLinkId
@@ -926,7 +922,7 @@ void parsing_json_obj_absWanTopo (cJSON *absWanTopoArray)
 			if (cJSON_IsNumber(aLinkId))
 			{
 				t->edges[indexEdges].aLinkId = (guint32)aLinkId->valuedouble;
-				DEBUG_RL_RA ("Abs WAN Topo - Adding Edge aLinkId: %u", t->edges[indexEdges].aLinkId);        
+				//DEBUG_RL_RA ("Abs WAN Topo - Adding Edge aLinkId: %u", t->edges[indexEdges].aLinkId);        
 			}
 
 			// Get the zLinkId
@@ -934,7 +930,7 @@ void parsing_json_obj_absWanTopo (cJSON *absWanTopoArray)
 			if (cJSON_IsNumber(zLinkId))
 			{
 				t->edges[indexEdges].zLinkId = (guint32)zLinkId->valuedouble;
-				DEBUG_RL_RA ("Abs WAN Topo - Adding Edge zLinkId: %u", t->edges[indexEdges].zLinkId);        
+				//DEBUG_RL_RA ("Abs WAN Topo - Adding Edge zLinkId: %u", t->edges[indexEdges].zLinkId);        
 			}
 
 			// Get QoS parameters: link cost, bw, delay
@@ -949,19 +945,19 @@ void parsing_json_obj_absWanTopo (cJSON *absWanTopoArray)
 			if (cJSON_IsNumber(LinkCost))
 			{
 				t->edges[indexEdges].linkCost = (gint)LinkCost->valuedouble;
-				DEBUG_RL_RA ("Abs WAN Topo - Adding Edge linkCost: %d", t->edges[indexEdges].linkCost);        
+				//DEBUG_RL_RA ("Abs WAN Topo - Adding Edge linkCost: %d", t->edges[indexEdges].linkCost);        
 			}      
 
 			if (cJSON_IsNumber(LinkDelay))
 			{               
 				memcpy (&(t->edges[indexEdges].linkDelay), &LinkDelay->valuedouble, sizeof (gdouble));
-				DEBUG_RL_RA ("Abs WAN Topo - Adding Edge linkDelay: %f", t->edges[indexEdges].linkDelay);        
+				//DEBUG_RL_RA ("Abs WAN Topo - Adding Edge linkDelay: %f", t->edges[indexEdges].linkDelay);        
 			}
 
 			if (cJSON_IsNumber(LinkAvaiBw))
 			{            
 				memcpy (&(t->edges[indexEdges].linkAvailBw), &LinkAvaiBw->valuedouble, sizeof (gdouble));
-				DEBUG_RL_RA ("Abs WAN Topo - Adding Edge linkAvailBw: %f", t->edges[indexEdges].linkAvailBw);        
+				//DEBUG_RL_RA ("Abs WAN Topo - Adding Edge linkAvailBw: %f", t->edges[indexEdges].linkAvailBw);        
 			}
 
 			// Get the network Layer for te edge
@@ -969,7 +965,7 @@ void parsing_json_obj_absWanTopo (cJSON *absWanTopoArray)
 			if (cJSON_IsString(netwLayer))
 			{
 				memcpy(t->edges[indexEdges].networkLinkLayer, netwLayer->valuestring, strlen (netwLayer->valuestring));
-				DEBUG_RL_RA ("Abs WAN Topo - Adding Edge Network Layer: %s", t->edges[indexEdges].networkLinkLayer);        
+				//DEBUG_RL_RA ("Abs WAN Topo - Adding Edge Network Layer: %s", t->edges[indexEdges].networkLinkLayer);        
 			}                
 		}            
 	}
@@ -979,7 +975,8 @@ void parsing_json_obj_absWanTopo (cJSON *absWanTopoArray)
 ///////////////////////////////////////////////////////////////////////////////////////
 /**
  * 	@file rl_ra_server/rl_ra_server_restapi.c
- * 	@brief Function used to parse the array containing the multiple InterNfviPopConnectivity Connections
+ * 	@brief Function used to parse the array containing the multiple 
+ *	InterNfviPopConnectivity Connection requests
  * 	
  * 	@param requestListArray
  *
@@ -989,8 +986,7 @@ void parsing_json_obj_absWanTopo (cJSON *absWanTopoArray)
 /////////////////////////////////////////////////////////////////////////////////////////
 void parsing_json_array_requestList (cJSON * requestListArray)
 {
-	DEBUG_RL_RA ("Parsing the JSON Array for the InterNfviPopConnectivity Requests");	
-	
+	//DEBUG_RL_RA ("Parsing the JSON Array for the InterNfviPopConnectivity Requests");	
 	for (gint i = 0; i < cJSON_GetArraySize(requestListArray); i++)
 	{
 		reqList->numReqList++;
@@ -1005,7 +1001,7 @@ void parsing_json_array_requestList (cJSON * requestListArray)
 		if (cJSON_IsNumber(reqIdItem))
 		{       
 			r->requestId = (guint32)reqIdItem->valuedouble;
-			DEBUG_RL_RA ("RequestId: %u", r->requestId);        
+			//DEBUG_RL_RA ("RequestId: %u", r->requestId);        
 		} 
 		
 		// Get the InterNfviPopConnectivityId
@@ -1013,7 +1009,7 @@ void parsing_json_array_requestList (cJSON * requestListArray)
 		if (cJSON_IsString(reqConn_item))
 		{
 			memcpy(r->interNfviPopConnectivityId, reqConn_item->valuestring, strlen (reqConn_item->valuestring));
-			DEBUG_RL_RA ("Requested InterNfviPopConnectitivityId: %s", r->interNfviPopConnectivityId);        
+			//DEBUG_RL_RA ("Requested InterNfviPopConnectitivityId: %s", r->interNfviPopConnectivityId);        
 		}
 
 		// Copy the previously selected raId
@@ -1024,7 +1020,7 @@ void parsing_json_array_requestList (cJSON * requestListArray)
 		if (cJSON_IsString (srcPEId))
 		{	
 			memcpy(r->srcPEId.nodeId, srcPEId->valuestring, strlen (srcPEId->valuestring));
-			DEBUG_RL_RA ("srcPEId: %s", r->srcPEId.nodeId);			
+			//DEBUG_RL_RA ("srcPEId: %s", r->srcPEId.nodeId);			
 		}
 	
 		// Get the dstPEId
@@ -1032,15 +1028,14 @@ void parsing_json_array_requestList (cJSON * requestListArray)
 		if (cJSON_IsString (dstPEId))
 		{	
 			memcpy(r->dstPEId.nodeId, dstPEId->valuestring, strlen (dstPEId->valuestring));
-			DEBUG_RL_RA ("dstPEId: %s", r->dstPEId.nodeId);			
-		}	
-		
+			//DEBUG_RL_RA ("dstPEId: %s", r->dstPEId.nodeId);			
+		}		
 		// Get the maximum number of paths to be computed (kPaths)
 		cJSON *kPaths = cJSON_GetObjectItemCaseSensitive (item, "kPaths");
 		if (cJSON_IsNumber (kPaths))
 		{
 			r->kPaths = (guint)kPaths->valuedouble;
-			DEBUG_RL_RA ("kPaths: %u", r->kPaths);
+			//DEBUG_RL_RA ("kPaths: %u", r->kPaths);
 		}
 		
 		// Get the QoS Constraints
@@ -1051,19 +1046,135 @@ void parsing_json_array_requestList (cJSON * requestListArray)
 		if (cJSON_IsNumber(bandwidthConsValue))
 		{            
 			memcpy (&(r->bandwidthCons), &bandwidthConsValue->valuedouble, sizeof (gdouble));
-			DEBUG_RL_RA ("Requested Bandwidth Constraint: %f", r->bandwidthCons);        
+			//DEBUG_RL_RA ("Requested Bandwidth Constraint: %f", r->bandwidthCons);        
 		}
 
 		if (cJSON_IsNumber(delayConsValue))
 		{            
 			memcpy (&(r->delayCons), &delayConsValue->valuedouble, sizeof (gdouble));
-			DEBUG_RL_RA ("Requested Delay Constraint: %f", r->delayCons);        
+			//DEBUG_RL_RA ("Requested Delay Constraint: %f", r->delayCons);        
 		}
-	}
-	
+
+		DEBUG_RL_RA("Req: %s %s --> %s [reqBw: %f b/s, reqLat: %f ms]", r->interNfviPopConnectivityId, r->srcPEId.nodeId, r->dstPEId.nodeId, r->bandwidthCons, r->delayCons);
+	}	
 	return;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+/**
+ * 	@file rl_ra_server/rl_ra_server_restapi.c
+ * 	@brief Function used to parse the JSON object/s the anomaly events
+ * 	
+ * 	@param anomalyEventArray
+ *
+ *	@author Ricardo Martínez <ricardo.martinez@cttc.es>
+ *	@date 2020
+ */
+/////////////////////////////////////////////////////////////////////////////////////////
+void parsing_json_obj_anomalyEvents (cJSON *anomalyEventArray)
+{
+	g_assert (anomalyEventArray);
+	DEBUG_RL_RA ("Parsing the JSON Array for Anomaly Events");
+	
+	for (gint i = 0; i < cJSON_GetArraySize(anomalyEventArray); i++)
+	{
+		anomalyEventList->numAnomalyEvents++;
+		gint index = i;
+		// Get reference for anomaly event instance
+		struct anomalyEvent_t *aEv = &(anomalyEventList->anomalyEvents[index]);
+		
+		cJSON *item = cJSON_GetArrayItem (anomalyEventArray, i);
+		
+		// Get Node Anomalies
+		cJSON *nodeAnomaly = cJSON_GetObjectItemCaseSensitive (item, "nodeAnomaly");
+		cJSON *nodeAnomalyWimId = cJSON_GetObjectItem (nodeAnomaly, "wimId");               
+		cJSON *nodeAnomalyNodeId = cJSON_GetObjectItem (nodeAnomaly, "nodeId");
+		cJSON *nodeAnomalyNodeStatus = cJSON_GetObjectItem (nodeAnomaly, "nodeStatus");		
+		if (cJSON_IsString (nodeAnomalyWimId))
+		{
+			strcpy (aEv->nodeAnomaly.wimId, nodeAnomalyWimId->valuestring);
+			DEBUG_RL_RA ("Node Anomaly WimId: %s", aEv->nodeAnomaly.wimId);
+		}
+		if (cJSON_IsString (nodeAnomalyNodeId))
+		{
+			strcpy (aEv->nodeAnomaly.nodeId.nodeId, nodeAnomalyNodeId->valuestring);
+			DEBUG_RL_RA ("Node Anomaly NodeId: %s", aEv->nodeAnomaly.nodeId.nodeId);
+		}
+		if (cJSON_IsString (nodeAnomalyNodeStatus))
+		{
+			strcpy (aEv->nodeAnomaly.nodeStatus, nodeAnomalyNodeStatus->valuestring);
+			DEBUG_RL_RA ("Node Anomaly NodeId: %s", aEv->nodeAnomaly.nodeStatus);
+		}
+		
+		// Get the Link Anomalies
+		cJSON *linkAnomaly = cJSON_GetObjectItemCaseSensitive (item, "LinkAnomaly");
+		cJSON *linkAnomalyInterWanLink = cJSON_GetObjectItem (linkAnomaly, "interWanLink");
+		if (cJSON_IsBool (linkAnomalyInterWanLink))
+		{
+			// Check whether the link anomaly occurs over a InterWanLink
+			if (cJSON_IsTrue (linkAnomalyInterWanLink))
+			{
+				aEv->linkAnomaly.interWanLink = TRUE;
+				DEBUG_RL_RA ("Link Anomaly over an INTER-WanLink");	
+			}
+			if (cJSON_IsFalse (linkAnomalyInterWanLink))
+			{
+				aEv->linkAnomaly.interWanLink = FALSE;
+				DEBUG_RL_RA ("Link Anomaly over an INTRA-WanLink");	
+			}
+		}
+		// aWimId
+		cJSON *linkAnomalyAwinId = cJSON_GetObjectItem (linkAnomaly, "aWimId");
+		if (cJSON_IsString (linkAnomalyAwinId))
+		{
+			strcpy (aEv->linkAnomaly.aWimId, linkAnomalyAwinId->valuestring);
+			DEBUG_RL_RA ("Link Anomaly aWimId: %s", aEv->linkAnomaly.aWimId);
+		}
+		// zWimId
+		cJSON *linkAnomalyZwinId = cJSON_GetObjectItem (linkAnomaly, "zWimId");
+		if (cJSON_IsString (linkAnomalyZwinId))
+		{
+			strcpy (aEv->linkAnomaly.zWimId, linkAnomalyZwinId->valuestring);
+			DEBUG_RL_RA ("Link Anomaly zWimId: %s", aEv->linkAnomaly.zWimId);
+		}
+		// aNodeId
+		cJSON *linkAnomalyAnodeId = cJSON_GetObjectItem (linkAnomaly, "aNodeId");
+		if (cJSON_IsString (linkAnomalyAnodeId))
+		{
+			strcpy (aEv->linkAnomaly.aNodeId.nodeId, linkAnomalyAnodeId->valuestring);
+			DEBUG_RL_RA ("Link Anomaly aNodeId: %s", aEv->linkAnomaly.aNodeId.nodeId);
+		}
+		// aLinkId
+		cJSON *linkAnomalyALinkId = cJSON_GetObjectItem (linkAnomaly, "aLinkId");
+		if (cJSON_IsNumber (linkAnomalyALinkId))
+		{
+			aEv->linkAnomaly.aLinkId = (guint32)linkAnomalyALinkId->valuedouble;
+			DEBUG_RL_RA ("Link Anomaly aLinkId: %u", aEv->linkAnomaly.aLinkId);        
+		}
+		// LinkStatus
+		cJSON *linkAnomalyLinkStatus = cJSON_GetObjectItem (linkAnomaly, "linkStatus");
+		if (cJSON_IsString (linkAnomalyLinkStatus))
+		{
+			strcpy (aEv->linkAnomaly.linkStatus, linkAnomalyLinkStatus->valuestring);
+			DEBUG_RL_RA ("Link Anomaly Link Status: %s", aEv->linkAnomaly.linkStatus);
+		}
+		// Degraded Link Packet Loss Value
+		cJSON *linkAnomalyDegradedLinkPktLoss = cJSON_GetObjectItem (linkAnomaly, "degLinkPacketLossValue");
+		if (cJSON_IsNumber (linkAnomalyDegradedLinkPktLoss))
+		{
+			memcpy (&(aEv->linkAnomaly.linkPacketLoss), &(linkAnomalyDegradedLinkPktLoss->valuedouble), sizeof (gdouble));			
+			DEBUG_RL_RA ("Link Anomaly Link Packet Loss: %f", aEv->linkAnomaly.linkPacketLoss);        
+		}
+		// Degraded Link Packet Loss Value
+		cJSON *linkAnomalyDegradedLinkPktDelay = cJSON_GetObjectItem (linkAnomaly, "degLinkLatencyValue");
+		if (cJSON_IsNumber (linkAnomalyDegradedLinkPktDelay))
+		{
+			memcpy (&(aEv->linkAnomaly.linkPacketDelay), &(linkAnomalyDegradedLinkPktDelay->valuedouble), sizeof (gdouble));			
+			DEBUG_RL_RA ("Link Anomaly Link Packet Delay: %f", aEv->linkAnomaly.linkPacketDelay);        
+		}		
+	}
+	return;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 /**
@@ -1079,7 +1190,7 @@ void parsing_json_array_requestList (cJSON * requestListArray)
 /////////////////////////////////////////////////////////////////////////////////////////
 void parsing_json_obj_ra_request (cJSON * root, GIOChannel * source)
 {
-	DEBUG_RL_RA ("Parsing the RA Request");    
+	//DEBUG_RL_RA ("Parsing the RA Request");    
     
     if (rlTopo == NULL)
 	{	
@@ -1092,18 +1203,16 @@ void parsing_json_obj_ra_request (cJSON * root, GIOChannel * source)
 		DEBUG_RL_RA ("reqList does not exist (was not created) ... STOP\n");
 		exit(-1);       
 	} 
-
-	DEBUG_RL_RA ("reqList: %p", reqList);
-	DEBUG_RL_RA ("rlTopo: %p", rlTopo);
-	DEBUG_RL_RA ("rlTopo->numInterWanLinks: %d", rlTopo->numInterWanLinks);
-	DEBUG_RL_RA ("rlTopo->numAbsWanTopo: %d", rlTopo->numAbsWanTopo);	
+	
+	//DEBUG_RL_RA ("rlTopo->numInterWanLinks: %d", rlTopo->numInterWanLinks);
+	//DEBUG_RL_RA ("rlTopo->numAbsWanTopo: %d", rlTopo->numAbsWanTopo);	
     
     // Get the RA id
 	cJSON *raId_oj = cJSON_GetObjectItemCaseSensitive (root, "raId");
 	if (cJSON_IsString (raId_oj))
 	{
 		memcpy(raId, raId_oj->valuestring, strlen (raId_oj->valuestring));		
-		DEBUG_RL_RA ("raId: %s", raId);
+		//DEBUG_RL_RA ("RA ID: %s", raId);
 	}
 	
 	// Get the syncPaths
@@ -1114,13 +1223,12 @@ void parsing_json_obj_ra_request (cJSON * root, GIOChannel * source)
 		if (cJSON_IsTrue (synchPath_obj))
 		{
 			syncPath = TRUE;
-			syncPath = TRUE;
-			DEBUG_RL_RA ("Synchronization of Paths is requested");	
+			//DEBUG_RL_RA ("Path Synchronization is required");	
 		}
 		if (cJSON_IsFalse (synchPath_obj))
 		{
-			syncPath = TRUE;
-			DEBUG_RL_RA ("Synchronization of Paths is NOT required");	
+			syncPath = FALSE;
+			//DEBUG_RL_RA ("No Path Synchronization");	
 		}
 	}
 		
@@ -1136,6 +1244,12 @@ void parsing_json_obj_ra_request (cJSON * root, GIOChannel * source)
     // Get the abstrated WAN topologies
 	cJSON *absWanTopoArray = cJSON_GetObjectItemCaseSensitive (root, "absWanTopo");
 	parsing_json_obj_absWanTopo (absWanTopoArray);
+	//DEBUG_RL_RA ("Abs Wan Topology already Parsed");
+	
+	// Get the anomaly events
+	cJSON *anomalyEventArray = cJSON_GetObjectItemCaseSensitive (root, "anomalyEvents");
+	if (cJSON_IsObject(anomalyEventArray))
+		parsing_json_obj_anomalyEvents (anomalyEventArray);
 
 	return;
 }
@@ -1155,15 +1269,12 @@ void parsing_json_obj_ra_request (cJSON * root, GIOChannel * source)
 gint parsing_json_obj (guchar *data, GIOChannel *source)
 {
     cJSON * root = cJSON_Parse((const char *)data);
-
     char * print = cJSON_Print(root);  
-    DEBUG_RL_RA ("Input JSON content: %s", print);
-
-    parsing_json_obj_ra_request (root, source);
-	
+    //DEBUG_RL_RA ("%s", print);
+    parsing_json_obj_ra_request (root, source);	
 	// Release the root JSON object variable used for RA
-	cJSON_free (root);	
-
+	cJSON_free (root);
+	g_free(print);
     return 0;
 }
 
@@ -1201,13 +1312,12 @@ struct rl_client * rl_ra_server_rapi_client_create (GIOChannel * channel_client,
 	CLIENT_ID++;
 	client->type = CLIENT_ID;
 
-	DEBUG_RL_RA ("Client Id: %u is created (%p)", client->type, client);
-	DEBUG_RL_RA ("Client ibuf: %p || obuf: %p", client->ibuf, client->obuf);
+	//DEBUG_RL_RA ("Client Id: %u is created (%p)", client->type, client);
+	//DEBUG_RL_RA ("Client ibuf: %p || obuf: %p", client->ibuf, client->obuf);
 
 	// Add the tcp client to the list
 	rapi_tcp_client_list = g_list_append (rapi_tcp_client_list, client);
-	DEBUG_RL_RA ("Number of Connected TCP Clients to MTP PA Server: %d", g_list_length (rapi_tcp_client_list));     
-
+	DEBUG_RL_RA ("Number of TCP Clients to RA Server: %d", g_list_length (rapi_tcp_client_list));
 	return client;
 }
 
@@ -1224,7 +1334,7 @@ struct rl_client * rl_ra_server_rapi_client_create (GIOChannel * channel_client,
 /////////////////////////////////////////////////////////////////////////////////////////
 void rapi_client_close (struct rl_client * client)
 {
-	DEBUG_RL_RA ("Closing the client (Id: %d) %p", client->type, client);
+	//DEBUG_RL_RA ("Closing the client (Id: %d) %p", client->type, client);
 	
 	if (client->ibuf != NULL)
 	{
@@ -1238,12 +1348,11 @@ void rapi_client_close (struct rl_client * client)
 	}
 	// Remove from the list
 	rapi_tcp_client_list = g_list_remove (rapi_tcp_client_list, client);
-	DEBUG_RL_RA ("TCP Client List: %d", g_list_length(rapi_tcp_client_list));
+	//DEBUG_RL_RA ("TCP Client List: %d", g_list_length(rapi_tcp_client_list));
 	 
 	g_free (client);
 	client = NULL;	 
-	DEBUG_RL_RA ("client has been removed ...");
-	 
+	//DEBUG_RL_RA ("client has been removed ...");	 
 	return;
 }
 
@@ -1262,7 +1371,7 @@ void rapi_close_operations (GIOChannel * source)
 {
 	gint fd = g_io_channel_unix_get_fd (source);
 	
-	DEBUG_RL_RA ("Stop all the operations over the fd: %d", fd);	
+	//DEBUG_RL_RA ("Stop all the operations over the fd: %d", fd);	
 	g_io_channel_flush(source, NULL);
 	GError *error = NULL;    
 	g_io_channel_shutdown (source, TRUE, &error);
@@ -1289,6 +1398,8 @@ void rapi_close_operations (GIOChannel * source)
 /////////////////////////////////////////////////////////////////////////////////////////
 void rapi_stop (struct rl_client * client, GIOChannel * source, gint fd)
 {
+	
+	DEBUG_RL_RA("Client Socket: %d is Stopped", fd);
 	// remove client
 	rapi_client_close (client);
 	// Stop operations over that channel
@@ -1313,8 +1424,8 @@ void rapi_stop (struct rl_client * client, GIOChannel * source, gint fd)
 gint rapi_get_line (GIOChannel *channel, gchar *buf, gint size)
 {
     gint i = 0;
-    DEBUG_RL_RA ("\n");
-    DEBUG_RL_RA ("----- Read REST API Line(\r\n) ------");
+    //DEBUG_RL_RA ("\n");
+    //DEBUG_RL_RA ("----- Read REST API Line(\r\n) ------");
     gint n = 0;
     guchar c = '\0'; // END OF FILE    
     gboolean cr = FALSE;
@@ -1323,7 +1434,7 @@ gint rapi_get_line (GIOChannel *channel, gchar *buf, gint size)
 		n = read_channel (channel, &c, 1);		
 		if (n == -1)
 		{
-			DEBUG_RL_RA ("Close the channel and eliminate the client");
+			//DEBUG_RL_RA ("Close the channel and eliminate the client");
 			return -1;			
 		}	
 		if (n > 0)
@@ -1349,7 +1460,7 @@ gint rapi_get_line (GIOChannel *channel, gchar *buf, gint size)
 		}
     }
     buf[i] = '\0';    
-    DEBUG_RL_RA ("Line (size: %d) buf: %s", i, buf);
+    //DEBUG_RL_RA ("Line (size: %d) buf: %s", i, buf);
     return i;
 }  
 
@@ -1379,9 +1490,9 @@ guint rl_ra_server_get_method (gchar *buf, gint *j)
 	method[i] = '\0';
 	DEBUG_RL_RA ("REST API METHOD: %s", method);	
 	
-	// Check that the methods are GET of POST
+	// Check that the methods are GET, POST or PUT
 	if (strcasecmp((const char *)method, "GET") && strcasecmp((const char *)method, "POST") && 
-		strcasecmp ((const char *)method, "HTTP/1.1"))
+		strcasecmp ((const char *)method, "HTTP/1.1") && strcasecmp ((const char *)method, "PUT"))
 	{
 		DEBUG_RL_RA ("The method: %s is not currently supported ...", method);
 		return RestApiMethod;	
@@ -1398,7 +1509,11 @@ guint rl_ra_server_get_method (gchar *buf, gint *j)
 	else if (strncmp ((const char *)method, "HTTP/1.1", 8) == 0)
 	{
 		RestApiMethod = REST_API_METHOD_HTTP;
-	}	
+	}
+	else if (strncmp ((const char *)method, "PUT", 3) == 0)
+	{
+		RestApiMethod = REST_API_METHOD_PUT;
+	}
 	
 	return RestApiMethod;	
 }
@@ -1418,8 +1533,6 @@ guint rl_ra_server_get_method (gchar *buf, gint *j)
 /////////////////////////////////////////////////////////////////////////////////////////
 gint get_url (gchar *buf, gint *j, gchar *url)
 {
-	gint i;	
-	
 	// Skip space char
 	while (ISspace(buf[*j]) && (*j < strlen(buf)))
 	{
@@ -1440,9 +1553,9 @@ gint get_url (gchar *buf, gint *j, gchar *url)
 	}
 	//DEBUG_RL_RA ("numChar: %d", numChar);
 	memcpy (url, buf + initChar, numChar);
-	DEBUG_RL_RA ("url: %s", url);
-	i = numChar;
-	return i;	
+	url[numChar] = '\0';
+	//DEBUG_RL_RA ("url: %s", url);
+	return numChar;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -1460,13 +1573,11 @@ gint get_url (gchar *buf, gint *j, gchar *url)
 /////////////////////////////////////////////////////////////////////////////////////////
 gint get_version (gchar *buf, gint *j, gchar *version)
 {
-	gint i;	
 	// Skip space char
 	while (ISspace(buf[*j]) && (*j < strlen(buf)))
 	{
 		*j = *j + 1;
-	}
-	
+	}	
 	//DEBUG_RL_RA ("buf[%d]: %c", *j, buf[*j]);
 	int result = isspace (buf[*j]);	
 	*buf = *buf + *j;
@@ -1481,9 +1592,9 @@ gint get_version (gchar *buf, gint *j, gchar *version)
 	}
 	//DEBUG_RL_RA ("numChar: %d", numChar);
 	memcpy (version, buf + initChar, numChar);
-	DEBUG_RL_RA ("version: %s", version);
-	i = numChar;
-	return i;
+	version[numChar] = '\0';
+	//DEBUG_RL_RA ("version: %s", version);	
+	return numChar;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -1500,14 +1611,27 @@ gint get_version (gchar *buf, gint *j, gchar *version)
 /////////////////////////////////////////////////////////////////////////////////////////
 gint triggering_routeComp (struct compRouteOutputList_t *compRouteList, gchar *raId)
 {
+	g_assert (compRouteList);	
 	gint httpCode = HTTP_RETURN_CODE_OK;
-	// Select the algorithm according to the requested RAId
-		
+	//////////////////// Algorithm Selector (RAId)//////////////////////////////////////	
+	// Connectivity Service Abstraction (CSA)
 	if (strncmp ((const char*)raId, "CSA", 3) == 0)
+	{
+		//DEBUG_RL_RA ("RA: CSA");
 		httpCode = ra_CSA_alg (compRouteList);
-	else if (strncmp ((const char*)raId, "InA", 3) == 0)
+	}
+	// Infrastructure Abstraction (InA)
+	else if (strncmp ((const char*)raId, "InA", 3) == 0) 
+	{
+		//DEBUG_RL_RA ("RA: InA");
 		httpCode = ra_InA_alg (compRouteList);
-	
+	}
+	// Global Concurrent Optimization (GCO): Resoration / Re-Allocation / Re-Optimization
+	else if (strncmp ((const char*)raId, "GCO", 3) == 0)
+	{
+		//DEBUG_RL_RA ("RA: GCO");
+		httpCode = ra_GCO_alg (compRouteList);	
+	}
 	return httpCode;
 }
 
@@ -1546,7 +1670,7 @@ gboolean rapi_activity (GIOChannel *source, GIOCondition cond, gpointer data)
 	DEBUG_RL_RA (" ************************************************************************** ");   
 
 	gint fd = g_io_channel_unix_get_fd (source);
-	DEBUG_RL_RA ("File Descriptor (fd): %d, cond: %d", fd, cond);
+	DEBUG_RL_RA ("fd: %d, cond: %d", fd, cond);
 
 	if (cond != G_IO_IN)
 	{
@@ -1589,34 +1713,13 @@ gboolean rapi_activity (GIOChannel *source, GIOCondition cond, gpointer data)
 	i = get_url (buf, &j, url);	
 	url[i] = '\0';	
 
-	// for method POST and GET, chech url "/compRoute/"
-	if (((RestApiMethod == REST_API_METHOD_POST) || (RestApiMethod == REST_API_METHOD_GET))
-		&& (strncmp((const char*) url, "/compRoute/", 10) != 0))
+	// for method POST, PUT check that the url is "/compRoute/"
+	if (strncmp((const char*) url, "/compRoute/", 10) != 0)
 	{
-		DEBUG_RL_RA ("UnKnown url(%s)!!!", url);
+		DEBUG_RL_RA ("Unknown url(%s)!!!", url);
 		rapi_stop (rl_client, source, fd);
 		exit (-1);
-	}	 
-
-	// Process the HTTP/1.1 response
-	if (RestApiMethod == REST_API_METHOD_HTTP)
-	{
-		int http_return = atoi ((const char *) url);
-		DEBUG_RL_RA ("HTTP/1.1. %d", http_return);
-	
-		// TBD - DO SOMETHING WITH THE RESTURNED VALUE
-	
-		i = 0;		
-		while (ISspace(buf[j]) && (j < sizeof(buf)))
-			j++;
-		while (!ISspace(buf[j]) && (i < sizeof(version) - 1) && (j < sizeof(buf)))
-		{
-			http_result[i] = buf[j];
-			i++; j++;
-		}	
-		http_result[i] = '\0';
-		DEBUG_RL_RA ("HTTP/1.1. %d %s", http_return, http_result);
-	}	
+	}
 	
 	// get the version	
 	i = get_version (buf, &j, version);
@@ -1631,7 +1734,7 @@ gboolean rapi_activity (GIOChannel *source, GIOCondition cond, gpointer data)
 		rapi_stop (rl_client, source, fd);		
 		return FALSE;					
 	}
-	DEBUG_RL_RA ("Header: %s", buf);	
+	//DEBUG_RL_RA ("Header: %s", buf);	
 	//DEBUG_RL_RA ("interNfviPopConnectivityId: %s", interNfviPopConnectivityId);
 	// Headers --- The Header Fields ends up with a void line (i.e., \r\n)
 	while ((nbytes > 0) && (strcmp ("\r\n", (const char *)buf) != 0))
@@ -1645,10 +1748,10 @@ gboolean rapi_activity (GIOChannel *source, GIOCondition cond, gpointer data)
 			rapi_stop (rl_client, source, fd);		
 			return FALSE;
 		}
-		DEBUG_RL_RA ("Header: %s", buf);	  
+		//DEBUG_RL_RA ("Header: %s", buf);	  
 		if (strncmp ((const char *)buf, "Content-Length:", 15) == 0)
 		{
-			DEBUG_RL_RA ("Header Content-Length Found");
+			//DEBUG_RL_RA ("Header Content-Length Found");
 			gchar str[20];
 	  
 			gint i = 15, k = 0;  // "Content-Length:" We skip the first 16 characters to directly retrieve the length in bytes of the Body of Request
@@ -1673,7 +1776,7 @@ gboolean rapi_activity (GIOChannel *source, GIOCondition cond, gpointer data)
 			}
 			contentLength[i] = '\0';			
 			body_length = atoi (contentLength);
-			DEBUG_RL_RA ("Body length: %d (%s) in Bytes", body_length, contentLength);	      
+			//DEBUG_RL_RA ("Body length: %d (%s) in Bytes", body_length, contentLength);	      
 		}	  
 	}	
 	if (body_length == 0)
@@ -1684,12 +1787,13 @@ gboolean rapi_activity (GIOChannel *source, GIOCondition cond, gpointer data)
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Processing Body of the Request
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	DEBUG_RL_RA ("Read the contents of the Body");
+	//DEBUG_RL_RA ("REST API Request - Body -");
 	nbytes = read_channel (source, (guchar *)(rl_client->ibuf->data + rl_client->ibuf->putp), body_length);
-	DEBUG_RL_RA ("nbytes: %d, rl_client->ibuf->data: %s", nbytes, rl_client->ibuf->data);
+	//DEBUG_RL_RA ("nbytes: %d, rl_client->ibuf->data: %s", nbytes, rl_client->ibuf->data);
+	
 	if ((nbytes < 0) && (body_length > 0))
 	{
-		DEBUG_RL_RA ("nbytes: %d // body_length: %d", nbytes, body_length);
+		DEBUG_RL_RA ("nbytes: %d; body_length: %d", nbytes, body_length);
 		exit (-1);
 	}
 	
@@ -1698,10 +1802,11 @@ gboolean rapi_activity (GIOChannel *source, GIOCondition cond, gpointer data)
 
 	// -----------  Parsing the contents on the RA to be executed -----------------------
 	// Build rlTopo placeholder	
-	rlTopo = create_rl_topology ();
-	
+	rlTopo = create_rl_topology ();	
 	// Create the interNfviPopConnectivity request List placeholder
 	reqList = create_req_list ();
+	// create the anomaly event list placeholder
+	anomalyEventList = create_anomaly_event_list ();
 	
 	// Process the json contents and store relevant information at both the rlTopo and interNfviPopConnectionReq		
 	gint ret = parsing_json_obj (rl_client->ibuf->data, source);	
@@ -1713,8 +1818,9 @@ gboolean rapi_activity (GIOChannel *source, GIOCondition cond, gpointer data)
 	}	
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////		
-	// Trigger the required computation	
+	// Trigger the path computation	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//DEBUG_RL_RA ("Triggering the computation");
 	struct compRouteOutputList_t *compRouteOutputList = create_route_list ();
 	gint httpCode = triggering_routeComp (compRouteOutputList, raId);	
 
@@ -1733,8 +1839,8 @@ gboolean rapi_activity (GIOChannel *source, GIOCondition cond, gpointer data)
 	// Release the variables		
 	g_free (rlTopo);
 	g_free (reqList);
-	g_free (compRouteOutputList);
-   
+	g_free (anomalyEventList);
+	g_free (compRouteOutputList);   
 	return TRUE;  
 }
 
@@ -1753,19 +1859,17 @@ gboolean rapi_activity (GIOChannel *source, GIOCondition cond, gpointer data)
 /////////////////////////////////////////////////////////////////////////////////////////
 gboolean rest_api_tcp_new_connection (GIOChannel *source, GIOCondition cond, gpointer data)
 {
-	socklen_t client;	
-	struct sockaddr_in client_addr;
-	
-	DEBUG_RL_RA (" \n");
-	DEBUG_RL_RA (" ****** New Incoming TCP Connection (RESTful API) ******");
+		
+	//DEBUG_RL_RA (" \n");
+	DEBUG_RL_RA (" ****** New TCP Connection (RESTful API) ******");
 
 	/** get size of client_addre structure */
-	client = sizeof(client_addr);
+	struct sockaddr_in client_addr;
+	socklen_t client = sizeof(client_addr);
 	
 	if ((cond == G_IO_HUP) || (cond == G_IO_ERR) || (G_IO_NVAL))
 	{
-		DEBUG_RL_RA ("Something happening with the channel and fd ... cond: %d", cond);
-		
+		//DEBUG_RL_RA ("Something happening with the channel and fd ... cond: %d", cond);		
 		// Find the associated RL client (by the fd) and remove from active RL client list. 
 		// Stop all the operations over that RL client bound channel
 		struct rl_client *rl_client = NULL;
@@ -1781,24 +1885,23 @@ gboolean rest_api_tcp_new_connection (GIOChannel *source, GIOCondition cond, gpo
 			close (fd);
 			return FALSE;
 		}		
-	}	
-
+	}
 	if (cond == G_IO_IN)
 	{
 		gint new;
 		if ((new = accept (g_io_channel_unix_get_fd (source), (struct sockaddr *)&client_addr, &client)) < 0)
 		{
-			DEBUG_RL_RA ("Unable to accept new connection");
+			//DEBUG_RL_RA ("Unable to accept new connection");
 			return FALSE;
 		}
 
 		/** new channel */
 		GIOChannel * new_channel = g_io_channel_unix_new (new);		
-		DEBUG_RL_RA ("TCP Connection (REST API) is UP; (socket: %d)", new);
+		//DEBUG_RL_RA ("TCP Connection (REST API) is UP; (socket: %d)", new);
 
 		/** create rl_ra_server client */		
 		struct rl_client *new_client = rl_ra_server_rapi_client_create (new_channel, new);	
-		DEBUG_RL_RA ("NEW RL client created (%p) Id: %d with fd: %d", new_client, new_client->type, new);
+		//DEBUG_RL_RA ("NEW RL client created (%p) Id: %d with fd: %d", new_client, new_client->type, new);
 
 		/** 
 		* force binary encoding with NULL
@@ -1821,8 +1924,7 @@ gboolean rest_api_tcp_new_connection (GIOChannel *source, GIOCondition cond, gpo
 		{
 			DEBUG_RL_RA ("Error: %s", error->message);
 			exit (-1);
-		}	
-
+		}
 		/**
 		* Adds the new channel into the main event loop.
 		* the watch_id is used for removing permanent the
@@ -1830,7 +1932,7 @@ gboolean rest_api_tcp_new_connection (GIOChannel *source, GIOCondition cond, gpo
 		* of the MainLoop.
 		*/
 		
-		DEBUG_RL_RA ("ibuf: %p // obud: %p", new_client->ibuf, new_client->obuf);		
+		//DEBUG_RL_RA ("ibuf: %p // obud: %p", new_client->ibuf, new_client->obuf);		
 		g_io_add_watch (new_channel, G_IO_IN, rapi_activity, new_client);
     }	
 	return TRUE;
@@ -1908,14 +2010,10 @@ void rapi_setnonblocking(gint sock)
 /////////////////////////////////////////////////////////////////////////////////////////
 void rest_api_serve_init (gint port)
 {     
-      
-	DEBUG_RL_RA ("REST API PORT (listening): %d", port);     
-	gint                s;
-	struct sockaddr_in  addr;
-	GIOChannel          *channel;
-
+    DEBUG_RL_RA ("REST API PORT (listening): %d", port);     
+	
 	/** File Descriptor for our "listening" socket */
-	s = socket (AF_INET, SOCK_STREAM, 0);
+	gint s = socket (AF_INET, SOCK_STREAM, 0);
 	if (s == -1)
 	{
 		DEBUG_RL_RA ("Error creating the socket");
@@ -1928,14 +2026,15 @@ void rest_api_serve_init (gint port)
 
 	/** So that we can re-bind to it without TIME_WAIT problems */
 	rapi_tcp_enable_reuseaddr (s);
-
+	
+	struct sockaddr_in addr;
 	memset (&addr, 0, sizeof (addr));
 	addr.sin_family       = AF_INET;
 	addr.sin_port         = htons ((u_short)port);
 	addr.sin_addr.s_addr  = INADDR_ANY;      
 
 	/** lets associate to an address*/
-	if (bind (s, (struct sockaddr *)&addr, sizeof (addr)) == -1)
+	if (bind (s, (struct sockaddr *)&addr, sizeof(addr)) == -1)
 	{
 		close (s);
 		DEBUG_RL_RA ("socket bind failed");
@@ -1954,24 +2053,21 @@ void rest_api_serve_init (gint port)
 	//DEBUG_RL_RA ("Listen (up to 10) to Fd: %d Done", s);
 
 	/** Create new channel to handle the socket */
-	channel = g_io_channel_unix_new (s);
+	GIOChannel *channel = g_io_channel_unix_new (s);
 	gsize buffersize = g_io_channel_get_buffer_size (channel);
-	DEBUG_RL_RA ("GIOChannel with Buffer Size: %d", buffersize);
+	//DEBUG_RL_RA ("GIOChannel with Buffer Size: %d", (gint)buffersize);
 
 	gsize newBufferSize = MAX_GIO_CHANNEL_BUFFER_SIZE;
 	g_io_channel_set_buffer_size (channel, newBufferSize);
 
 	buffersize = g_io_channel_get_buffer_size (channel);
-	DEBUG_RL_RA ("GIOChannel with Buffer Size: %d", buffersize);
-
-	DEBUG_RL_RA ("Channel associated to fd: %d is created", s);
-
+	//DEBUG_RL_RA ("GIOChannel with Buffer Size: %d", (gint)buffersize);
+	//DEBUG_RL_RA ("Channel associated to fd: %d is created", s);
 	/**
 	* Adds the new channel into the main event loop.
 	* According to a condition G_IO_IN, the function
 	* rest_api_tcp_new_connection handles this event.
 	*/
 	g_io_add_watch (channel, G_IO_IN | G_IO_ERR | G_IO_HUP | G_IO_NVAL, rest_api_tcp_new_connection, NULL);
-
 	return;     
-}  
+}

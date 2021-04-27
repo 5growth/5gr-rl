@@ -39,8 +39,8 @@
 #include "rl_ra_server_ra_InA.h"
 
 // Global Variables
-struct map_nodes_t *mapNodes;
-struct graph_t *graph;
+//struct map_nodes_t *mapNodes;
+//struct graph_t *graph;
 
 ///////////////////////////////////////////////////////////////////////////////////
 /**
@@ -126,8 +126,8 @@ void routing_ra_InA (gint srcMapIndex, gint dstMapIndex, struct graph_t *g,
 		if (memcmp (re->aNodeId.nodeId, SN->nodeId, sizeof (SN->nodeId)) != 0)
 		{
 			DEBUG_RL_RA ("root Link: aNodeId: %s is NOT the spurNode: %s -- something wrong", re->aNodeId.nodeId, SN->nodeId);
-			g_list_free_full (S, g_free);
-			g_list_free_full (Q, g_free);
+			g_list_free_full (g_steal_pointer(&S), g_free);
+			g_list_free_full (g_steal_pointer(&Q), g_free);
 			return;
 		}		
 	}
@@ -168,8 +168,8 @@ void routing_ra_InA (gint srcMapIndex, gint dstMapIndex, struct graph_t *g,
         DEBUG_RL_RA ("S length: %d", g_list_length (S));              
     }
     
-    g_list_free_full (S, g_free);
-	g_list_free_full (Q, g_free);
+    g_list_free_full (g_steal_pointer(&S), g_free);
+	g_list_free_full (g_steal_pointer(&Q), g_free);
 	return;
 }
 
@@ -229,49 +229,7 @@ gint compute_path_sp_ra_InA (struct pred_t *predecessors, struct graph_t *g, str
 	DEBUG_RL_RA ("Destination %s is reachable", r->dstPEId.nodeId);    
     
     // Handle predecessors
-	struct nodes_t v;	
-	duplicate_node_id (&r->dstPEId, &v);
-	
-	struct edges_t *e = create_edge ();	
-	get_edge_from_map_by_node (e, v, mapNodes);
-	
-	DEBUG_RL_RA ("edge -- aNodeId: %s, zNodeId: %s, aLinkId: %u, zLinkId: %u", e->aNodeId.nodeId, e->zNodeId.nodeId, e->aLinkId, e->zLinkId);
-			
-	// Get u (being source of edge e)
-	struct nodes_t u;	
-	duplicate_node_id (&e->aNodeId, &u);
-		
-	// Add to the predecessors list
-	struct pred_comp_t *pred = &predecessors->predComp[predecessors->numPredComp];
-	memcpy (pred->v.nodeId, u.nodeId, sizeof (u.nodeId));
-	
-	struct edges_t *e1 = &(pred->e);	
-	duplicate_edge (e1, e);
-	predecessors->numPredComp++;
-	DEBUG_RL_RA ("items in predecessors: %d", predecessors->numPredComp);
-		
-	// Back-trace edges till reaching the srcPEId
-	while (memcmp ((const char*)(u.nodeId), (const char *) (r->srcPEId.nodeId), strlen(r->srcPEId.nodeId)) != 0)
-	{		
-		duplicate_node_id (&u, &v);
-		get_edge_from_map_by_node (e, v, mapNodes);
-		DEBUG_RL_RA ("edge -- aNodeId: %s, zNodeId: %s, aLinkId: %u, zLinkId: %u", e->aNodeId.nodeId, e->zNodeId.nodeId, e->aLinkId, e->zLinkId);
-		
-		// Get the u (being source of edge e)		
-		duplicate_node_id (&e->aNodeId, &u);
-		
-		// Get the new predecessor
-		struct pred_comp_t *pred = &predecessors->predComp[predecessors->numPredComp];
-			
-		// Add to the predecessors list					
-		duplicate_node_id (&u, &pred->v);
-		
-		struct edges_t *e1 = &(pred->e);
-		duplicate_edge (e1, e);
-		predecessors->numPredComp++;
-		DEBUG_RL_RA ("items in predecessors: %d", predecessors->numPredComp);		
-	}    
-    g_free (e);
+	build_predecessors (predecessors, r, mapNodes);
     return 1;
 }    
 	
@@ -302,7 +260,14 @@ void ra_InA_alg_per_connReq (struct compRouteOutput_t *connRoute, struct interNf
 	struct pred_t * predecessors = create_predecessors ();	
     
     // Compute the shortest path applying Dijkstra algorithm with the current graph
-    gint done = compute_path_sp_ra_InA (predecessors, graph, req, NULL, NULL);    
+    gint done = compute_path_sp_ra_InA (predecessors, graph, req, NULL, NULL);
+	if (done == -1)
+	{
+		DEBUG_RL_RA("1st SO did not worked");
+		g_free(predecessors);
+		g_free(mapNodes);
+		return;
+	}
     
     // Create the node list from the predecessors
 	struct compRouteOutputItem_t * path = create_path_item ();    
@@ -414,12 +379,9 @@ void ra_InA_alg_per_connReq (struct compRouteOutput_t *connRoute, struct interNf
 			newKpath->pathCost = dst_map->distance;
 			memcpy (&newKpath->reqBw, &dst_map->avaiBandwidth, sizeof (dst_map->avaiBandwidth));
 			memcpy (&newKpath->latency, &dst_map->latency, sizeof (dst_map->latency));
-			DEBUG_RL_RA ("*****************************************************************************");
 			DEBUG_RL_RA ("New Candidate (kth: %d) SP --- Path Cost: %d, e2e latency: %f, bw: %f", k, newKpath->pathCost, newKpath->latency, newKpath->reqBw);				
 			// Add the computed kth SP to the heap B
-			duplicate_path (newKpath, &B->paths[B->numPaths]);
-			DEBUG_RL_RA ("*****************************************************************************");
-						
+			duplicate_path (newKpath, &B->paths[B->numPaths]);						
 			B->numPaths++;
 			DEBUG_RL_RA ("Number of B paths: %d", B->numPaths);
 			
@@ -440,19 +402,17 @@ void ra_InA_alg_per_connReq (struct compRouteOutput_t *connRoute, struct interNf
 		// Sort the potential paths contained in B by cost and latency and available bandwidth
 		sort_path_set (B);
 		
-		// Add the lowest path into A[k]
-		DEBUG_RL_RA ("\n");
+		// Add the lowest path into A[k]		
 		DEBUG_RL_RA ("-------------------------------------------------------------");
 		DEBUG_RL_RA ("Added SP from B[0] to A --- Path Cost: %d, e2e Latency: %f", B->paths[0].pathCost, B->paths[0].latency);
 		duplicate_path (&B->paths[0], &A->paths[A->numPaths]);
 		A->numPaths++;
 		DEBUG_RL_RA ("A number of elements: %d", A->numPaths);
-		DEBUG_RL_RA ("-------------------------------------------------------------");
-		DEBUG_RL_RA ("\n");
+		DEBUG_RL_RA ("-------------------------------------------------------------");		
 		
 		// Remove/pòp front element from the path set B (i.e. remove B[0])
 		pop_front_path_set (B);	
-		DEBUG_RL_RA ("B number of paths", B->numPaths);
+		DEBUG_RL_RA ("B number of paths: %d", B->numPaths);
 	}
 	
 	// Set the name of the interNfviPopConnectivityId and the requestId

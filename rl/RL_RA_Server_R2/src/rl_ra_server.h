@@ -21,30 +21,20 @@
 #ifndef _RL_RA_SERVER_H
 #define _RL_RA_SERVER_H
 
-
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <glib-2.0/glib/gtypes.h>
-
 
 ///////////////////////////////////////////////////
 // IP addressing of peer functional entities
 ///////////////////////////////////////////////////
 extern struct in_addr RL_IpAddr;
 
-
 // TCP Port for the REST API communication with the MTP main process
-#define RL_PORT 		8081
-       
+#define RL_PORT 		8081       
 
 // External Variables
 extern GMainLoop * loop;
 
-
-///////////////////////////////////////////////////
-// External Functions
-//////////////////////////////////////////////////
-void print_message (guchar *, uint16_t);
-struct timeval tv_adjust_pcc (struct timeval );
 
 #endif

@@ -39,10 +39,41 @@
 #include "rl_ra_server_ra_CSA.h"
 
 // Global Variables
-struct map_nodes_t *mapNodes;
-struct graph_t *graph;
+struct map_nodes_t *mapNodes = NULL;
+struct graph_t *graph = NULL;
 
-gint K_MAX = 5;
+gint errorBwCons = 0; // Path Computation Errors due to not fulfilling Bw constraints
+gint errorLatCons = 0; // Path Computation Error due to not fulfilling Latency constraints
+gint numPathCompIntents = 0;  // number of events triggering the path computation
+gint numSuccesPathComp = 0; // number of events resulting in succesfully path computations fulfilling the constraints
+struct timeval total_path_comp_time;
+
+
+///////////////////////////////////////////////////////////////////////////////////
+/**
+ * 	@file rl_ra_server/rl_ra_server_ra_CSA.c
+ * 	@brief update statistics of the CSA path computation
+ *
+ *  @param d
+ *
+ *	@author Ricardo Martínez <ricardo.martinez@cttc.es>
+ *	@date 2021
+ */
+ /////////////////////////////////////////////////////////////////////////////////////////
+void update_stats_csa_path_comp(struct timeval d)
+{
+	total_path_comp_time.tv_sec = total_path_comp_time.tv_sec + d.tv_sec;
+	total_path_comp_time.tv_usec = total_path_comp_time.tv_usec + d.tv_usec;
+	total_path_comp_time = tv_adjust(total_path_comp_time);
+
+	gdouble path_comp_time_msec = (((total_path_comp_time.tv_sec) * 1000) + ((total_path_comp_time.tv_usec) / 1000));
+	gdouble av_alg_comp_time = ((path_comp_time_msec / numSuccesPathComp));
+	DEBUG_RL_RA("\t --- STATS CSA PATH COMP ----");
+	DEBUG_RL_RA("Succesfully Comp: %d | Path Comp Requests: %d", numSuccesPathComp, numPathCompIntents);
+	DEBUG_RL_RA("Error Bw Cons: %d | Error Latency Cons: %d", errorBwCons, errorLatCons);
+	DEBUG_RL_RA("AV. PATH COMP ALG. TIME: %f ms", av_alg_comp_time);
+	return;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////
 /**
@@ -64,7 +95,9 @@ void routing_ra_CSA (gint srcMapIndex, gint dstMapIndex, struct graph_t *g,
 						struct interNfviPop_connection_req_t *r,
 						struct nodes_t *SN, struct compRouteOutputItem_t *RP)
 {
-    // Set params into mapNodes related to the source nodes of the request
+    
+	//DEBUG_RL_RA("Basic RSA CSA Routing");
+	// Set params into mapNodes related to the source nodes of the request
     mapNodes->map[srcMapIndex].distance = 0;
     mapNodes->map[srcMapIndex].latency = 0.0;
     mapNodes->map[srcMapIndex].avaiBandwidth = 0.0;
@@ -82,14 +115,15 @@ void routing_ra_CSA (gint srcMapIndex, gint dstMapIndex, struct graph_t *g,
 		exit (-1);    
     }
     
-    nodeItem->distance = 0;    
+    nodeItem->distance = 0;
+	nodeItem->latency = 0.0;
 	duplicate_node_id (&mapNodes->map[srcMapIndex].verticeId, &nodeItem->node);
     Q = g_list_insert_sorted (Q, nodeItem, sort_by_distance);    
 	
 	// Check whether there is spurNode (SN) and rootPath (RP)
 	if (SN != NULL && RP != NULL)
 	{
-		DEBUG_RL_RA ("There is rootPath and SpurNode: %s to be considered", SN->nodeId);
+		DEBUG_RL_RA ("RootPath and SpurNode: %s", SN->nodeId);
 		// Iterate through the rootPath from the source to the destination copying all the links till the SpurNode		
 		struct routeElement_t *re;
 		for (gint j = 0; j < RP->numRouteElements; j++)
@@ -125,53 +159,53 @@ void routing_ra_CSA (gint srcMapIndex, gint dstMapIndex, struct graph_t *g,
 		}
 		
 		// Check that the first node in Q set is SpurNode, otherwise something went wrong ...
-		if (memcmp (re->aNodeId.nodeId, SN->nodeId, sizeof (SN->nodeId)) != 0)
+		if (strcmp (re->aNodeId.nodeId, SN->nodeId) != 0)
 		{
 			DEBUG_RL_RA ("root Link: aNodeId: %s is NOT the spurNode: %s -- something wrong", re->aNodeId.nodeId, SN->nodeId);
-			g_list_free_full (S, g_free);
-			g_list_free_full (Q, g_free);
+			g_list_free_full (g_steal_pointer(&S), g_free);
+			g_list_free_full (g_steal_pointer(&Q), g_free);
 			return;
 		}		
 	}
+
+	if (g_list_length(Q) == 0)
+	{
+		DEBUG_RL_RA("Q Length = 0, weird ..");
+	}
         
-	DEBUG_RL_RA ("Q length: %d", g_list_length (Q));		
+	//DEBUG_RL_RA ("Q length: %d", g_list_length (Q));		
     while (g_list_length (Q) > 0)
     {
         //Extract from Q set
 		GList *listnode = g_list_first (Q);
         struct nodeItem_t *node = (struct nodeItem_t *)(listnode->data);
 		Q = g_list_remove (Q, node);
-        DEBUG_RL_RA ("Q length: %d", g_list_length (Q)); 
-        DEBUG_RL_RA ("Exploring node %s", node->node.nodeId);            
+        //DEBUG_RL_RA ("Q length: %d", g_list_length (Q)); 
+        //DEBUG_RL_RA ("Exploring node %s", node->node.nodeId);            
                
         // visit all the links from u within the graph
         indexVertice = graph_vertice_lookup (node->node.nodeId, g);        
         g_assert (indexVertice >= 0);
+
+		if (g->vertices[indexVertice].numTargetedVertices == 0)
+		{
+			DEBUG_RL_RA("Weird, v: %s has %d tVertices", g->vertices[indexVertice].verticeId.nodeId, g->vertices[indexVertice].numTargetedVertices);
+		}
 		           
 		// Check the targeted vertices from u
 		for (gint i = 0; i < g->vertices[indexVertice].numTargetedVertices; i++)
 		{
-			DEBUG_RL_RA ("Trigger check Link i: %d", i);                
+			//DEBUG_RL_RA ("Trigger check Link i: %d", i);                
 			gint done = check_link (node, indexVertice, i, g, r, &S, &Q, mapNodes);
 			(void)done;
-#if 0			
-			if (done)
-			{
-				DEBUG_RL_RA ("destination: %s has been reached", r->dstPEId.nodeId);
-				g_list_free_full (S, g_free);
-				g_list_free_full (Q, g_free);
-				g_free (node);
-				return;                    
-			}
-#endif
 		}           
         // Add node into the S Set
         S = g_list_append (S, node);
-        DEBUG_RL_RA ("S length: %d", g_list_length (S));              
+        //DEBUG_RL_RA ("S length: %d", g_list_length (S));              
     }
     
-    g_list_free_full (S, g_free);
-	g_list_free_full (Q, g_free);	
+    g_list_free_full (g_steal_pointer(&S), g_free);
+	g_list_free_full (g_steal_pointer(&Q), g_free);
 	return;
 }
 
@@ -199,90 +233,46 @@ gint compute_path_sp (struct pred_t *predecessors, struct graph_t *g, struct int
 	gint srcMapIndex = get_map_index_by_nodeId (r->srcPEId.nodeId, mapNodes);
     if (srcMapIndex == -1)
     {
-        DEBUG_RL_RA ("source: %s is not in the graph", r->srcPEId.nodeId);
+        DEBUG_RL_RA ("src %s NOT IN THE GRAPH", r->srcPEId.nodeId);
         return -1;
     }
     gint dstMapIndex = get_map_index_by_nodeId (r->dstPEId.nodeId, mapNodes);
     if (dstMapIndex == -1)
     {
-        DEBUG_RL_RA ("destination: %s is not in the graph", r->dstPEId.nodeId);       
+        DEBUG_RL_RA ("dst %s NOT IN THE GRAPH", r->dstPEId.nodeId);       
         return -1;
     }
     
 	// Compute the route
-    routing_ra_CSA (srcMapIndex, dstMapIndex, g, r, SN, RP);
-    
+    routing_ra_CSA (srcMapIndex, dstMapIndex, g, r, SN, RP);    
     // Check that a feasible solution in term of latency and bandwidth is found
     gint map_dstIndex = get_map_index_by_nodeId (r->dstPEId.nodeId, mapNodes);
 	struct map_t *dest_map = &mapNodes->map[map_dstIndex];
     if (!(dest_map->distance < INFINITY_COST))
     {
-        DEBUG_RL_RA ("destination: %s is not reachable", r->dstPEId.nodeId);
+        DEBUG_RL_RA ("dst: %s NOT REACHABLE", r->dstPEId.nodeId);
+		errorBwCons++;
         return -1;
     }
     
-	  DEBUG_RL_RA ("Computed avail bw at node: %s is %f", dest_map->verticeId.nodeId, dest_map->avaiBandwidth);
-	  DEBUG_RL_RA ("Req bw at dst: %s is %f", r->dstPEId.nodeId, r->bandwidthCons);   
-    
+	//DEBUG_RL_RA ("AvailBw @ %s: %f (reqBw: %f)", dest_map->verticeId.nodeId, dest_map->avaiBandwidth, r->bandwidthCons);    
     if (dest_map->avaiBandwidth < r->bandwidthCons)
     {
-        DEBUG_RL_RA ("destination: %s is not reachable due to bandwidth contraint", r->dstPEId.nodeId);
+        DEBUG_RL_RA ("dst: %s NOT REACHABLE - Bw failure", r->dstPEId.nodeId);
+		errorBwCons++;
         return -1;
     }
-#if 1
-    if (dest_map->latency > r->delayCons)
+
+	if (dest_map->latency > r->delayCons)
     {
-        DEBUG_RL_RA ("destination: %s is not reachable due to latnecy constraint", r->dstPEId.nodeId);
+        DEBUG_RL_RA ("dst: %s NOT REACHABLE - Latency failure", r->dstPEId.nodeId);
+		errorLatCons++;
         return -1;
     }
-#endif
-    
-   DEBUG_RL_RA ("Destination %s is reachable", r->dstPEId.nodeId);    
-    
+
+	//DEBUG_RL_RA ("Destination %s is reachable", r->dstPEId.nodeId);    
     // Handle predecessors
-	struct nodes_t v;	
-	duplicate_node_id (&r->dstPEId, &v);
-	
-	struct edges_t *e = create_edge ();	
-	get_edge_from_map_by_node (e, v, mapNodes);
-	
-	DEBUG_RL_RA ("edge -- aNodeId: %s, zNodeId: %s, aLinkkId: %u. zLinkId: %u", e->aNodeId.nodeId, e->zNodeId.nodeId, e->aLinkId, e->zLinkId);
-			
-	// Get u (being source of edge e)
-	struct nodes_t u;	
-	duplicate_node_id (&e->aNodeId, &u);
-		
-	// Add to the predecessors list
-	struct pred_comp_t *pred = &predecessors->predComp[predecessors->numPredComp];
-	memcpy (pred->v.nodeId, u.nodeId, sizeof (u.nodeId));
-	
-	struct edges_t *e1 = &(pred->e);	
-	duplicate_edge (e1, e);
-	predecessors->numPredComp++;
-	DEBUG_RL_RA ("items in predecessors: %d", predecessors->numPredComp);
-		
-	// Back-trace edges till reaching the srcPEId
-	while (memcmp ((const char*)(u.nodeId), (const char *) (r->srcPEId.nodeId), strlen(r->srcPEId.nodeId)) != 0)
-	{		
-		duplicate_node_id (&u, &v);
-		get_edge_from_map_by_node (e, v, mapNodes);
-		DEBUG_RL_RA ("edge -- aNodeId: %s, zNodeId: %s, aLinkkId: %u. zLinkId: %u", e->aNodeId.nodeId, e->zNodeId.nodeId, e->aLinkId, e->zLinkId);
-		
-		// Get the u (being source of edge e)		
-		duplicate_node_id (&e->aNodeId, &u);
-		
-		// Get the new predecessor
-		struct pred_comp_t *pred = &predecessors->predComp[predecessors->numPredComp];
-		
-		// Add to the predecessors list					
-		duplicate_node_id (&u, &pred->v);
-		
-		struct edges_t *e1 = &(pred->e);
-		duplicate_edge (e1, e);
-		predecessors->numPredComp++;
-		DEBUG_RL_RA ("items in predecessors: %d", predecessors->numPredComp);		
-	}    
-    g_free (e);
+	build_predecessors (predecessors, r, mapNodes);	
     return 1;
 }    
 	
@@ -301,9 +291,9 @@ gint compute_path_sp (struct pred_t *predecessors, struct graph_t *g, struct int
 void ra_CSA_alg_execution (gint *http_code, struct compRouteOutputList_t * routeConnList)
 {	
     g_assert (routeConnList);
-	DEBUG_RL_RA ("routeConnList : %p", routeConnList);		
+	//DEBUG_RL_RA ("routeConnList : %p", routeConnList);		
 	
-	// For CSA it is only expecte a single requested connection
+	// For CSA, it is expected a single requested connection
 	gint indexReq = 0;
 	// check that srcPEId and dstPEId are not equal
 	struct interNfviPop_connection_req_t *req = &(reqList->interNfviConnReqs[indexReq]);	
@@ -331,7 +321,18 @@ void ra_CSA_alg_execution (gint *http_code, struct compRouteOutputList_t * route
 	struct pred_t * predecessors = create_predecessors ();
     
     // Compute SP applying Dijkstra algorithm
-    gint done = compute_path_sp (predecessors, graph, req, NULL, NULL);    
+    gint done = compute_path_sp (predecessors, graph, req, NULL, NULL);
+	if (done == -1)
+	{
+		DEBUG_RL_RA(" 1st SP DID NOT WORK...");
+		//*http_code = HTTP_CODE_NOT_FOUND;
+		routeConnList->numCompRouteConnList++;
+		struct compRouteOutput_t* compRouteConn = &(routeConnList->compRouteConnection[routeConnList->numCompRouteConnList - 1]);
+		comp_route_connection_issue_handler(compRouteConn, req);
+		g_free(mapNodes);
+		g_free(predecessors);
+		return;
+	}
     
     // Create the node list from the predecessors
 	struct compRouteOutputItem_t * path = create_path_item ();    
@@ -341,14 +342,14 @@ void ra_CSA_alg_execution (gint *http_code, struct compRouteOutputList_t * route
 	// Get the delay and cost
 	path->pathCost = dst_map->distance;
 	memcpy (&path->latency, &dst_map->latency, sizeof (dst_map->latency));	
-	DEBUG_RL_RA ("Computed Path Cost: %d, latency: %f, bw: %f", path->pathCost, path->latency, path->reqBw);
+	//DEBUG_RL_RA ("Path Cost: %d, Path Latency: %f, Path Avail. Bw: %f", path->pathCost, path->latency, path->reqBw);
     
     // If 1st SP satisfies the requirements from the req, STOP
 	gboolean feasibleRoute = check_computed_path_feasability (req, path);
 	if (feasibleRoute == TRUE)
 	{
-		DEBUG_RL_RA ("1st K-CSPF is feasible, stop ...");
-		print_path (path);
+		DEBUG_RL_RA ("1st SP is feasible, STOP");
+		//print_path (path);
 		// Only one route as output for the CSA
 		routeConnList->numCompRouteConnList++;		
 		struct compRouteOutput_t *compRouteConn = &(routeConnList->compRouteConnection[routeConnList->numCompRouteConnList - 1]);		
@@ -470,24 +471,22 @@ void ra_CSA_alg_execution (gint *http_code, struct compRouteOutputList_t * route
 		{
 			DEBUG_RL_RA ("B does not have any path ... stop kth computation");
 			break;
-		}
-		
+		}		
 		// Sort the potential paths contained in B by cost and latency
-		sort_path_set (B);
-		
+		sort_path_set (B);		
 		// Add the lowest path into A[k]
-		DEBUG_RL_RA ("\n");
+		
 		DEBUG_RL_RA ("-------------------------------------------------------------");
 		DEBUG_RL_RA ("Added SP from B[0] to A --- Path Cost: %d, e2e Latency: %f", B->paths[0].pathCost, B->paths[0].latency);
 		duplicate_path (&B->paths[0], &A->paths[A->numPaths]);
 		A->numPaths++;
 		DEBUG_RL_RA ("A number of elements: %d", A->numPaths);
 		DEBUG_RL_RA ("-------------------------------------------------------------");
-		DEBUG_RL_RA ("\n");
+		
 		
 		// Remove/pòp front element from the path set B (i.e. remove B[0])
 		pop_front_path_set (B);	
-		DEBUG_RL_RA ("B number of paths", B->numPaths);
+		DEBUG_RL_RA ("B number of paths: %d", B->numPaths);
 	}
 		
 	feasibleRoute = FALSE;
@@ -511,24 +510,21 @@ void ra_CSA_alg_execution (gint *http_code, struct compRouteOutputList_t * route
 			
 			// Copy the computed path
 			struct compRouteOutputItem_t *targetedPath = &compRouteConn->compRoutes[compRouteConn->numCompRoutes - 1];
-			duplicate_path (pathaux, targetedPath);
-					
-			g_free (A);
-			g_free (B);			
+			duplicate_path (pathaux, targetedPath);					
+			remove_path_set (A);
+			remove_path_set(B);
 			return;		
 		}	
 	}
-	g_free (A);
-	g_free (B);	
+	remove_path_set(A);
+	remove_path_set(B);
 	
 	// No path is found to satisfy the contraints, this should be notified	
-	DEBUG_RL_RA ("K-SP failed!!!");
-    //*http_code = HTTP_CODE_NOT_FOUND;
+	DEBUG_RL_RA ("K-SP failed!!!");    
 	// Only one route as output for the CSA
 	routeConnList->numCompRouteConnList++;	
 	struct compRouteOutput_t *compRouteConn = &(routeConnList->compRouteConnection[routeConnList->numCompRouteConnList - 1]);
-	comp_route_connection_issue_handler (compRouteConn, req);
-		  
+	comp_route_connection_issue_handler (compRouteConn, req);		  
 	return;
 }
 
@@ -544,27 +540,53 @@ void ra_CSA_alg_execution (gint *http_code, struct compRouteOutputList_t * route
  */
 /////////////////////////////////////////////////////////////////////////////////////////
 gint ra_CSA_alg (struct compRouteOutputList_t * routeConnList)
-{     
-	 
-	DEBUG_RL_RA ("\n");
+{   	
 	DEBUG_RL_RA ("================================================================");
 	DEBUG_RL_RA ("===========================   CSA   =========================");
 	DEBUG_RL_RA ("================================================================");
+	// increase the number of Path Comp. Intents
+	numPathCompIntents++;
+
+	// timestamp
+	struct timeval t0;
+	gettimeofday(&t0, NULL);
 	
 	g_assert (routeConnList);
-	DEBUG_RL_RA ("routeConnList : %p", routeConnList);
-    	
+	//DEBUG_RL_RA ("routeConnList : %p", routeConnList);    	
 	gint http_code = HTTP_CODE_OK;	
 	
 	// Create and construct the graph
 	graph = create_graph ();		
 	build_graph (graph);
-	print_graph (graph);
+	//print_graph (graph);
 	
 	//Triggering the selected path computation
 	ra_CSA_alg_execution (&http_code, routeConnList);
 
-	g_free (graph);	
+	// -- timestamp t1
+	struct timeval t1, delta;
+	gettimeofday(&t1, NULL);
+	delta.tv_sec = t1.tv_sec - t0.tv_sec;
+	delta.tv_usec = t1.tv_usec - t0.tv_usec;
+	delta = tv_adjust(delta);
 
+	// Check whether succesfully computation
+	gboolean successPathComp = FALSE;
+	for (gint i = 0; i < routeConnList->numCompRouteConnList; i++)
+	{
+		struct compRouteOutput_t* compRouteO = &(routeConnList->compRouteConnection[i]);
+		if (compRouteO->noPathIssue != NO_PATH_CONS_ISSUE)
+		{
+			successPathComp = TRUE;
+			break;
+		}
+	}
+	if (successPathComp == TRUE)
+	{
+		// increase the number of Succesfully Path Comp. Intents
+		numSuccesPathComp++;
+		update_stats_csa_path_comp(delta);
+	}
+	g_free (graph);
 	return http_code;
 }

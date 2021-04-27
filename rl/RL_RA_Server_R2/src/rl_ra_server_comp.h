@@ -25,9 +25,14 @@
 #include <glib/gstdio.h>
 #include <glib-2.0/glib/gtypes.h>
 
+// External variables
+extern struct map_nodes_t* mapNodes;
+extern struct graph_t* graph;
+
 #define INFINITY_COST                    0xFFFFFFFF
 #define MAX_NUM_PRED					100
 
+#define K_MAX							5
 
 #define MAX_NODE_ID_SIZE				128
 struct nodes_t {
@@ -38,6 +43,7 @@ struct nodeItem_t
 {
     struct nodes_t node;
     guint32 distance;
+	gdouble latency;
 };
 
 ////////////////////////////////////////////////////
@@ -67,12 +73,15 @@ struct compRouteOutputItem_t
     gint numRouteElements; 	
 };
 
-#define NO_PATH_CONS_ISSUE			1
+#define NO_PATH_CONS_ISSUE			1	 // No path due to a constraint issue
 #define MAX_NUMBER_COMPUTED_ROUTES	10
 struct compRouteOutput_t
 {
     // Identifier of the computed InterNfviPopConnectivityId
     gchar interNfviPopConnectivityId[128];
+
+	// Requested Bw
+	gdouble reqBw;
 	
 	// bound to the Id of the request
 	guint32 requestId; // bound to the Id of the request
@@ -80,7 +89,7 @@ struct compRouteOutput_t
 	// if the interNfviPop Connectivity cannot be computed, this value is set to 0 determining the constraints were not fulfilled
 	gint noPathIssue; 
 	
-	// List containing successfully computer interNfviPop paths
+	// List containing successfully computed interNfviPop paths
 	struct compRouteOutputItem_t compRoutes[MAX_NUMBER_COMPUTED_ROUTES];
 	gint numCompRoutes;    
 };
@@ -91,12 +100,24 @@ struct compRouteOutputList_t
 {
 	struct compRouteOutput_t compRouteConnection[MAX_COMP_CONN_LIST];
 	gint numCompRouteConnList;	
+	
+	///////////////// Metrics //////////////////////////////////////////
+	// Number of total succesfully computed connections, i.e., at least 1 feasible path exists
+	// for every connection in the list
+	gint compRouteOK;
+	// For the succesfully newly computed/recovered/re-allocated/re-optimized connections, this 
+	// metric determines the average allocable bandwidth over all the (re-)computed paths for the succesfully 
+	// (i.e., feasible path) connections
+	gdouble compRouteConnAvBandwidth; 
+	// For the succesfully newly computed/recovered/re-allocated/re-optimized connections, this 
+	// metric determines the average path length (in terms of number of hops) over the computed path for the
+	// succesfully (i.e., feasible path) connections
+	gdouble compRouteConnAvPathLength;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Structures for collecting the RL topology including: intra WAN topology and inter-WAN links
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 struct edges_t {	
 	//aNodeId	
 	struct nodes_t aNodeId;	
@@ -116,7 +137,6 @@ struct edges_t {
 	gdouble linkDelay;	
 	gchar networkLinkLayer[128];
 };
-
 
 // Structure to handle the path computation
 struct pred_comp_t
@@ -170,7 +190,7 @@ struct graph_t {
 	gint numVertices;	
 };
 
-#define MAX_NUM_PATHS		10
+#define MAX_NUM_PATHS		30
 struct path_set_t
 {
 	struct compRouteOutputItem_t paths[MAX_NUM_PATHS];
@@ -178,21 +198,19 @@ struct path_set_t
 };
 
 #define MAX_RAID_LENGTH		10
-
 ////////////////////////////////////////////////////
 // External Variables
 ///////////////////////////////////////////////////
 extern struct request_list_t *reqList;
 extern struct rl_topology_t *rlTopo;
 extern gchar raId[MAX_RAID_LENGTH];
+extern struct anomalyEventList_t *anomalyEventList;
 
 ////////////////////////////////////////////////////
 // Structure for the Inter Nfvi Pop Connection Requirements
 ///////////////////////////////////////////////////
-
 #define RA_ID_1000		1000
 #define RA_ID_2000		2000
-
 struct interNfviPop_connection_req_t
 {	
 	// Identifier of the request
@@ -226,7 +244,46 @@ struct request_list_t
 	gint numReqList;	
 };
 
+////////////////////////////////////////////////////
+// Structure for the Anomaly Events
+///////////////////////////////////////////////////
+struct node_anomaly_t
+{
+	gchar wimId[128];
+	struct nodes_t nodeId;
+	gchar nodeStatus[128]; // active, failed, etc.
+};
+
+struct link_anomaly_t {
+	gboolean interWanLink;
+	gchar aWimId[128];
+	gchar zWimId[128];
+	struct nodes_t aNodeId;
+	guint32 aLinkId;
+	gchar linkStatus[128]; // active, failed, degraded
+	gdouble linkPacketLoss;
+	gdouble linkPacketDelay;
+};
+
+struct anomalyEvent_t 
+{
+	// Node Anomaly
+	struct node_anomaly_t nodeAnomaly;	
+	// Link Anomaly
+	struct link_anomaly_t linkAnomaly;	
+};
+
+// Structure to handle the anomaly events
+#define MAX_ANOMALY_EVENTS	20
+struct anomalyEventList_t
+{
+	struct anomalyEvent_t anomalyEvents[MAX_ANOMALY_EVENTS];
+	gint numAnomalyEvents;
+};
+
+//////////////////////////////////////////////////////////////////
 // Structure to handle the abstacted topology on per WAN basis
+//////////////////////////////////////////////////////////////////
 #define MAX_INTER_WAN_LINK	 		100
 #define MAX_WAN_TOPO		 		100
 #define MAX_NUMBER_NODES_PER_WAN	100
@@ -267,6 +324,12 @@ struct interWanLink_t
 	gdouble linkDelay;
 };
 
+struct wansTopo_t 
+{
+	gint numAbsWanTopo;
+	struct absWanTopo_t absWanTop[MAX_WAN_TOPO];
+};
+
 // Structure handling the composition of all the abstracted WAN domains and their interWAN links
 struct rl_topology_t 
 {
@@ -279,22 +342,21 @@ struct rl_topology_t
 	struct absWanTopo_t absWanTop[MAX_WAN_TOPO];
 };
 
-struct wansTopo_t 
-{
-	gint numAbsWanTopo;
-	struct absWanTopo_t absWanTop[MAX_WAN_TOPO];
-};
-
 // Prototype of external declaration of functions
 void print_path (struct compRouteOutputItem_t *);
+void print_path_list (struct compRouteOutputList_t *);
 struct pred_t * create_predecessors ();
+void print_predecessors (struct pred_t *);
+void build_predecessors (struct pred_t *, struct interNfviPop_connection_req_t *, struct map_nodes_t *);
 struct nodes_t * create_node ();
 struct routeElement_t * create_routeElement ();
 
 void duplicate_node_id (struct nodes_t *, struct nodes_t *);
+gint compare_node_id (struct nodes_t *, struct nodes_t *);
 void duplicate_routeElement (struct routeElement_t *, struct routeElement_t *);
 void duplicate_edge (struct edges_t *, struct edges_t *);
 void duplicate_path (struct compRouteOutputItem_t *, struct compRouteOutputItem_t *);
+void duplicate_compRouteOutputList (struct compRouteOutputList_t*, struct compRouteOutputList_t*);
 gint get_map_index_by_nodeId (gchar *, struct map_nodes_t *);
 void get_edge_from_map_by_node (struct edges_t *, struct nodes_t, struct map_nodes_t *);
 void get_edge_from_predecessors (struct edges_t *, struct nodes_t, struct pred_t *);
@@ -312,6 +374,7 @@ struct edges_t * create_edge ();
 struct path_set_t * create_path_set ();
 void sort_path_set (struct path_set_t *);
 void pop_front_path_set (struct path_set_t *);
+void remove_path_set(struct path_set_t*);
 
 void build_graph (struct graph_t *);
 void build_map_node(struct map_nodes_t *, struct graph_t *);
@@ -331,8 +394,16 @@ struct map_nodes_t * create_map_node ();
 
 struct rl_topology_t * create_rl_topology ();
 struct request_list_t * create_req_list ();
+struct anomalyEventList_t * create_anomaly_event_list ();
 
 gint same_src_dst_pe_nodeid (struct interNfviPop_connection_req_t *);
 void comp_route_connection_issue_handler (struct compRouteOutput_t *, struct interNfviPop_connection_req_t *);
 
+void destroy_compRouteOutputList (struct compRouteOutputList_t *);
+void duplicate_graph (struct graph_t *, struct graph_t *);
+void duplicateReqConn (struct interNfviPop_connection_req_t *, struct interNfviPop_connection_req_t *);
+void allocate_graph_resources (struct compRouteOutputItem_t *, struct interNfviPop_connection_req_t *, struct graph_t *);
+void allocate_graph_reverse_resources(struct compRouteOutputItem_t*, struct interNfviPop_connection_req_t*, struct graph_t*);
+void print_route_solution_list (GList *);
+struct timeval tv_adjust(struct timeval);
 #endif

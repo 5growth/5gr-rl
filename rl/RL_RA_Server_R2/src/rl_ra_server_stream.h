@@ -77,15 +77,15 @@ extern FILE *logfile;
 {			       \
 	if (logfile != NULL)   \
 	{		       \
-		g_fprintf(logfile,"[D:%d] -- %30s:%1.5d -- %30s --\t "format"\n",\
-                                getpid(), __SHORT_FILENAME__,     		\
+		g_fprintf(logfile,"%s:%1.5d  %30s "format"\n",\
+                                __SHORT_FILENAME__,     		\
                                 __LINE__, __FUNCTION__, ##__VA_ARGS__);	        \
 		fflush(logfile);					        \
 	}								        \
 	else 								        \
 	{	                                                                \
-		g_fprintf(stdout,"[D:%d] -- %30s:%1.5d -- %30s --\t "format"\n", \
-                                getpid(), __SHORT_FILENAME__,     		\
+		g_fprintf(stdout,"%s:%1.5d  %30s "format"\n", \
+                                __SHORT_FILENAME__,     		\
                                 __LINE__, __FUNCTION__, ##__VA_ARGS__);	        \
 		fflush(stdout);					                \
 	}                                                                       \

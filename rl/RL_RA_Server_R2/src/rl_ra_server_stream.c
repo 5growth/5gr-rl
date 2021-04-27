@@ -650,20 +650,15 @@ gint read_channel (GIOChannel *channel, guchar *ptr, gint nbytes)
 
   while (nleft > 0)
   {
-
-#if 1
 	  status = g_io_channel_read_chars (channel, (void *)ptr, nleft, &nread, &error);
 	  if (status !=  G_IO_STATUS_NORMAL )
 	  {
-		  DEBUG_RL_RA ("gio-test: ...from %d: G_IO_STATUS_%s\n", fd,
-				  (status == G_IO_STATUS_AGAIN ? "AGAIN" :
-				  (status == G_IO_STATUS_EOF ? "EOF" :
-				  (status == G_IO_STATUS_ERROR ? "ERROR" : "???"))));
-
+		  //DEBUG_RL_RA ("gio-test: ...from %d: G_IO_STATUS_%s\n", fd,
+		  //		  (status == G_IO_STATUS_AGAIN ? "AGAIN" :
+		  //		  (status == G_IO_STATUS_EOF ? "EOF" :
+		  //		  (status == G_IO_STATUS_ERROR ? "ERROR" : "???"))));
 		  return -1;
 	  }
-#endif
-
 	  if (nread < 0)
 	  {
 		  return (nread);

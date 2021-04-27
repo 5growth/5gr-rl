@@ -23,8 +23,8 @@ LDFLAGS   =   -g
 
 all: rl_ra_server
 
-rl_ra_server: rl_ra_server.o rl_ra_server_stream.o rl_ra_server_cjson.o rl_ra_server_comp.o rl_ra_server_ra_CSA.o rl_ra_server_ra_InA.o rl_ra_server_restapi.o 
-	gcc -o rl_ra_server rl_ra_server.o rl_ra_server_stream.o rl_ra_server_cjson.o rl_ra_server_comp.o rl_ra_server_ra_CSA.o rl_ra_server_ra_InA.o rl_ra_server_restapi.o -L/usr/lib/i386-linux-gnu/ -lglib-2.0  $(LDFLAGS) $(LDLIBS)
+rl_ra_server: rl_ra_server.o rl_ra_server_stream.o rl_ra_server_cjson.o rl_ra_server_comp.o rl_ra_server_ra_CSA.o rl_ra_server_ra_InA.o rl_ra_server_ra_GCO.o rl_ra_server_restapi.o 
+	gcc -o rl_ra_server rl_ra_server.o rl_ra_server_stream.o rl_ra_server_cjson.o rl_ra_server_comp.o rl_ra_server_ra_CSA.o rl_ra_server_ra_InA.o rl_ra_server_ra_GCO.o rl_ra_server_restapi.o -L/usr/lib/i386-linux-gnu/ -lglib-2.0  $(LDFLAGS) $(LDLIBS)
 
 # strip rl_ra_server
 	
@@ -42,8 +42,11 @@ rl_ra_server_ra_CSA.o: rl_ra_server_stream.h rl_ra_server_comp.h rl_ra_server_ra
 	
 rl_ra_server_ra_InA.o: rl_ra_server_stream.h rl_ra_server_comp.h rl_ra_server_ra_InA.h rl_ra_server_ra_InA.c
 	$(CC) $(CFLAGS) -c rl_ra_server_ra_InA.c -o rl_ra_server_ra_InA.o
+	
+rl_ra_server_ra_GCO.o: rl_ra_server_stream.h rl_ra_server_comp.h rl_ra_server_ra_GCO.h rl_ra_server_ra_GCO.c
+	$(CC) $(CFLAGS) -c rl_ra_server_ra_GCO.c -o rl_ra_server_ra_GCO.o
 
-rl_ra_server_restapi.o: rl_ra_server_comp.h rl_ra_server_stream.h rl_ra_server_cjson.h rl_ra_server_ra_CSA.h rl_ra_server_ra_InA.h rl_ra_server_restapi.h rl_ra_server_restapi.c
+rl_ra_server_restapi.o: rl_ra_server_comp.h rl_ra_server_stream.h rl_ra_server_cjson.h rl_ra_server_ra_CSA.h rl_ra_server_ra_InA.h rl_ra_server_ra_CSA.h rl_ra_server_restapi.h rl_ra_server_restapi.c
 	$(CC) $(CFLAGS) -c rl_ra_server_restapi.c -o rl_ra_server_restapi.o
 
 rl_ra_server.o: rl_ra_server_stream.h rl_ra_server_restapi.h rl_ra_server.c rl_ra_server.h

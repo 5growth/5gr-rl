@@ -42,6 +42,7 @@
 #define REST_API_METHOD_GET		1
 #define REST_API_METHOD_POST	2
 #define REST_API_METHOD_HTTP	3
+#define REST_API_METHOD_PUT		4
 
 ////////////////////////////////////////////////////
 // Client Struct for connecting to RL RA SERVER
@@ -51,12 +52,12 @@
 #define RL_RA_CLIENT_TYPE	1000
 struct rl_client
 {
-     /** IO Channel from client. */
-     GIOChannel *channel;
+	/** IO Channel from client. */
+	GIOChannel *channel;
 
-     /** Input/output buffer to the client. */    
-     struct rl_ra_server_stream *obuf;  
-	 struct rl_ra_server_stream *ibuf;
+	/** Input/output buffer to the client. */    
+	struct rl_ra_server_stream *obuf;  
+	struct rl_ra_server_stream *ibuf;
 
 	gint fd; // file descriptor     
     guint type;     
