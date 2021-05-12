@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2020 Open Networking Foundation
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.onosproject</groupId>
+        <artifactId>onos-dependencies</artifactId>
+        <version>2.4.1-SNAPSHOT</version>
+    </parent>
+
+    <groupId>telca.fivegrowth</groupId>
+    <artifactId>p4.pipeconf</artifactId>
+    <version>2.4.1-SNAPSHOT</version>
+    <packaging>bundle</packaging>
+
+    <description>ONOS OSGi bundle archetype</description>
+    <url>http://onosproject.org</url>
+
+    <properties>
+        <!-- Uncomment to generate ONOS app from this module.-->
+        <onos.app.name>telca.fivegrowth.p4.pipeconf</onos.app.name>
+        <onos.app.title>P4 Slicer Pipeconf</onos.app.title>
+        <onos.app.origin>Telcaria Ideas</onos.app.origin>
+        <onos.app.category>Pipeconf</onos.app.category>
+        <onos.app.url>https://www.telcaria.com/</onos.app.url>
+        <onos.app.readme>ONOS P4 Pipeconf.</onos.app.readme>
+        <onos.app.requires>org.onosproject.drivers.p4runtime</onos.app.requires>
+        <web.context>/onos/p4-pipeconf</web.context>
+        <api.package>org.onosproject.p4slicing.pipeconf</api.package>
+    </properties>
+    
+   <dependencies>
+         <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.service.component</artifactId>
+            <version>1.4.0</version>
+         </dependency>
+
+         <dependency>
+             <groupId>org.slf4j</groupId>
+             <artifactId>slf4j-api</artifactId>
+             <version>1.7.30</version>
+         </dependency>
+         
+         <dependency>
+             <groupId>org.slf4j</groupId>
+             <artifactId>slf4j-simple</artifactId>
+             <version>1.7.30</version>
+         </dependency>
+         
+        <dependency>
+             <groupId>com.eclipsesource.minimal-json</groupId>
+             <artifactId>minimal-json</artifactId>
+             <version>0.9.5</version>
+         </dependency>
+
+               
+         <dependency>
+             <groupId>org.onosproject</groupId>
+             <artifactId>onos-protocols-grpc-api</artifactId>
+             <version>${onos.version}</version>
+            <scope>provided</scope>
+         </dependency>
+         
+         <dependency>
+            <groupId>org.onosproject</groupId>
+            <artifactId>onos-protocols-p4runtime-model</artifactId>
+            <version>${onos.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.onosproject</groupId>
+            <artifactId>onos-protocols-p4runtime-api</artifactId>
+            <version>${onos.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.onosproject</groupId>
+            <artifactId>onos-drivers-default</artifactId>
+            <version>${onos.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+       <dependency>
+           <groupId>org.glassfish.jersey.containers</groupId>
+           <artifactId>jersey-container-servlet</artifactId>
+           <scope>provided</scope>
+       </dependency>
+
+        <dependency>
+            <groupId>org.onosproject</groupId>
+            <artifactId>onos-api</artifactId>
+            <version>${onos.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.onosproject</groupId>
+            <artifactId>onlab-osgi</artifactId>
+            <version>${onos.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.onosproject</groupId>
+            <artifactId>onlab-misc</artifactId>
+            <version>${onos.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.onosproject</groupId>
+            <artifactId>onos-api</artifactId>
+            <version>${onos.version}</version>
+            <scope>test</scope>
+            <classifier>tests</classifier>
+        </dependency>
+
+       <dependency>
+           <groupId>org.onosproject</groupId>
+           <artifactId>onlab-rest</artifactId>
+           <version>${onos.version}</version>
+           <scope>provided</scope>
+       </dependency>
+
+       <dependency>
+           <groupId>org.onosproject</groupId>
+           <artifactId>onos-rest</artifactId>
+           <version>${onos.version}</version>
+           <scope>provided</scope>
+       </dependency>
+
+       <dependency>
+           <groupId>javax.ws.rs</groupId>
+           <artifactId>javax.ws.rs-api</artifactId>
+           <version>2.1.1</version>
+       </dependency>
+
+   </dependencies>
+
+    <build>
+        <plugins>
+           <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+           </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <_wab>src/main/webapp/</_wab>
+                       <Include-Resource>
+                           WEB-INF/classes/slicer_p4info.txt=target/classes/slicer_p4info.txt,
+                           WEB-INF/classes/slicer.json=target/classes/slicer.json,
+                           {maven-resources}
+                        </Include-Resource>
+                        <Import-Package>
+                            *,org.glassfish.jersey.servlet
+                        </Import-Package>
+                        <Web-ContextPath>${web.context}</Web-ContextPath>
+                    </instructions>
+                </configuration>
+            </plugin>
+           <plugin>
+                <groupId>org.onosproject</groupId>
+                <artifactId>onos-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

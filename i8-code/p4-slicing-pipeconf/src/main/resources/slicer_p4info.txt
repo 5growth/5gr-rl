@@ -1,0 +1,649 @@
+pkg_info {
+  arch: "v1model"
+}
+tables {
+  preamble {
+    id: 33606914
+    name: "c_ingress.t_l2_fwd"
+    alias: "t_l2_fwd"
+  }
+  match_fields {
+    id: 1
+    name: "standard_metadata.ingress_port"
+    bitwidth: 9
+    match_type: TERNARY
+  }
+  match_fields {
+    id: 2
+    name: "hdr.ethernet.dst_addr"
+    bitwidth: 48
+    match_type: TERNARY
+  }
+  match_fields {
+    id: 3
+    name: "hdr.ethernet.src_addr"
+    bitwidth: 48
+    match_type: TERNARY
+  }
+  match_fields {
+    id: 4
+    name: "hdr.ipv4.dst_addr"
+    bitwidth: 32
+    match_type: LPM
+  }
+  match_fields {
+    id: 5
+    name: "hdr.vlan.vid"
+    bitwidth: 12
+    match_type: TERNARY
+  }
+  match_fields {
+    id: 6
+    name: "hdr.ether_type.value"
+    bitwidth: 16
+    match_type: TERNARY
+  }
+  action_refs {
+    id: 16797726
+  }
+  action_refs {
+    id: 16785597
+  }
+  action_refs {
+    id: 16780428
+  }
+  action_refs {
+    id: 16827689
+  }
+  action_refs {
+    id: 16832998
+  }
+  action_refs {
+    id: 16789742
+  }
+  action_refs {
+    id: 16825311
+  }
+  action_refs {
+    id: 16780125
+  }
+  action_refs {
+    id: 16835139
+  }
+  action_refs {
+    id: 16831479
+  }
+  action_refs {
+    id: 16816711
+  }
+  action_refs {
+    id: 16783382
+  }
+  action_refs {
+    id: 16822540
+  }
+  action_refs {
+    id: 16812828
+  }
+  action_refs {
+    id: 16808599
+  }
+  action_refs {
+    id: 16800567
+  }
+  direct_resource_ids: 318778805
+  size: 1024
+}
+tables {
+  preamble {
+    id: 33561206
+    name: "c_ingress.m_filter"
+    alias: "m_filter"
+  }
+  match_fields {
+    id: 1
+    name: "meta.meter_tag"
+    bitwidth: 32
+    match_type: EXACT
+  }
+  action_refs {
+    id: 16777688
+  }
+  action_refs {
+    id: 16821724
+  }
+  action_refs {
+    id: 16789634
+  }
+  action_refs {
+    id: 16800567
+  }
+  direct_resource_ids: 318809947
+  size: 1024
+}
+tables {
+  preamble {
+    id: 33567844
+    name: "c_egress.policing"
+    alias: "policing"
+  }
+  action_refs {
+    id: 16811245
+  }
+  size: 1024
+}
+actions {
+  preamble {
+    id: 16800567
+    name: "NoAction"
+    alias: "NoAction"
+  }
+}
+actions {
+  preamble {
+    id: 16822540
+    name: "c_ingress.send_to_cpu"
+    alias: "send_to_cpu"
+  }
+}
+actions {
+  preamble {
+    id: 16831479
+    name: "c_ingress.set_out_port"
+    alias: "set_out_port"
+  }
+  params {
+    id: 1
+    name: "port"
+    bitwidth: 9
+  }
+}
+actions {
+  preamble {
+    id: 16797726
+    name: "c_ingress.set_vlan"
+    alias: "set_vlan"
+  }
+  params {
+    id: 1
+    name: "port"
+    bitwidth: 9
+  }
+  params {
+    id: 2
+    name: "vlan_vid"
+    bitwidth: 12
+  }
+}
+actions {
+  preamble {
+    id: 16785597
+    name: "c_ingress.set_vlan_meter"
+    alias: "set_vlan_meter"
+  }
+  params {
+    id: 1
+    name: "port"
+    bitwidth: 9
+  }
+  params {
+    id: 2
+    name: "vlan_vid"
+    bitwidth: 12
+  }
+  params {
+    id: 3
+    name: "meter_id"
+    bitwidth: 32
+  }
+}
+actions {
+  preamble {
+    id: 16780428
+    name: "c_ingress.set_vlan_meter_queue"
+    alias: "set_vlan_meter_queue"
+  }
+  params {
+    id: 1
+    name: "port"
+    bitwidth: 9
+  }
+  params {
+    id: 2
+    name: "vlan_vid"
+    bitwidth: 12
+  }
+  params {
+    id: 3
+    name: "meter_id"
+    bitwidth: 32
+  }
+  params {
+    id: 4
+    name: "T_DELAY"
+    bitwidth: 48
+  }
+  params {
+    id: 5
+    name: "C_DELAY"
+    bitwidth: 48
+  }
+  params {
+    id: 6
+    name: "M_DELAY"
+    bitwidth: 48
+  }
+}
+actions {
+  preamble {
+    id: 16825311
+    name: "c_ingress.pop_vlan"
+    alias: "pop_vlan"
+  }
+  params {
+    id: 1
+    name: "port"
+    bitwidth: 9
+  }
+}
+actions {
+  preamble {
+    id: 16780125
+    name: "c_ingress.pop_vlan_meter"
+    alias: "pop_vlan_meter"
+  }
+  params {
+    id: 1
+    name: "port"
+    bitwidth: 9
+  }
+  params {
+    id: 2
+    name: "meter_id"
+    bitwidth: 32
+  }
+}
+actions {
+  preamble {
+    id: 16835139
+    name: "c_ingress.pop_vlan_meter_queue"
+    alias: "pop_vlan_meter_queue"
+  }
+  params {
+    id: 1
+    name: "port"
+    bitwidth: 9
+  }
+  params {
+    id: 2
+    name: "meter_id"
+    bitwidth: 32
+  }
+  params {
+    id: 3
+    name: "T_DELAY"
+    bitwidth: 48
+  }
+  params {
+    id: 4
+    name: "C_DELAY"
+    bitwidth: 48
+  }
+  params {
+    id: 5
+    name: "M_DELAY"
+    bitwidth: 48
+  }
+}
+actions {
+  preamble {
+    id: 16827689
+    name: "c_ingress.push_vlan"
+    alias: "push_vlan"
+  }
+  params {
+    id: 1
+    name: "port"
+    bitwidth: 9
+  }
+  params {
+    id: 2
+    name: "vlan_vid"
+    bitwidth: 12
+  }
+}
+actions {
+  preamble {
+    id: 16832998
+    name: "c_ingress.push_vlan_meter"
+    alias: "push_vlan_meter"
+  }
+  params {
+    id: 1
+    name: "port"
+    bitwidth: 9
+  }
+  params {
+    id: 2
+    name: "vlan_vid"
+    bitwidth: 12
+  }
+  params {
+    id: 3
+    name: "meter_id"
+    bitwidth: 32
+  }
+}
+actions {
+  preamble {
+    id: 16789742
+    name: "c_ingress.push_vlan_meter_queue"
+    alias: "push_vlan_meter_queue"
+  }
+  params {
+    id: 1
+    name: "port"
+    bitwidth: 9
+  }
+  params {
+    id: 2
+    name: "vlan_vid"
+    bitwidth: 12
+  }
+  params {
+    id: 3
+    name: "meter_id"
+    bitwidth: 32
+  }
+  params {
+    id: 4
+    name: "T_DELAY"
+    bitwidth: 48
+  }
+  params {
+    id: 5
+    name: "C_DELAY"
+    bitwidth: 48
+  }
+  params {
+    id: 6
+    name: "M_DELAY"
+    bitwidth: 48
+  }
+}
+actions {
+  preamble {
+    id: 16808599
+    name: "c_ingress._drop"
+    alias: "_drop"
+  }
+}
+actions {
+  preamble {
+    id: 16812828
+    name: "c_ingress.m_action"
+    alias: "m_action"
+  }
+  params {
+    id: 1
+    name: "meter_id"
+    bitwidth: 32
+  }
+}
+actions {
+  preamble {
+    id: 16816711
+    name: "c_ingress.set_out_port_metered"
+    alias: "set_out_port_metered"
+  }
+  params {
+    id: 1
+    name: "port"
+    bitwidth: 9
+  }
+  params {
+    id: 2
+    name: "meter_id"
+    bitwidth: 32
+  }
+}
+actions {
+  preamble {
+    id: 16783382
+    name: "c_ingress.set_out_port_metered_queue"
+    alias: "set_out_port_metered_queue"
+  }
+  params {
+    id: 1
+    name: "port"
+    bitwidth: 9
+  }
+  params {
+    id: 2
+    name: "meter_id"
+    bitwidth: 32
+  }
+  params {
+    id: 3
+    name: "T_DELAY"
+    bitwidth: 48
+  }
+  params {
+    id: 4
+    name: "C_DELAY"
+    bitwidth: 48
+  }
+  params {
+    id: 5
+    name: "M_DELAY"
+    bitwidth: 48
+  }
+}
+actions {
+  preamble {
+    id: 16777688
+    name: "c_ingress.set_ecn"
+    alias: "set_ecn"
+  }
+}
+actions {
+  preamble {
+    id: 16821724
+    name: "c_ingress.set_ecn_forward"
+    alias: "set_ecn_forward"
+  }
+  params {
+    id: 1
+    name: "port"
+    bitwidth: 9
+  }
+}
+actions {
+  preamble {
+    id: 16789634
+    name: "c_ingress.m_drop"
+    alias: "m_drop"
+  }
+}
+actions {
+  preamble {
+    id: 16824033
+    name: "c_egress.drop"
+    alias: "drop"
+  }
+}
+actions {
+  preamble {
+    id: 16811245
+    name: "c_egress.rate_limit"
+    alias: "rate_limit"
+  }
+}
+counters {
+  preamble {
+    id: 302003196
+    name: "c_ingress.tx_port_counter"
+    alias: "tx_port_counter"
+  }
+  spec {
+    unit: BOTH
+  }
+  size: 255
+}
+counters {
+  preamble {
+    id: 302045227
+    name: "c_ingress.rx_port_counter"
+    alias: "rx_port_counter"
+  }
+  spec {
+    unit: BOTH
+  }
+  size: 255
+}
+direct_counters {
+  preamble {
+    id: 318778805
+    name: "c_ingress.l2_fwd_counter"
+    alias: "l2_fwd_counter"
+  }
+  spec {
+    unit: BOTH
+  }
+  direct_table_id: 33606914
+}
+direct_counters {
+  preamble {
+    id: 318809947
+    name: "c_ingress.m_filter_counter"
+    alias: "m_filter_counter"
+  }
+  spec {
+    unit: BOTH
+  }
+  direct_table_id: 33561206
+}
+meters {
+  preamble {
+    id: 335572674
+    name: "c_ingress.my_meter"
+    alias: "my_meter"
+  }
+  spec {
+    unit: PACKETS
+  }
+  size: 4801
+}
+controller_packet_metadata {
+  preamble {
+    id: 67146229
+    name: "packet_in"
+    alias: "packet_in"
+    annotations: "@controller_header(\"packet_in\")"
+  }
+  metadata {
+    id: 1
+    name: "ingress_port"
+    bitwidth: 9
+  }
+  metadata {
+    id: 2
+    name: "_padding"
+    bitwidth: 7
+  }
+}
+controller_packet_metadata {
+  preamble {
+    id: 67121543
+    name: "packet_out"
+    alias: "packet_out"
+    annotations: "@controller_header(\"packet_out\")"
+  }
+  metadata {
+    id: 1
+    name: "egress_port"
+    bitwidth: 9
+  }
+  metadata {
+    id: 2
+    name: "_padding"
+    bitwidth: 7
+  }
+}
+registers {
+  preamble {
+    id: 369152238
+    name: "r_dropped"
+    alias: "r_dropped"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 32
+      }
+    }
+  }
+  size: 256
+}
+registers {
+  preamble {
+    id: 369146735
+    name: "s_delay"
+    alias: "s_delay"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 48
+      }
+    }
+  }
+  size: 256
+}
+registers {
+  preamble {
+    id: 369121400
+    name: "r_delay"
+    alias: "r_delay"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 48
+      }
+    }
+  }
+  size: 256
+}
+registers {
+  preamble {
+    id: 369114735
+    name: "s_ts"
+    alias: "s_ts"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 48
+      }
+    }
+  }
+  size: 256
+}
+registers {
+  preamble {
+    id: 369118463
+    name: "r_delta"
+    alias: "r_delta"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 48
+      }
+    }
+  }
+  size: 256
+}
+type_info {
+}

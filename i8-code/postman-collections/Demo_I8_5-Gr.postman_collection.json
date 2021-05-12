@@ -1,0 +1,545 @@
+{
+	"info": {
+		"_postman_id": "46f78ae9-da12-4bca-8db0-badf7fbb51d5",
+		"name": "Demo_I8_5-Gr",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "MTP",
+			"item": [
+				{
+					"name": "network allocate 1",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "            {\r\n            \"typeSubnetData\": {\r\n                \"networkId\": \"null\",\r\n                \"addressPool\": [\r\n                    0\r\n                ],\r\n                \"resourceId\": \"null\",\r\n                \"gatewayIp\": null,\r\n                \"ipVersion\": \"IPv4\",\r\n                \"isDhcpEnabled\": true,\r\n                \"cidr\": \"192.168.3.0/24\",\r\n                \"metadata\": [\r\n                    {\r\n                        \"value\": \"False\",\r\n                        \"key\": \"ip-floating-required\"\r\n                    },\r\n                    {\r\n                        \"value\": \"[\\\"8.8.8.8\\\"]\",\r\n                        \"key\": \"dns\"\r\n                    },\r\n                    {\r\n                        \"value\": \"10\",\r\n                        \"key\": \"interpop_vlan\"\r\n                    }\r\n                ]\r\n            },\r\n            \"networkResourceType\": \"subnet-vlan\",\r\n            \"typeNetworkPortData\": \"\",\r\n            \"resourceGroupId\": \"null\",\r\n            \"reservationId\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795_n6_cmm_vl\",\r\n            \"typeNetworkData\": null,\r\n            \"affinityOrAntiAffinityConstraints\": \"null\",\r\n            \"networkResourceName\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795_n6_cmm_vl\",\r\n            \"locationConstraints\": \"null\",\r\n            \"metadata\": [\r\n                {\r\n                    \"value\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795\",\r\n                    \"key\": \"ServiceId\"\r\n                },\r\n                {\r\n                    \"value\": 11,\r\n                    \"key\": \"AbstractNfviPoPId\"\r\n                }\r\n            ]\r\n        }\r\n"
+						},
+						"url": {
+							"raw": "http://10.9.8.211:50000/mtpbase/network_resources",
+							"protocol": "http",
+							"host": [
+								"10",
+								"9",
+								"8",
+								"211"
+							],
+							"port": "50000",
+							"path": [
+								"mtpbase",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "network allocate 2",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "            {\r\n            \"typeSubnetData\": {\r\n                \"networkId\": \"null\",\r\n                \"addressPool\": [\r\n                    0\r\n                ],\r\n                \"resourceId\": \"null\",\r\n                \"gatewayIp\": null,\r\n                \"ipVersion\": \"IPv4\",\r\n                \"isDhcpEnabled\": true,\r\n                \"cidr\": \"192.168.4.0/24\",\r\n                \"metadata\": [\r\n                    {\r\n                        \"value\": \"False\",\r\n                        \"key\": \"ip-floating-required\"\r\n                    },\r\n                    {\r\n                        \"value\": \"[\\\"8.8.8.8\\\"]\",\r\n                        \"key\": \"dns\"\r\n                    },\r\n                    {\r\n                        \"value\": \"20\",\r\n                        \"key\": \"interpop_vlan\"\r\n                    }\r\n                ]\r\n            },\r\n            \"networkResourceType\": \"subnet-vlan\",\r\n            \"typeNetworkPortData\": \"\",\r\n            \"resourceGroupId\": \"null\",\r\n            \"reservationId\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795_n6_cmm_vl\",\r\n            \"typeNetworkData\": null,\r\n            \"affinityOrAntiAffinityConstraints\": \"null\",\r\n            \"networkResourceName\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795_n6_cmm_vl\",\r\n            \"locationConstraints\": \"null\",\r\n            \"metadata\": [\r\n                {\r\n                    \"value\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795-2\",\r\n                    \"key\": \"ServiceId\"\r\n                },\r\n                {\r\n                    \"value\": 21,\r\n                    \"key\": \"AbstractNfviPoPId\"\r\n                }\r\n            ]\r\n        }\r\n"
+						},
+						"url": {
+							"raw": "http://10.9.8.211:50000/mtpbase/network_resources",
+							"protocol": "http",
+							"host": [
+								"10",
+								"9",
+								"8",
+								"211"
+							],
+							"port": "50000",
+							"path": [
+								"mtpbase",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "network allocate 3",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "            {\r\n            \"typeSubnetData\": {\r\n                \"networkId\": \"null\",\r\n                \"addressPool\": [\r\n                    0\r\n                ],\r\n                \"resourceId\": \"null\",\r\n                \"gatewayIp\": null,\r\n                \"ipVersion\": \"IPv4\",\r\n                \"isDhcpEnabled\": true,\r\n                \"cidr\": \"192.168.5.0/24\",\r\n                \"metadata\": [\r\n                    {\r\n                        \"value\": \"False\",\r\n                        \"key\": \"ip-floating-required\"\r\n                    },\r\n                    {\r\n                        \"value\": \"[\\\"8.8.8.8\\\"]\",\r\n                        \"key\": \"dns\"\r\n                    },\r\n                    {\r\n                        \"value\": \"30\",\r\n                        \"key\": \"interpop_vlan\"\r\n                    }\r\n                ]\r\n            },\r\n            \"networkResourceType\": \"subnet-vlan\",\r\n            \"typeNetworkPortData\": \"\",\r\n            \"resourceGroupId\": \"null\",\r\n            \"reservationId\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795_n6_cmm_vl\",\r\n            \"typeNetworkData\": null,\r\n            \"affinityOrAntiAffinityConstraints\": \"null\",\r\n            \"networkResourceName\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795_n6_cmm_vl\",\r\n            \"locationConstraints\": \"null\",\r\n            \"metadata\": [\r\n                {\r\n                    \"value\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795\",\r\n                    \"key\": \"ServiceId\"\r\n                },\r\n                {\r\n                    \"value\": 51,\r\n                    \"key\": \"AbstractNfviPoPId\"\r\n                }\r\n            ]\r\n        }\r\n"
+						},
+						"url": {
+							"raw": "http://10.9.8.211:50000/mtpbase/network_resources",
+							"protocol": "http",
+							"host": [
+								"10",
+								"9",
+								"8",
+								"211"
+							],
+							"port": "50000",
+							"path": [
+								"mtpbase",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "network allocate 4",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "            {\r\n            \"typeSubnetData\": {\r\n                \"networkId\": \"null\",\r\n                \"addressPool\": [\r\n                    0\r\n                ],\r\n                \"resourceId\": \"null\",\r\n                \"gatewayIp\": null,\r\n                \"ipVersion\": \"IPv4\",\r\n                \"isDhcpEnabled\": true,\r\n                \"cidr\": \"192.168.6.0/24\",\r\n                \"metadata\": [\r\n                    {\r\n                        \"value\": \"False\",\r\n                        \"key\": \"ip-floating-required\"\r\n                    },\r\n                    {\r\n                        \"value\": \"[\\\"8.8.8.8\\\"]\",\r\n                        \"key\": \"dns\"\r\n                    },\r\n                    {\r\n                        \"value\": \"40\",\r\n                        \"key\": \"interpop_vlan\"\r\n                    }\r\n                ]\r\n            },\r\n            \"networkResourceType\": \"subnet-vlan\",\r\n            \"typeNetworkPortData\": \"\",\r\n            \"resourceGroupId\": \"null\",\r\n            \"reservationId\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795_n6_cmm_vl\",\r\n            \"typeNetworkData\": null,\r\n            \"affinityOrAntiAffinityConstraints\": \"null\",\r\n            \"networkResourceName\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795_n6_cmm_vl\",\r\n            \"locationConstraints\": \"null\",\r\n            \"metadata\": [\r\n                {\r\n                    \"value\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795-2\",\r\n                    \"key\": \"ServiceId\"\r\n                },\r\n                {\r\n                    \"value\": 61,\r\n                    \"key\": \"AbstractNfviPoPId\"\r\n                }\r\n            ]\r\n        }\r\n"
+						},
+						"url": {
+							"raw": "http://10.9.8.211:50000/mtpbase/network_resources",
+							"protocol": "http",
+							"host": [
+								"10",
+								"9",
+								"8",
+								"211"
+							],
+							"port": "50000",
+							"path": [
+								"mtpbase",
+								"network_resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "compute allocate 1",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\r\n            \"userData\": {\r\n                \"content\": \"/bin/ash, -c, trap : TERM INT; sleep infinity & wait\",\r\n                \"method\": \"CONFIG-DRIVE\"\r\n            },\r\n            \"interfaceData\": [\r\n                {\r\n                    \"ipAddress\": \"192.168.3.10\",\r\n                    \"macAddress\": \"52:54:00:11:2a:29\",\r\n                    \"networkId\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795-n6-cmm-vl\"\r\n                }\r\n            ],\r\n            \"computeFlavourId\": \"flavor_DARLVNF\",\r\n            \"resourceGroupId\": \"\",\r\n            \"mecAppDId\": \"\",\r\n            \"affinityOrAntiAffinityConstraints\": [\r\n                {\r\n                    \"type\": \"\",\r\n                    \"affinityAntiAffinityResourceGroup\": \"\",\r\n                    \"affinityAntiAffinityResourceList\": {\r\n                        \"resource\": [\r\n                            \"\"\r\n                        ]\r\n                    },\r\n                    \"scope\": \"\"\r\n                }\r\n            ],\r\n            \"reservationId\": \"\",\r\n            \"locationConstraints\": \"\",\r\n            \"computeName\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795-0-DARLVNF-1\",\r\n            \"vcImageId\": \"jabbo16/iperf-host:1.0.0\",\r\n            \"metadata\": [\r\n                {\r\n                    \"value\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795\",\r\n                    \"key\": \"ServiceId\"\r\n                },\r\n                {\r\n                    \"value\": \"11\",\r\n                    \"key\": \"AbstractNfviPoPId\"\r\n                },\r\n                {\r\n                    \"value\": \"innovaliakey\",\r\n                    \"key\": \"key-name\"\r\n                }\r\n            ]\r\n        }\r\n"
+						},
+						"url": {
+							"raw": "http://10.9.8.211:50000/mtpbase/abstract-compute-resources",
+							"protocol": "http",
+							"host": [
+								"10",
+								"9",
+								"8",
+								"211"
+							],
+							"port": "50000",
+							"path": [
+								"mtpbase",
+								"abstract-compute-resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "compute allocate 2",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\r\n            \"userData\": {\r\n                \"content\": \"/bin/ash, -c, trap : TERM INT; sleep infinity & wait\",\r\n                \"method\": \"CONFIG-DRIVE\"\r\n            },\r\n            \"interfaceData\": [\r\n                {\r\n                    \"ipAddress\": \"192.168.4.10\",\r\n                    \"macAddress\": \"52:54:00:11:2a:29\",\r\n                    \"networkId\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795-n6-cmm-vl\"\r\n                }\r\n            ],\r\n            \"computeFlavourId\": \"flavor_DARLVNF\",\r\n            \"resourceGroupId\": \"\",\r\n            \"mecAppDId\": \"\",\r\n            \"affinityOrAntiAffinityConstraints\": [\r\n                {\r\n                    \"type\": \"\",\r\n                    \"affinityAntiAffinityResourceGroup\": \"\",\r\n                    \"affinityAntiAffinityResourceList\": {\r\n                        \"resource\": [\r\n                            \"\"\r\n                        ]\r\n                    },\r\n                    \"scope\": \"\"\r\n                }\r\n            ],\r\n            \"reservationId\": \"\",\r\n            \"locationConstraints\": \"\",\r\n            \"computeName\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795-0-DARLVNF-1\",\r\n            \"vcImageId\": \"jabbo16/iperf-host:1.0.0\",\r\n            \"metadata\": [\r\n                {\r\n                    \"value\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795\",\r\n                    \"key\": \"ServiceId\"\r\n                },\r\n                {\r\n                    \"value\": \"21\",\r\n                    \"key\": \"AbstractNfviPoPId\"\r\n                },\r\n                {\r\n                    \"value\": \"innovaliakey\",\r\n                    \"key\": \"key-name\"\r\n                }\r\n            ]\r\n        }\r\n"
+						},
+						"url": {
+							"raw": "http://10.9.8.211:50000/mtpbase/abstract-compute-resources",
+							"protocol": "http",
+							"host": [
+								"10",
+								"9",
+								"8",
+								"211"
+							],
+							"port": "50000",
+							"path": [
+								"mtpbase",
+								"abstract-compute-resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "compute allocate 3",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\r\n            \"userData\": {\r\n                \"content\": \"/bin/ash, -c, trap : TERM INT; sleep infinity & wait\",\r\n                \"method\": \"CONFIG-DRIVE\"\r\n            },\r\n            \"interfaceData\": [\r\n                {\r\n                    \"ipAddress\": \"192.168.5.10\",\r\n                    \"macAddress\": \"52:54:00:11:2a:29\",\r\n                    \"networkId\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795-n6-cmm-vl\"\r\n                }\r\n            ],\r\n            \"computeFlavourId\": \"flavor_DARLVNF\",\r\n            \"resourceGroupId\": \"\",\r\n            \"mecAppDId\": \"\",\r\n            \"affinityOrAntiAffinityConstraints\": [\r\n                {\r\n                    \"type\": \"\",\r\n                    \"affinityAntiAffinityResourceGroup\": \"\",\r\n                    \"affinityAntiAffinityResourceList\": {\r\n                        \"resource\": [\r\n                            \"\"\r\n                        ]\r\n                    },\r\n                    \"scope\": \"\"\r\n                }\r\n            ],\r\n            \"reservationId\": \"\",\r\n            \"locationConstraints\": \"\",\r\n            \"computeName\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795-0-DARLVNF-1\",\r\n            \"vcImageId\": \"jabbo16/iperf-host:1.0.0\",\r\n            \"metadata\": [\r\n                {\r\n                    \"value\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795\",\r\n                    \"key\": \"ServiceId\"\r\n                },\r\n                {\r\n                    \"value\": \"51\",\r\n                    \"key\": \"AbstractNfviPoPId\"\r\n                },\r\n                {\r\n                    \"value\": \"innovaliakey\",\r\n                    \"key\": \"key-name\"\r\n                }\r\n            ]\r\n        }\r\n"
+						},
+						"url": {
+							"raw": "http://10.9.8.211:50000/mtpbase/abstract-compute-resources",
+							"protocol": "http",
+							"host": [
+								"10",
+								"9",
+								"8",
+								"211"
+							],
+							"port": "50000",
+							"path": [
+								"mtpbase",
+								"abstract-compute-resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "compute allocate 4",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\r\n            \"userData\": {\r\n                \"content\": \"/bin/ash, -c, trap : TERM INT; sleep infinity & wait\",\r\n                \"method\": \"CONFIG-DRIVE\"\r\n            },\r\n            \"interfaceData\": [\r\n                {\r\n                    \"ipAddress\": \"192.168.6.10\",\r\n                    \"macAddress\": \"52:54:00:11:2a:29\",\r\n                    \"networkId\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795-n6-cmm-vl\"\r\n                }\r\n            ],\r\n            \"computeFlavourId\": \"flavor_DARLVNF\",\r\n            \"resourceGroupId\": \"\",\r\n            \"mecAppDId\": \"\",\r\n            \"affinityOrAntiAffinityConstraints\": [\r\n                {\r\n                    \"type\": \"\",\r\n                    \"affinityAntiAffinityResourceGroup\": \"\",\r\n                    \"affinityAntiAffinityResourceList\": {\r\n                        \"resource\": [\r\n                            \"\"\r\n                        ]\r\n                    },\r\n                    \"scope\": \"\"\r\n                }\r\n            ],\r\n            \"reservationId\": \"\",\r\n            \"locationConstraints\": \"\",\r\n            \"computeName\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795-0-DARLVNF-1\",\r\n            \"vcImageId\": \"jabbo16/iperf-host:1.0.0\",\r\n            \"metadata\": [\r\n                {\r\n                    \"value\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795\",\r\n                    \"key\": \"ServiceId\"\r\n                },\r\n                {\r\n                    \"value\": \"61\",\r\n                    \"key\": \"AbstractNfviPoPId\"\r\n                },\r\n                {\r\n                    \"value\": \"innovaliakey\",\r\n                    \"key\": \"key-name\"\r\n                }\r\n            ]\r\n        }\r\n"
+						},
+						"url": {
+							"raw": "http://10.9.8.211:50000/mtpbase/abstract-compute-resources",
+							"protocol": "http",
+							"host": [
+								"10",
+								"9",
+								"8",
+								"211"
+							],
+							"port": "50000",
+							"path": [
+								"mtpbase",
+								"abstract-compute-resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "compute terminate",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:50000/mtpbase/abstract-compute-resources?computeId=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "50000",
+							"path": [
+								"mtpbase",
+								"abstract-compute-resources"
+							],
+							"query": [
+								{
+									"key": "computeId",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "network terminate",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:50000/mtpbase/network_resources?networkResourceId=8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "50000",
+							"path": [
+								"mtpbase",
+								"network_resources"
+							],
+							"query": [
+								{
+									"key": "networkResourceId",
+									"value": "8"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RL demo 1 demo_delay",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"logicalLinkPathList\": [\n      {\n        \"logicalLinkAttributes\": {\n        \"logicalLinkId\": \"5\",\n        \"srcGwIpAddress\": \"192.168.3.30\",\n        \"localLinkId\": 13,\n        \"dstGwIpAddress\": \"192.168.5.50\",\n        \"remoteLinkId\": 15\n        },\n        \"reqBandwidth\": 10000,\n        \"reqLatency\": 70,\n        \"metaData\": [\n          {\n            \"key\": \"null\",\n            \"value\": \"null\"\n          }\n        ]\n      }\n    ],\n    \"networkLayer\": \"IP\",\n    \"interNfviPopNetworkType\": \"L2VPN\",\n    \"metaData\": [\n      {\n        \"key\": \"ServiceId\",\n        \"value\": \"fgt-91e0e29-3b9b-46de-9015-863cb2283795\"\n      },\n      {    \n      \"key\": \"QosSliceDelay\",\n      \"value\": \"enable\"\n      }\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://10.9.8.211:50000/mtpbase/abstract-network-resources",
+					"protocol": "http",
+					"host": [
+						"10",
+						"9",
+						"8",
+						"211"
+					],
+					"port": "50000",
+					"path": [
+						"mtpbase",
+						"abstract-network-resources"
+					]
+				},
+				"description": "    "
+			},
+			"response": []
+		},
+		{
+			"name": "RL demo 2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"logicalLinkPathList\": [\n      {\n        \"logicalLinkAttributes\": {\n        \"logicalLinkId\": \"15\",\n        \"srcGwIpAddress\": \"192.168.4.40\",\n        \"localLinkId\": 14,\n        \"dstGwIpAddress\": \"192.168.6.60\",\n        \"remoteLinkId\": 16\n        },\n        \"reqBandwidth\": 10000,\n        \"reqLatency\": 70,\n        \"metaData\": [\n          {\n            \"key\": \"null\",\n            \"value\": \"null\"\n          }\n        ]\n      }\n    ],\n    \"networkLayer\": \"IP\",\n    \"interNfviPopNetworkType\": \"L2VPN\",\n    \"metaData\": [\n      {\n        \"key\": \"ServiceId\",\n        \"value\": \"xfgt-91e0e29-3b9b-46de-9015-863cb2283795\"\n      },\n      {    \n      \"key\": \"QosSliceDelay\",\n      \"value\": \"enable\"\n      }\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://10.9.8.211:50000/mtpbase/abstract-network-resources",
+					"protocol": "http",
+					"host": [
+						"10",
+						"9",
+						"8",
+						"211"
+					],
+					"port": "50000",
+					"path": [
+						"mtpbase",
+						"abstract-network-resources"
+					]
+				},
+				"description": "    "
+			},
+			"response": []
+		},
+		{
+			"name": "Abstraction request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://10.9.8.211:50000/mtpbase/abstract-resources",
+					"protocol": "http",
+					"host": [
+						"10",
+						"9",
+						"8",
+						"211"
+					],
+					"port": "50000",
+					"path": [
+						"mtpbase",
+						"abstract-resources"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get queues",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "rocks",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "onos",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://10.9.8.233:8181/onos/p4-pipeconf/",
+					"protocol": "http",
+					"host": [
+						"10",
+						"9",
+						"8",
+						"233"
+					],
+					"port": "8181",
+					"path": [
+						"onos",
+						"p4-pipeconf",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
