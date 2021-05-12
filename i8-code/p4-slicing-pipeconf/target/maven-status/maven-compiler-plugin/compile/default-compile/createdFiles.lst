@@ -1,0 +1,6 @@
+rest/QueueModel.class
+rest/P4PipeconfWebApplication.class
+org/onosproject/p4slicing/pipeconf/PortStatisticsDiscoveryImpl.class
+org/onosproject/p4slicing/pipeconf/PipeconfFactory.class
+org/onosproject/p4slicing/pipeconf/PipelineInterpreterImpl.class
+rest/P4PipelineWebResource.class

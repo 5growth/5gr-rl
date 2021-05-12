@@ -1,0 +1,7 @@
+/home/dev/p4-slicing-pipeconf/src/main/java/org/onosproject/p4slicing/pipeconf/package-info.java
+/home/dev/p4-slicing-pipeconf/src/main/java/org/onosproject/p4slicing/pipeconf/PipeconfFactory.java
+/home/dev/p4-slicing-pipeconf/src/main/java/org/onosproject/p4slicing/pipeconf/PipelineInterpreterImpl.java
+/home/dev/p4-slicing-pipeconf/src/main/java/rest/P4PipelineWebResource.java
+/home/dev/p4-slicing-pipeconf/src/main/java/org/onosproject/p4slicing/pipeconf/PortStatisticsDiscoveryImpl.java
+/home/dev/p4-slicing-pipeconf/src/main/java/rest/QueueModel.java
+/home/dev/p4-slicing-pipeconf/src/main/java/rest/P4PipeconfWebApplication.java
