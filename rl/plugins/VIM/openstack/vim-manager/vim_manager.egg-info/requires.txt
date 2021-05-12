@@ -1,0 +1,15 @@
+pbr>=2.0
+apispec==0.39.0
+arrow
+daiquiri
+flasgger==0.9.1
+flask
+marshmallow
+marshmallow-enum
+oslo.config
+python-neutronclient
+python-novaclient
+python-openstackclient
+requests
+simplejson
+apisdk

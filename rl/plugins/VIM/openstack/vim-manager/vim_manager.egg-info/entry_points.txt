@@ -1,0 +1,6 @@
+[console_scripts]
+vim-manager = vim_manager.main:main
+
+[oslo.config.opts]
+vim_manager = vim_manager.conf.opts:list_opts
+
