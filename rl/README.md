@@ -19,5 +19,5 @@ This folder contains the PA algorithm used to enforce the resource selection. Pl
 ### 5. Plugins
 This folder contains the RL plugins. Please refer to the [PLUGINS README](plugins/README.md) for instruction details
 
-### 6. RL_RA_Server_R1
+### 6. RL_RA_Server_R2
 This folder contains the Resource algorithm to use for slice performance isolation feature. Please refer to [README.docx](RL_RA_Server_R1/src/README.docx) for details
