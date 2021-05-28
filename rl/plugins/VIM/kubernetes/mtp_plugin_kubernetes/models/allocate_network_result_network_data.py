@@ -5,9 +5,15 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
+from mtp_plugin_kubernetes.models.meta_data_inner import MetaDataInner
+
+from mtp_plugin_kubernetes.models.allocate_network_result_network_data_network_qo_s import \
+    AllocateNetworkResultNetworkDataNetworkQoS
+
+from mtp_plugin_kubernetes.models.allocate_network_result_network_data_network_port import \
+    AllocateNetworkResultNetworkDataNetworkPort
+
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.allocate_network_result_network_data_network_port import AllocateNetworkResultNetworkDataNetworkPort  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.allocate_network_result_network_data_network_qo_s import AllocateNetworkResultNetworkDataNetworkQoS  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
 
 
@@ -17,7 +23,7 @@ class AllocateNetworkResultNetworkData(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, bandwidth: float=None, is_shared: bool=None, network_port: List[AllocateNetworkResultNetworkDataNetworkPort]=None, network_qo_s: List[AllocateNetworkResultNetworkDataNetworkQoS]=None, network_resource_id: str=None, network_resource_name: str=None, network_type: str=None, operational_state: str=None, segment_type: str=None, sharing_criteria: str=None, subnet: str=None, zone_id: str=None):  # noqa: E501
+    def __init__(self, bandwidth: float=None, is_shared: bool=None, network_port: List[AllocateNetworkResultNetworkDataNetworkPort]=None, network_qo_s: List[AllocateNetworkResultNetworkDataNetworkQoS]=None, network_resource_id: str=None, network_resource_name: str=None, network_type: str=None, operational_state: str=None, segment_type: str=None, sharing_criteria: str=None, subnet: List[str]=None, zone_id: str=None, metadata: List[MetaDataInner]=None):  # noqa: E501
         """AllocateNetworkResultNetworkData - a model defined in Swagger
 
         :param bandwidth: The bandwidth of this AllocateNetworkResultNetworkData.  # noqa: E501
@@ -41,9 +47,11 @@ class AllocateNetworkResultNetworkData(Model):
         :param sharing_criteria: The sharing_criteria of this AllocateNetworkResultNetworkData.  # noqa: E501
         :type sharing_criteria: str
         :param subnet: The subnet of this AllocateNetworkResultNetworkData.  # noqa: E501
-        :type subnet: str
+        :type subnet: List[str]
         :param zone_id: The zone_id of this AllocateNetworkResultNetworkData.  # noqa: E501
         :type zone_id: str
+        :param metadata: The metadata of this AllocateNetworkResultNetworkData.  # noqa: E501
+        :type metadata: List[MetaDataInner]
         """
         self.swagger_types = {
             'bandwidth': float,
@@ -56,8 +64,9 @@ class AllocateNetworkResultNetworkData(Model):
             'operational_state': str,
             'segment_type': str,
             'sharing_criteria': str,
-            'subnet': str,
-            'zone_id': str
+            'subnet': List[str],
+            'zone_id': str,
+            'metadata': List[MetaDataInner]
         }
 
         self.attribute_map = {
@@ -72,7 +81,8 @@ class AllocateNetworkResultNetworkData(Model):
             'segment_type': 'segmentType',
             'sharing_criteria': 'sharingCriteria',
             'subnet': 'subnet',
-            'zone_id': 'zoneId'
+            'zone_id': 'zoneId',
+            'metadata': 'metadata'
         }
 
         self._bandwidth = bandwidth
@@ -87,6 +97,7 @@ class AllocateNetworkResultNetworkData(Model):
         self._sharing_criteria = sharing_criteria
         self._subnet = subnet
         self._zone_id = zone_id
+        self._metadata = metadata
 
     @classmethod
     def from_dict(cls, dikt) -> 'AllocateNetworkResultNetworkData':
@@ -350,24 +361,24 @@ class AllocateNetworkResultNetworkData(Model):
         self._sharing_criteria = sharing_criteria
 
     @property
-    def subnet(self) -> str:
+    def subnet(self) -> List[str]:
         """Gets the subnet of this AllocateNetworkResultNetworkData.
 
         Only present if the network provides layer 3 connectivity.  # noqa: E501
 
         :return: The subnet of this AllocateNetworkResultNetworkData.
-        :rtype: str
+        :rtype: List[str]
         """
         return self._subnet
 
     @subnet.setter
-    def subnet(self, subnet: str):
+    def subnet(self, subnet: List[str]):
         """Sets the subnet of this AllocateNetworkResultNetworkData.
 
         Only present if the network provides layer 3 connectivity.  # noqa: E501
 
         :param subnet: The subnet of this AllocateNetworkResultNetworkData.
-        :type subnet: str
+        :type subnet: List[str]
         """
         if subnet is None:
             raise ValueError("Invalid value for `subnet`, must not be `None`")  # noqa: E501
@@ -398,3 +409,28 @@ class AllocateNetworkResultNetworkData(Model):
             raise ValueError("Invalid value for `zone_id`, must not be `None`")  # noqa: E501
 
         self._zone_id = zone_id
+
+    @property
+    def metadata(self) -> List[MetaDataInner]:
+        """Gets the metadata of this AllocateNetworkResultNetworkData.
+
+        List of metadata key-value pairs used by the consumer to   associate meaningful metadata to the related virtualised resource.  # noqa: E501
+
+        :return: The metadata of this AllocateNetworkResultNetworkData.
+        :rtype: List[MetaDataInner]
+        """
+        return self._metadata
+
+    @metadata.setter
+    def metadata(self, metadata: List[MetaDataInner]):
+        """Sets the metadata of this AllocateNetworkResultNetworkData.
+
+        List of metadata key-value pairs used by the consumer to   associate meaningful metadata to the related virtualised resource.  # noqa: E501
+
+        :param metadata: The metadata of this AllocateNetworkResultNetworkData.
+        :type metadata: List[MetaDataInner]
+        """
+        if metadata is None:
+            raise ValueError("Invalid value for `metadata`, must not be `None`")  # noqa: E501
+
+        self._metadata = metadata

@@ -367,12 +367,16 @@ public class AllocateIntraPopVIMNetworkThread extends Thread {
         AllocateNetworkRequest initreq = new  AllocateNetworkRequest();
         initreq.setNetworkResourceName(request.getIntrapopreq().getNetworkResourceName());
         initreq.setNetworkResourceType("router");
-        List<MetaDataInner> metadatas = request.getIntrapopreq().getMetadata();
+        ArrayList<MetaDataInner> metadatas = request.getIntrapopreq().getMetadata();
         List <String> excludeMetaData = Arrays.asList("ServiceId", "AbstractNvfiPoPId");
         List<MetaDataInner> newMetaDatas = metadatas.stream().filter(line -> !excludeMetaData.contains(line.getKey()))
                 .collect(Collectors.toList());
 //        metadatas.forEach(System.out::println);
-        initreq.setMetadata(newMetaDatas);
+        MetaData senddata = new MetaData();
+        for (int i = 0; i < newMetaDatas.size(); i++) {
+            senddata.add(newMetaDatas.get(i));
+        }
+        initreq.setMetadata(senddata);
 
         try {
             initrep = api.vIMallocateNetwork(initreq);

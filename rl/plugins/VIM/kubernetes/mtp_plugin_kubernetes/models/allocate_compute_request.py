@@ -5,11 +5,14 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
+from mtp_plugin_kubernetes.models.allocate_compute_request_affinity_or_anti_affinity_constraints import \
+    AllocateComputeRequestAffinityOrAntiAffinityConstraints
+from mtp_plugin_kubernetes.models.allocate_compute_request_interface_data import AllocateComputeRequestInterfaceData
+from mtp_plugin_kubernetes.models.allocate_compute_request_user_data import AllocateComputeRequestUserData
+from mtp_plugin_kubernetes.models.meta_data_inner import MetaDataInner
+
+
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.allocate_compute_request_affinity_or_anti_affinity_constraints import AllocateComputeRequestAffinityOrAntiAffinityConstraints  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.allocate_compute_request_interface_data import AllocateComputeRequestInterfaceData  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.allocate_compute_request_user_data import AllocateComputeRequestUserData  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.meta_data_inner import MetaDataInner  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
 
 
@@ -19,7 +22,7 @@ class AllocateComputeRequest(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, affinity_or_anti_affinity_constraints: List[AllocateComputeRequestAffinityOrAntiAffinityConstraints]=None, compute_flavour_id: str=None, compute_name: str=None, interface_data: List[AllocateComputeRequestInterfaceData]=None, location_constraints: str=None, metadata: List[MetaDataInner]=None, reservation_id: str=None, resource_group_id: str=None, user_data: AllocateComputeRequestUserData=None, vc_image_id: str=None):  # noqa: E501
+    def __init__(self, affinity_or_anti_affinity_constraints: List[AllocateComputeRequestAffinityOrAntiAffinityConstraints]=None, compute_flavour_id: str=None, compute_name: str=None, interface_data: List[AllocateComputeRequestInterfaceData]=None, location_constraints: str=None, metadata: List[MetaDataInner]=None, reservation_id: str=None, resource_group_id: str=None, user_data: AllocateComputeRequestUserData=None, vc_image_id: str=None, mec_app_d_id: str=None):  # noqa: E501
         """AllocateComputeRequest - a model defined in Swagger
 
         :param affinity_or_anti_affinity_constraints: The affinity_or_anti_affinity_constraints of this AllocateComputeRequest.  # noqa: E501
@@ -42,6 +45,8 @@ class AllocateComputeRequest(Model):
         :type user_data: AllocateComputeRequestUserData
         :param vc_image_id: The vc_image_id of this AllocateComputeRequest.  # noqa: E501
         :type vc_image_id: str
+        :param mec_app_d_id: The mec_app_d_id of this AllocateComputeRequest.  # noqa: E501
+        :type mec_app_d_id: str
         """
         self.swagger_types = {
             'affinity_or_anti_affinity_constraints': List[AllocateComputeRequestAffinityOrAntiAffinityConstraints],
@@ -53,7 +58,8 @@ class AllocateComputeRequest(Model):
             'reservation_id': str,
             'resource_group_id': str,
             'user_data': AllocateComputeRequestUserData,
-            'vc_image_id': str
+            'vc_image_id': str,
+            'mec_app_d_id': str
         }
 
         self.attribute_map = {
@@ -66,7 +72,8 @@ class AllocateComputeRequest(Model):
             'reservation_id': 'reservationId',
             'resource_group_id': 'resourceGroupId',
             'user_data': 'userData',
-            'vc_image_id': 'vcImageId'
+            'vc_image_id': 'vcImageId',
+            'mec_app_d_id': 'mecAppDId'
         }
 
         self._affinity_or_anti_affinity_constraints = affinity_or_anti_affinity_constraints
@@ -79,6 +86,7 @@ class AllocateComputeRequest(Model):
         self._resource_group_id = resource_group_id
         self._user_data = user_data
         self._vc_image_id = vc_image_id
+        self._mec_app_d_id = mec_app_d_id
 
     @classmethod
     def from_dict(cls, dikt) -> 'AllocateComputeRequest':
@@ -338,3 +346,28 @@ class AllocateComputeRequest(Model):
             raise ValueError("Invalid value for `vc_image_id`, must not be `None`")  # noqa: E501
 
         self._vc_image_id = vc_image_id
+
+    @property
+    def mec_app_d_id(self) -> str:
+        """Gets the mec_app_d_id of this AllocateComputeRequest.
+
+        Identifier of the MEC AppD reference identifier. Cardinality can be 0 if an VM is not allocated for a MEC application.   # noqa: E501
+
+        :return: The mec_app_d_id of this AllocateComputeRequest.
+        :rtype: str
+        """
+        return self._mec_app_d_id
+
+    @mec_app_d_id.setter
+    def mec_app_d_id(self, mec_app_d_id: str):
+        """Sets the mec_app_d_id of this AllocateComputeRequest.
+
+        Identifier of the MEC AppD reference identifier. Cardinality can be 0 if an VM is not allocated for a MEC application.   # noqa: E501
+
+        :param mec_app_d_id: The mec_app_d_id of this AllocateComputeRequest.
+        :type mec_app_d_id: str
+        """
+        if mec_app_d_id is None:
+            raise ValueError("Invalid value for `mec_app_d_id`, must not be `None`")  # noqa: E501
+
+        self._mec_app_d_id = mec_app_d_id

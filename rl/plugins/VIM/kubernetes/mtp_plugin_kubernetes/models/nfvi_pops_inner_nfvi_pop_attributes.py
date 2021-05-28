@@ -6,9 +6,15 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.nfvi_pops_inner_nfvi_pop_attributes_network_connectivity_endpoint import NfviPopsInnerNfviPopAttributesNetworkConnectivityEndpoint  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.nfvi_pops_inner_nfvi_pop_attributes_resource_zone_attributes import NfviPopsInnerNfviPopAttributesResourceZoneAttributes  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
+from mtp_plugin_kubernetes.models.mec_region_info import MECRegionInfo
+from mtp_plugin_kubernetes.models.nfvi_pops_inner_nfvi_pop_attributes_network_connectivity_endpoint import \
+    NfviPopsInnerNfviPopAttributesNetworkConnectivityEndpoint
+from mtp_plugin_kubernetes.models.nfvi_pops_inner_nfvi_pop_attributes_radio_coverage_areas import \
+    NfviPopsInnerNfviPopAttributesRadioCoverageAreas
+from mtp_plugin_kubernetes.models.nfvi_pops_inner_nfvi_pop_attributes_resource_zone_attributes import \
+    NfviPopsInnerNfviPopAttributesResourceZoneAttributes
+from mtp_plugin_kubernetes.models.pn_flist import PNFlist
 
 
 class NfviPopsInnerNfviPopAttributes(Model):
@@ -17,41 +23,71 @@ class NfviPopsInnerNfviPopAttributes(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, geographical_location_info: str=None, vim_id: str=None, network_connectivity_endpoint: List[NfviPopsInnerNfviPopAttributesNetworkConnectivityEndpoint]=None, nfvi_pop_id: str=None, resource_zone_attributes: List[NfviPopsInnerNfviPopAttributesResourceZoneAttributes]=None):  # noqa: E501
+    def __init__(self, pnflist: PNFlist=None, geographical_location_info: str=None, vim_id: str=None, federated_vim_id: str=None, network_connectivity_endpoint: List[NfviPopsInnerNfviPopAttributesNetworkConnectivityEndpoint]=None, nfvi_pop_id: str=None, resource_zone_attributes: List[NfviPopsInnerNfviPopAttributesResourceZoneAttributes]=None, mec_capable: str=None, mec_regions: List[MECRegionInfo]=None, radio_capable: str=None, radio_coverage_areas: List[NfviPopsInnerNfviPopAttributesRadioCoverageAreas]=None):  # noqa: E501
         """NfviPopsInnerNfviPopAttributes - a model defined in Swagger
 
+        :param pnflist: The pnflist of this NfviPopsInnerNfviPopAttributes.  # noqa: E501
+        :type pnflist: PNFlist
         :param geographical_location_info: The geographical_location_info of this NfviPopsInnerNfviPopAttributes.  # noqa: E501
         :type geographical_location_info: str
         :param vim_id: The vim_id of this NfviPopsInnerNfviPopAttributes.  # noqa: E501
         :type vim_id: str
+        :param federated_vim_id: The federated_vim_id of this NfviPopsInnerNfviPopAttributes.  # noqa: E501
+        :type federated_vim_id: str
         :param network_connectivity_endpoint: The network_connectivity_endpoint of this NfviPopsInnerNfviPopAttributes.  # noqa: E501
         :type network_connectivity_endpoint: List[NfviPopsInnerNfviPopAttributesNetworkConnectivityEndpoint]
         :param nfvi_pop_id: The nfvi_pop_id of this NfviPopsInnerNfviPopAttributes.  # noqa: E501
         :type nfvi_pop_id: str
         :param resource_zone_attributes: The resource_zone_attributes of this NfviPopsInnerNfviPopAttributes.  # noqa: E501
         :type resource_zone_attributes: List[NfviPopsInnerNfviPopAttributesResourceZoneAttributes]
+        :param mec_capable: The mec_capable of this NfviPopsInnerNfviPopAttributes.  # noqa: E501
+        :type mec_capable: str
+        :param mec_regions: The mec_regions of this NfviPopsInnerNfviPopAttributes.  # noqa: E501
+        :type mec_regions: List[MECRegionInfo]
+        :param radio_capable: The radio_capable of this NfviPopsInnerNfviPopAttributes.  # noqa: E501
+        :type radio_capable: str
+        :param radio_coverage_areas: The radio_coverage_areas of this NfviPopsInnerNfviPopAttributes.  # noqa: E501
+        :type radio_coverage_areas: List[NfviPopsInnerNfviPopAttributesRadioCoverageAreas]
         """
         self.swagger_types = {
+            'pnflist': PNFlist,
             'geographical_location_info': str,
             'vim_id': str,
+            'federated_vim_id': str,
             'network_connectivity_endpoint': List[NfviPopsInnerNfviPopAttributesNetworkConnectivityEndpoint],
             'nfvi_pop_id': str,
-            'resource_zone_attributes': List[NfviPopsInnerNfviPopAttributesResourceZoneAttributes]
+            'resource_zone_attributes': List[NfviPopsInnerNfviPopAttributesResourceZoneAttributes],
+            'mec_capable': str,
+            'mec_regions': List[MECRegionInfo],
+            'radio_capable': str,
+            'radio_coverage_areas': List[NfviPopsInnerNfviPopAttributesRadioCoverageAreas]
         }
 
         self.attribute_map = {
+            'pnflist': 'pnflist',
             'geographical_location_info': 'geographicalLocationInfo',
             'vim_id': 'vimId',
+            'federated_vim_id': 'federatedVimId',
             'network_connectivity_endpoint': 'networkConnectivityEndpoint',
             'nfvi_pop_id': 'nfviPopId',
-            'resource_zone_attributes': 'resourceZoneAttributes'
+            'resource_zone_attributes': 'resourceZoneAttributes',
+            'mec_capable': 'MecCapable',
+            'mec_regions': 'MecRegions',
+            'radio_capable': 'RadioCapable',
+            'radio_coverage_areas': 'RadioCoverageAreas'
         }
 
+        self._pnflist = pnflist
         self._geographical_location_info = geographical_location_info
         self._vim_id = vim_id
+        self._federated_vim_id = federated_vim_id
         self._network_connectivity_endpoint = network_connectivity_endpoint
         self._nfvi_pop_id = nfvi_pop_id
         self._resource_zone_attributes = resource_zone_attributes
+        self._mec_capable = mec_capable
+        self._mec_regions = mec_regions
+        self._radio_capable = radio_capable
+        self._radio_coverage_areas = radio_coverage_areas
 
     @classmethod
     def from_dict(cls, dikt) -> 'NfviPopsInnerNfviPopAttributes':
@@ -63,6 +99,29 @@ class NfviPopsInnerNfviPopAttributes(Model):
         :rtype: NfviPopsInnerNfviPopAttributes
         """
         return util.deserialize_model(dikt, cls)
+
+    @property
+    def pnflist(self) -> PNFlist:
+        """Gets the pnflist of this NfviPopsInnerNfviPopAttributes.
+
+
+        :return: The pnflist of this NfviPopsInnerNfviPopAttributes.
+        :rtype: PNFlist
+        """
+        return self._pnflist
+
+    @pnflist.setter
+    def pnflist(self, pnflist: PNFlist):
+        """Sets the pnflist of this NfviPopsInnerNfviPopAttributes.
+
+
+        :param pnflist: The pnflist of this NfviPopsInnerNfviPopAttributes.
+        :type pnflist: PNFlist
+        """
+        if pnflist is None:
+            raise ValueError("Invalid value for `pnflist`, must not be `None`")  # noqa: E501
+
+        self._pnflist = pnflist
 
     @property
     def geographical_location_info(self) -> str:
@@ -113,6 +172,31 @@ class NfviPopsInnerNfviPopAttributes(Model):
             raise ValueError("Invalid value for `vim_id`, must not be `None`")  # noqa: E501
 
         self._vim_id = vim_id
+
+    @property
+    def federated_vim_id(self) -> str:
+        """Gets the federated_vim_id of this NfviPopsInnerNfviPopAttributes.
+
+        Identification of the Federated VIM.  # noqa: E501
+
+        :return: The federated_vim_id of this NfviPopsInnerNfviPopAttributes.
+        :rtype: str
+        """
+        return self._federated_vim_id
+
+    @federated_vim_id.setter
+    def federated_vim_id(self, federated_vim_id: str):
+        """Sets the federated_vim_id of this NfviPopsInnerNfviPopAttributes.
+
+        Identification of the Federated VIM.  # noqa: E501
+
+        :param federated_vim_id: The federated_vim_id of this NfviPopsInnerNfviPopAttributes.
+        :type federated_vim_id: str
+        """
+        if federated_vim_id is None:
+            raise ValueError("Invalid value for `federated_vim_id`, must not be `None`")  # noqa: E501
+
+        self._federated_vim_id = federated_vim_id
 
     @property
     def network_connectivity_endpoint(self) -> List[NfviPopsInnerNfviPopAttributesNetworkConnectivityEndpoint]:
@@ -184,3 +268,97 @@ class NfviPopsInnerNfviPopAttributes(Model):
             raise ValueError("Invalid value for `resource_zone_attributes`, must not be `None`")  # noqa: E501
 
         self._resource_zone_attributes = resource_zone_attributes
+
+    @property
+    def mec_capable(self) -> str:
+        """Gets the mec_capable of this NfviPopsInnerNfviPopAttributes.
+
+        Set if PoP contains MEC attributes  # noqa: E501
+
+        :return: The mec_capable of this NfviPopsInnerNfviPopAttributes.
+        :rtype: str
+        """
+        return self._mec_capable
+
+    @mec_capable.setter
+    def mec_capable(self, mec_capable: str):
+        """Sets the mec_capable of this NfviPopsInnerNfviPopAttributes.
+
+        Set if PoP contains MEC attributes  # noqa: E501
+
+        :param mec_capable: The mec_capable of this NfviPopsInnerNfviPopAttributes.
+        :type mec_capable: str
+        """
+        if mec_capable is None:
+            raise ValueError("Invalid value for `mec_capable`, must not be `None`")  # noqa: E501
+
+        self._mec_capable = mec_capable
+
+    @property
+    def mec_regions(self) -> List[MECRegionInfo]:
+        """Gets the mec_regions of this NfviPopsInnerNfviPopAttributes.
+
+
+        :return: The mec_regions of this NfviPopsInnerNfviPopAttributes.
+        :rtype: List[MECRegionInfo]
+        """
+        return self._mec_regions
+
+    @mec_regions.setter
+    def mec_regions(self, mec_regions: List[MECRegionInfo]):
+        """Sets the mec_regions of this NfviPopsInnerNfviPopAttributes.
+
+
+        :param mec_regions: The mec_regions of this NfviPopsInnerNfviPopAttributes.
+        :type mec_regions: List[MECRegionInfo]
+        """
+        if mec_regions is None:
+            raise ValueError("Invalid value for `mec_regions`, must not be `None`")  # noqa: E501
+
+        self._mec_regions = mec_regions
+
+    @property
+    def radio_capable(self) -> str:
+        """Gets the radio_capable of this NfviPopsInnerNfviPopAttributes.
+
+        Set if PoP contains Radio attributes  # noqa: E501
+
+        :return: The radio_capable of this NfviPopsInnerNfviPopAttributes.
+        :rtype: str
+        """
+        return self._radio_capable
+
+    @radio_capable.setter
+    def radio_capable(self, radio_capable: str):
+        """Sets the radio_capable of this NfviPopsInnerNfviPopAttributes.
+
+        Set if PoP contains Radio attributes  # noqa: E501
+
+        :param radio_capable: The radio_capable of this NfviPopsInnerNfviPopAttributes.
+        :type radio_capable: str
+        """
+        if radio_capable is None:
+            raise ValueError("Invalid value for `radio_capable`, must not be `None`")  # noqa: E501
+
+        self._radio_capable = radio_capable
+
+    @property
+    def radio_coverage_areas(self) -> List[NfviPopsInnerNfviPopAttributesRadioCoverageAreas]:
+        """Gets the radio_coverage_areas of this NfviPopsInnerNfviPopAttributes.
+
+
+        :return: The radio_coverage_areas of this NfviPopsInnerNfviPopAttributes.
+        :rtype: List[NfviPopsInnerNfviPopAttributesRadioCoverageAreas]
+        """
+        return self._radio_coverage_areas
+
+    @radio_coverage_areas.setter
+    def radio_coverage_areas(self, radio_coverage_areas: List[NfviPopsInnerNfviPopAttributesRadioCoverageAreas]):
+        """Sets the radio_coverage_areas of this NfviPopsInnerNfviPopAttributes.
+
+
+        :param radio_coverage_areas: The radio_coverage_areas of this NfviPopsInnerNfviPopAttributes.
+        :type radio_coverage_areas: List[NfviPopsInnerNfviPopAttributesRadioCoverageAreas]
+        """
+
+        self._radio_coverage_areas = radio_coverage_areas

@@ -15,16 +15,7 @@ class ReservedVirtualComputeVirtualisationContainerReservedVirtualNetworkInterfa
     Do not edit the class manually.
     """
 
-    def __init__(self, acceleration_capability: object = None, bandwidth: object = None, ip_address: object = None,
-                 mac_address: object = None,
-                 metadata: object = None,
-                 network_id: object = None,
-                 network_port_id: object = None,
-                 operational_state: object = None,
-                 owner_id: object = None,
-                 resource_id: object = None,
-                 type_configuration: object = None,
-                 type_virtual_nic: object = None) -> object:  # noqa: E501
+    def __init__(self, acceleration_capability: str=None, bandwidth: str=None, ip_address: str=None, mac_address: str=None, metadata: str=None, network_id: str=None, network_port_id: str=None, operational_state: str=None, owner_id: str=None, resource_id: str=None, type_configuration: str=None, type_virtual_nic: str=None):  # noqa: E501
         """ReservedVirtualComputeVirtualisationContainerReservedVirtualNetworkInterface - a model defined in Swagger
 
         :param acceleration_capability: The acceleration_capability of this ReservedVirtualComputeVirtualisationContainerReservedVirtualNetworkInterface.  # noqa: E501

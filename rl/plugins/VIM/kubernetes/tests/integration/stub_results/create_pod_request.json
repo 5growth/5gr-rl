@@ -1,0 +1,45 @@
+{
+  "affinityOrAntiAffinityConstraints": [
+    {
+      "affinityAntiAffinityResourceGroup": "",
+      "affinityAntiAffinityResourceList": {
+        "resource": [
+          ""
+        ]
+      },
+      "scope": "",
+      "type": ""
+    }
+  ],
+  "computeFlavourId": "flavor_DARLVNF",
+  "computeName": "fgt-91e0e29-3b9b-46de-9015-863cb2283795-0-DARLVNF-1",
+  "interfaceData": [
+    {
+      "ipAddress": "192.168.10.17",
+      "macAddress": "52:54:00:11:2a:29",
+      "networkId": "fgt-91e0e29-3b9b-46de-9015-863cb2283795-n6-cmm-vl"
+    }
+  ],
+  "locationConstraints": "",
+  "metadata": [
+    {
+      "key": "ServiceId",
+      "value": "fgt-91e0e29-3b9b-46de-9015-863cb2283795"
+    },
+    {
+      "key": "AbstractNfviPoPId",
+      "value": "1"
+    },
+    {
+      "key": "key-name",
+      "value": "innovaliakey"
+    }
+  ],
+  "reservationId": "",
+  "resourceGroupId": "",
+  "userData": {
+    "content": "/bin/ash, -c, trap : TERM INT; sleep infinity & wait",
+    "method": "CONFIG-DRIVE"
+  },
+  "vcImageId": "jabbo16/iperf-host:1.0.0"
+}

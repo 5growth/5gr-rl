@@ -1,0 +1,54 @@
+            {
+                "networkData": null,
+                "networkPortData": null,
+                "subnetData": {
+                    "addressPool": [
+                        0
+                    ],
+                    "cidr": "192.168.10.0/24",
+                    "gatewayIp": null,
+                    "ipVersion": 4,
+                    "isDhcpEnabled": true,
+                    "metadata": [
+                        {
+                            "key": "id",
+                            "value": "fgt-91e0e29-3b9b-46de-9015-863cb2283795-n6-cmm-vl"
+                        },
+                        {
+                            "key": "name",
+                            "value": "subnet-fgt-91e0e29-3b9b-46de-9015-863cb2283795_n6_cmm_vl"
+                        },
+                        {
+                            "key": "network_id",
+                            "value": "fgt-91e0e29-3b9b-46de-9015-863cb2283795-n6-cmm-vl"
+                        },
+                        {
+                            "key": "ip_version",
+                            "value": "4"
+                        },
+                        {
+                            "key": "enable_dhcp",
+                            "value": "True"
+                        },
+                        {
+                            "key": "ipv6_address_mode",
+                            "value": "None"
+                        },
+                        {
+                            "key": "gateway_ip",
+                            "value": "None"
+                        },
+                        {
+                            "key": "cidr",
+                            "value": "192.168.10.0/24"
+                        },
+                        {
+                            "key": "allocation_pools",
+                            "value": "[{'start': '192.168.10.2', 'end': '192.168.10.20'}]"
+                        }
+                    ],
+                    "networkId": "fgt-91e0e29-3b9b-46de-9015-863cb2283795-n6-cmm-vl",
+                    "operationalState": "enabled",
+                    "resourceId": "fgt-91e0e29-3b9b-46de-9015-863cb2283795-n6-cmm-vl"
+                }
+            }

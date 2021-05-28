@@ -14,15 +14,24 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
-import java.util.List;
+import com.rl.extinterface.nbi.swagger.model.MetaData;
+import java.io.IOException;
 
 /**
  * SoftwareImageAddQuery
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class SoftwareImageAddQuery {
   @SerializedName("name")
   private String name = null;
@@ -37,7 +46,7 @@ public class SoftwareImageAddQuery {
   private String softwareImage = null;
 
   @SerializedName("userMetadata")
-  private List<MetaDataInner> userMetadata = new ArrayList<MetaDataInner>();
+  private MetaData userMetadata = null;
 
   @SerializedName("version")
   private String version = null;
@@ -117,26 +126,21 @@ public class SoftwareImageAddQuery {
     this.softwareImage = softwareImage;
   }
 
-  public SoftwareImageAddQuery userMetadata(List<MetaDataInner> userMetadata) {
+  public SoftwareImageAddQuery userMetadata(MetaData userMetadata) {
     this.userMetadata = userMetadata;
     return this;
   }
 
-  public SoftwareImageAddQuery addUserMetadataItem(MetaDataInner userMetadataItem) {
-    this.userMetadata.add(userMetadataItem);
-    return this;
-  }
-
    /**
-   * User-defined metadata.
+   * Get userMetadata
    * @return userMetadata
   **/
-  @ApiModelProperty(required = true, value = "User-defined metadata.")
-  public List<MetaDataInner> getUserMetadata() {
+  @ApiModelProperty(required = true, value = "")
+  public MetaData getUserMetadata() {
     return userMetadata;
   }
 
-  public void setUserMetadata(List<MetaDataInner> userMetadata) {
+  public void setUserMetadata(MetaData userMetadata) {
     this.userMetadata = userMetadata;
   }
 

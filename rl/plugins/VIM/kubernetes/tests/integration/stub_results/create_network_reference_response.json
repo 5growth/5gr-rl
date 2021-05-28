@@ -1,0 +1,48 @@
+            {
+                "networkData": {
+                    "bandwidth": 0,
+                    "isShared": false,
+                    "metadata": [
+                        {
+                            "key": "id",
+                            "value": "fgt-91e0e29-3b9b-46de-9015-863cb2283795-n6-cmm-vl"
+                        },
+                        {
+                            "key": "name",
+                            "value": "fgt-91e0e29-3b9b-46de-9015-863cb2283795_n6_cmm_vl"
+                        },
+                        {
+                            "key": "admin_state_up",
+                            "value": "True"
+                        },
+                        {
+                            "key": "provider:network_type",
+                            "value": "vlan"
+                        },
+                        {
+                            "key": "provider:segmentation_id",
+                            "value": "40"
+                        },
+                        {
+                            "key": "ipv4_address_scope",
+                            "value": "None"
+                        },
+                        {
+                            "key": "ipv6_address_scope",
+                            "value": "None"
+                        }
+                    ],
+                    "networkPort": [],
+                    "networkQoS": [],
+                    "networkResourceId": "fgt-91e0e29-3b9b-46de-9015-863cb2283795-n6-cmm-vl",
+                    "networkResourceName": "fgt-91e0e29-3b9b-46de-9015-863cb2283795_n6_cmm_vl",
+                    "networkType": "vlan",
+                    "operationalState": "enabled",
+                    "segmentType": 40,
+                    "sharingCriteria": "",
+                    "subnet": [],
+                    "zoneId": ""
+                },
+                "networkPortData": null,
+                "subnetData": null
+            }

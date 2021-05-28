@@ -14,6 +14,7 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -27,7 +28,10 @@ import java.io.IOException;
  * The virtual CPU pinning configuration for the virtualised compute resource.
  */
 @ApiModel(description = "The virtual CPU pinning configuration for the virtualised compute resource.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class VirtualCpuPinningData {
   /**
    * ndicates the policy for CPU pinning. The policy can take values of \&quot;static\&quot; or \&quot;dynamic\&quot;. The cardinality can be 0 during the allocation request, if no particular value is requested.

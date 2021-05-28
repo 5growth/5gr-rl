@@ -6,9 +6,11 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.virtual_compute_resource_information_virtual_cpu import VirtualComputeResourceInformationVirtualCPU  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.virtual_compute_resource_information_virtual_memory import VirtualComputeResourceInformationVirtualMemory  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
+from mtp_plugin_kubernetes.models.virtual_compute_resource_information_virtual_cpu import \
+    VirtualComputeResourceInformationVirtualCPU
+from mtp_plugin_kubernetes.models.virtual_compute_resource_information_virtual_memory import \
+    VirtualComputeResourceInformationVirtualMemory
 
 
 class VirtualComputeResourceInformation(Model):

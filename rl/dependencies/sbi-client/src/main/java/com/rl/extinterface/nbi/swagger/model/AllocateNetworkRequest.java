@@ -14,15 +14,25 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
-import java.util.List;
+import com.rl.extinterface.nbi.swagger.model.MetaData;
+import com.rl.extinterface.nbi.swagger.model.SubnetData;
+import java.io.IOException;
 
 /**
  * AllocateNetworkRequest
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class AllocateNetworkRequest {
   @SerializedName("affinityOrAntiAffinityConstraints")
   private String affinityOrAntiAffinityConstraints = null;
@@ -31,7 +41,7 @@ public class AllocateNetworkRequest {
   private String locationConstraints = null;
 
   @SerializedName("metadata")
-  private List<MetaDataInner> metadata = new ArrayList<MetaDataInner>();
+  private MetaData metadata = null;
 
   @SerializedName("networkResourceName")
   private String networkResourceName = null;
@@ -90,26 +100,21 @@ public class AllocateNetworkRequest {
     this.locationConstraints = locationConstraints;
   }
 
-  public AllocateNetworkRequest metadata(List<MetaDataInner> metadata) {
+  public AllocateNetworkRequest metadata(MetaData metadata) {
     this.metadata = metadata;
     return this;
   }
 
-  public AllocateNetworkRequest addMetadataItem(MetaDataInner metadataItem) {
-    this.metadata.add(metadataItem);
-    return this;
-  }
-
    /**
-   * The binary software image file.
+   * Get metadata
    * @return metadata
   **/
-  @ApiModelProperty(required = true, value = "The binary software image file.")
-  public List<MetaDataInner> getMetadata() {
+  @ApiModelProperty(required = true, value = "")
+  public MetaData getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(List<MetaDataInner> metadata) {
+  public void setMetadata(MetaData metadata) {
     this.metadata = metadata;
   }
 

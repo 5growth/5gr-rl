@@ -103,7 +103,7 @@ def extract_virtual_network_interface(server_ports):
             'typeConfiguration': port['binding:vif_type'],
             'macAddress': port['mac_address'],
             'bandwidth': '0',
-            'accelerationCapability': [],
+            'accelerationCapability': '',
             'operationalState': port['status'],
             'metadata': []
         }

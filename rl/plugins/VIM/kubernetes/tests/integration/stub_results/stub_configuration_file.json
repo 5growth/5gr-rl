@@ -1,0 +1,31 @@
+{
+  "VIM": {
+    "DomainInfo": {
+      "NVFIPopList": {
+        "NfviPop": {
+          "geographicalLocationInfo": "Pisa",
+          "inter_pop_physical_network": "ens8",
+          "networkConnectivityEndpoint": "192.168.3.30",
+          "nfviPopId": "1",
+          "vimId": "1",
+          "vlanFrom": "10",
+          "vlanTill": "50"
+        }
+      },
+      "Zonelist": {
+        "Zone": {
+          "nfviPopId": "1",
+          "zoneId": "nova1",
+          "zoneName": "nova",
+          "zoneProperty": "cpu",
+          "zoneState": "available"
+        }
+      }
+    },
+    "Server": {
+      "KubernetesConfig": "kube.conf",
+      "Port": "54000",
+      "URLprefix": "/kubernetes"
+    }
+  }
+}

@@ -14,15 +14,29 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import com.rl.extinterface.nbi.swagger.model.AllocateComputeRequestAffinityOrAntiAffinityConstraints;
+import com.rl.extinterface.nbi.swagger.model.AllocateComputeRequestInterfaceData;
+import com.rl.extinterface.nbi.swagger.model.AllocateComputeRequestUserData;
+import com.rl.extinterface.nbi.swagger.model.MetaData;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * AllocateComputeRequest
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class AllocateComputeRequest {
   @SerializedName("affinityOrAntiAffinityConstraints")
   private List<AllocateComputeRequestAffinityOrAntiAffinityConstraints> affinityOrAntiAffinityConstraints = new ArrayList<AllocateComputeRequestAffinityOrAntiAffinityConstraints>();
@@ -40,7 +54,7 @@ public class AllocateComputeRequest {
   private String locationConstraints = null;
 
   @SerializedName("metadata")
-  private List<MetaDataInner> metadata = new ArrayList<MetaDataInner>();
+  private MetaData metadata = null;
 
   @SerializedName("reservationId")
   private String reservationId = null;
@@ -157,26 +171,21 @@ public class AllocateComputeRequest {
     this.locationConstraints = locationConstraints;
   }
 
-  public AllocateComputeRequest metadata(List<MetaDataInner> metadata) {
+  public AllocateComputeRequest metadata(MetaData metadata) {
     this.metadata = metadata;
     return this;
   }
 
-  public AllocateComputeRequest addMetadataItem(MetaDataInner metadataItem) {
-    this.metadata.add(metadataItem);
-    return this;
-  }
-
    /**
-   * The binary software image file.
+   * Get metadata
    * @return metadata
   **/
-  @ApiModelProperty(required = true, value = "The binary software image file.")
-  public List<MetaDataInner> getMetadata() {
+  @ApiModelProperty(required = true, value = "")
+  public MetaData getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(List<MetaDataInner> metadata) {
+  public void setMetadata(MetaData metadata) {
     this.metadata = metadata;
   }
 

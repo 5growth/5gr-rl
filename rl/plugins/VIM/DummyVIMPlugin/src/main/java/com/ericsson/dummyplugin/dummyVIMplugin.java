@@ -15,7 +15,7 @@ import com.ericsson.dummyplugin.nbi.swagger.api.NetworkResourcesApi;
 import com.ericsson.dummyplugin.nbi.swagger.api.QuotasApi;
 import com.ericsson.dummyplugin.nbi.swagger.api.ReservationsApi;
 import com.ericsson.dummyplugin.nbi.swagger.api.SoftwareImagesApi;
-import com.ericsson.dummyplugin.sbi.XenIF;
+import com.ericsson.dummyplugin.sbi.DummyVIMIF;
 import com.google.common.eventbus.EventBus;
 import com.ericsson.dummyplugin.nbi.swagger.api.AbstractComputeOperateResourcesApi;
 import com.ericsson.dummyplugin.nbi.swagger.api.AbstractComputeResourcesApi;
@@ -80,7 +80,7 @@ public class dummyVIMplugin {
         System.out.println("XEN PLUGIN registering modules ...");
 
         evbus.register(mtpif);
-        evbus.register(new XenIF());
+        evbus.register(new DummyVIMIF());
 
         //register jaxrs api
         //register jaxrs api

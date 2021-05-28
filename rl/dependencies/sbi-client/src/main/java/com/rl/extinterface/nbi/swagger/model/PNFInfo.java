@@ -14,18 +14,31 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import com.rl.extinterface.nbi.swagger.model.MetaData;
+import java.io.IOException;
 
 /**
  * Info of PNF
  */
 @ApiModel(description = "Info of PNF")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class PNFInfo {
   @SerializedName("pnfid")
   private String pnfid = null;
+
+  @SerializedName("pdumaxnum")
+  private Integer pdumaxnum = null;
 
   @SerializedName("metadata")
   private MetaData metadata = null;
@@ -46,6 +59,24 @@ public class PNFInfo {
 
   public void setPnfid(String pnfid) {
     this.pnfid = pnfid;
+  }
+
+  public PNFInfo pdumaxnum(Integer pdumaxnum) {
+    this.pdumaxnum = pdumaxnum;
+    return this;
+  }
+
+   /**
+   * Get pdumaxnum
+   * @return pdumaxnum
+  **/
+  @ApiModelProperty(value = "")
+  public Integer getPdumaxnum() {
+    return pdumaxnum;
+  }
+
+  public void setPdumaxnum(Integer pdumaxnum) {
+    this.pdumaxnum = pdumaxnum;
   }
 
   public PNFInfo metadata(MetaData metadata) {
@@ -77,12 +108,13 @@ public class PNFInfo {
     }
     PNFInfo pnFInfo = (PNFInfo) o;
     return Objects.equals(this.pnfid, pnFInfo.pnfid) &&
+        Objects.equals(this.pdumaxnum, pnFInfo.pdumaxnum) &&
         Objects.equals(this.metadata, pnFInfo.metadata);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(pnfid, metadata);
+    return Objects.hash(pnfid, pdumaxnum, metadata);
   }
 
 
@@ -92,6 +124,7 @@ public class PNFInfo {
     sb.append("class PNFInfo {\n");
     
     sb.append("    pnfid: ").append(toIndentedString(pnfid)).append("\n");
+    sb.append("    pdumaxnum: ").append(toIndentedString(pdumaxnum)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -55,12 +55,8 @@ import com.rl.events.resourcemanagement.PhysicalTermination.PhysicalTerminateReq
 import com.rl.events.resourcemanagement.PhysicalTermination.PhysicalTerminateVIMReply;
 import com.rl.extinterface.nbi.swagger.model.AllocateComputeRequest;
 import com.rl.extinterface.nbi.swagger.model.PNFRequest;
-import com.rl.resourcemanagement.qosperfomanceisolation.model.AssignQosQueueRequest;
-import com.rl.events.resourcemanagement.VirtualQueueAssignment.QosPerformanceIsolationReq;
-import com.rl.events.resourcemanagement.ApplyPerformanceIsolation.ApplyPerformanceIsolationReq;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  *
@@ -802,46 +798,7 @@ public class ResouceOrchestration {
 //         E2ENetworkTerminateInstanceOutcome allinstout = new E2ENetworkTerminateInstanceOutcome();
 //        System.out.println("ResouceOrchestration --> Post E2ENetworkAllocateInstanceOutcome Event");
 //        SingletonEventBus.getBus().post(allinstout);
-    }
-
-    @Subscribe
-    public void handle_ApplyPerfomanceIsolationRequest(ApplyPerformanceIsolationReq applyPerformanceIsolationReq) {
-        System.out.println("ResouceOrchestration --> Handle handle_ApplyPerfomanceIsolationRequest Event");
-
-        //Steps to perform according to current workflow:
-        //Retrieve local physical topology
-        //TODO: Retrieve switch Identifiers from the abstraction engine
-        List<String> switchIdentifiers = new ArrayList<>();
-        switchIdentifiers.add("device:bmv2:s3");
-        switchIdentifiers.add("device:bmv2:s4");
-        switchIdentifiers.add("device:bmv2:s5");
-        switchIdentifiers.add("device:bmv2:s6");
-        switchIdentifiers.add("device:bmv2:s8");
-        //Retrieve QoS capabilities
-        //TODO
-        //Execute Performance Isolation Smart algorithm with input above
-        //TODO
-        //Get output from the Performance Isolation algorithm and select policy
-        //TODO: The policy parameter will be extended to be the QoS policy chosen by the Performance Isolation Algorithm
-        String policy = "rate-limiting";
-
-        //Apply QoS Request:
-        AssignQosQueueRequest qosQueueRequest = new AssignQosQueueRequest();
-        qosQueueRequest.setSliceId(applyPerformanceIsolationReq.getSlareq().getSliceId());
-        qosQueueRequest.setSrcEndpoint(applyPerformanceIsolationReq.getSlareq().getSrcEndpoint());
-        qosQueueRequest.setDstEndpoint(applyPerformanceIsolationReq.getSlareq().getDstEndpoint());
-        qosQueueRequest.setMaxCapacity(applyPerformanceIsolationReq.getSlareq().getMaxCapacity());
-        qosQueueRequest.setSwitchIdentifiers(switchIdentifiers);
-        qosQueueRequest.setPolicy(policy);
-
-        QosPerformanceIsolationReq qosPerformanceIsolationReq = new QosPerformanceIsolationReq(applyPerformanceIsolationReq.getReqid(),
-                applyPerformanceIsolationReq.getServid(), applyPerformanceIsolationReq.getDomid(), qosQueueRequest,
-                applyPerformanceIsolationReq.getNfvipopid());
-
-        System.out.println("ResouceOrchestration --> Post QosPerformanceIsolationRequest Event");
-        SingletonEventBus.getBus().post(qosPerformanceIsolationReq);
-
-    }
+    }    
     
     
 }

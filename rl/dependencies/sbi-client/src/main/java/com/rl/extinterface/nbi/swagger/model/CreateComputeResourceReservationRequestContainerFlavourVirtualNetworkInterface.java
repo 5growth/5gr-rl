@@ -14,9 +14,16 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import com.rl.extinterface.nbi.swagger.model.MetaData;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +31,10 @@ import java.util.List;
  * The virtual network interfaces of the virtualised compute.
  */
 @ApiModel(description = "The virtual network interfaces of the virtualised compute.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class CreateComputeResourceReservationRequestContainerFlavourVirtualNetworkInterface {
   @SerializedName("accelerationCapability")
   private String accelerationCapability = null;
@@ -39,7 +49,10 @@ public class CreateComputeResourceReservationRequestContainerFlavourVirtualNetwo
   private String macAddress = null;
 
   @SerializedName("metadata")
-  private String metadata = null;
+  private MetaData metadata = null;
+
+  @SerializedName("networkName")
+  private String networkName = null;
 
   @SerializedName("networkId")
   private String networkId = null;
@@ -139,22 +152,40 @@ public class CreateComputeResourceReservationRequestContainerFlavourVirtualNetwo
     this.macAddress = macAddress;
   }
 
-  public CreateComputeResourceReservationRequestContainerFlavourVirtualNetworkInterface metadata(String metadata) {
+  public CreateComputeResourceReservationRequestContainerFlavourVirtualNetworkInterface metadata(MetaData metadata) {
     this.metadata = metadata;
     return this;
   }
 
    /**
-   * List of metadata key-value pairs used by the consumer to associate meaningful metadata to the related virtualised resource.
+   * Get metadata
    * @return metadata
   **/
-  @ApiModelProperty(required = true, value = "List of metadata key-value pairs used by the consumer to associate meaningful metadata to the related virtualised resource.")
-  public String getMetadata() {
+  @ApiModelProperty(required = true, value = "")
+  public MetaData getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(String metadata) {
+  public void setMetadata(MetaData metadata) {
     this.metadata = metadata;
+  }
+
+  public CreateComputeResourceReservationRequestContainerFlavourVirtualNetworkInterface networkName(String networkName) {
+    this.networkName = networkName;
+    return this;
+  }
+
+   /**
+   * name of the virtual network
+   * @return networkName
+  **/
+  @ApiModelProperty(value = "name of the virtual network")
+  public String getNetworkName() {
+    return networkName;
+  }
+
+  public void setNetworkName(String networkName) {
+    this.networkName = networkName;
   }
 
   public CreateComputeResourceReservationRequestContainerFlavourVirtualNetworkInterface networkId(String networkId) {
@@ -298,6 +329,7 @@ public class CreateComputeResourceReservationRequestContainerFlavourVirtualNetwo
         Objects.equals(this.ipAddress, createComputeResourceReservationRequestContainerFlavourVirtualNetworkInterface.ipAddress) &&
         Objects.equals(this.macAddress, createComputeResourceReservationRequestContainerFlavourVirtualNetworkInterface.macAddress) &&
         Objects.equals(this.metadata, createComputeResourceReservationRequestContainerFlavourVirtualNetworkInterface.metadata) &&
+        Objects.equals(this.networkName, createComputeResourceReservationRequestContainerFlavourVirtualNetworkInterface.networkName) &&
         Objects.equals(this.networkId, createComputeResourceReservationRequestContainerFlavourVirtualNetworkInterface.networkId) &&
         Objects.equals(this.networkPortId, createComputeResourceReservationRequestContainerFlavourVirtualNetworkInterface.networkPortId) &&
         Objects.equals(this.operationalState, createComputeResourceReservationRequestContainerFlavourVirtualNetworkInterface.operationalState) &&
@@ -309,7 +341,7 @@ public class CreateComputeResourceReservationRequestContainerFlavourVirtualNetwo
 
   @Override
   public int hashCode() {
-    return Objects.hash(accelerationCapability, bandwidth, ipAddress, macAddress, metadata, networkId, networkPortId, operationalState, ownerId, resourceId, typeConfiguration, typeVirtualNic);
+    return Objects.hash(accelerationCapability, bandwidth, ipAddress, macAddress, metadata, networkName, networkId, networkPortId, operationalState, ownerId, resourceId, typeConfiguration, typeVirtualNic);
   }
 
 
@@ -323,6 +355,7 @@ public class CreateComputeResourceReservationRequestContainerFlavourVirtualNetwo
     sb.append("    ipAddress: ").append(toIndentedString(ipAddress)).append("\n");
     sb.append("    macAddress: ").append(toIndentedString(macAddress)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
+    sb.append("    networkName: ").append(toIndentedString(networkName)).append("\n");
     sb.append("    networkId: ").append(toIndentedString(networkId)).append("\n");
     sb.append("    networkPortId: ").append(toIndentedString(networkPortId)).append("\n");
     sb.append("    operationalState: ").append(toIndentedString(operationalState)).append("\n");

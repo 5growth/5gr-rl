@@ -1,0 +1,43 @@
+            {
+                "affinityOrAntiAffinityConstraints": "null",
+                "locationConstraints": "null",
+                "metadata": [
+                    {
+                        "key": "ServiceId",
+                        "value": "fgt-91e0e29-3b9b-46de-9015-863cb2283795"
+                    },
+                    {
+                        "key": "AbstractNfviPoPId",
+                        "value": "1"
+                    }
+                ],
+                "networkResourceName": "subnet-fgt-91e0e29-3b9b-46de-9015-863cb2283795_n6_cmm_vl",
+                "networkResourceType": "subnet",
+                "reservationId": "mysubnet-subnet-fgt-91e0e29-3b9b-46de-9015-863cb2283795_n6_cmm_vl",
+                "resourceGroupId": "null",
+                "typeNetworkPortData": "",
+                "typeSubnetData": {
+                    "resourceId": "null",
+                    "networkId": "fgt-91e0e29-3b9b-46de-9015-863cb2283795-n6-cmm-vl",
+                    "ipVersion": "IPv4",
+                    "cidr": "192.168.10.0/24",
+                    "isDhcpEnabled": true,
+                    "addressPool": [
+                        0
+                    ],
+                    "metadata": [
+                        {
+                            "key": "ip-floating-required",
+                            "value": "False"
+                        },
+                        {
+                            "key": "dns",
+                            "value": "[\"8.8.8.8\"]"
+                        },
+                        {
+                            "key": "interpop_vlan",
+                            "value": "40"
+                        }
+                    ]
+                }
+            }

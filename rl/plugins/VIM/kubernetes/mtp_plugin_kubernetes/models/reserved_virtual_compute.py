@@ -6,9 +6,11 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.reserved_virtual_compute_compute_pool_reserved import ReservedVirtualComputeComputePoolReserved  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.reserved_virtual_compute_virtualisation_container_reserved import ReservedVirtualComputeVirtualisationContainerReserved  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
+from mtp_plugin_kubernetes.models.reserved_virtual_compute_compute_pool_reserved import \
+    ReservedVirtualComputeComputePoolReserved
+from mtp_plugin_kubernetes.models.reserved_virtual_compute_virtualisation_container_reserved import \
+    ReservedVirtualComputeVirtualisationContainerReserved
 
 
 class ReservedVirtualCompute(Model):

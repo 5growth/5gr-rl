@@ -218,10 +218,10 @@ public class QueryRadioThread extends Thread {
             System.out.println("Val= " + e.getCode() + ";Message = " + e.getMessage());
             return;
         }
-        if (pnfs.getPnFList().isEmpty() == false) {
+        if (pnfs.getPnfList().isEmpty() == false) {
              List<PNFInfo>pnflist = new ArrayList();
              
-             Iterator<PNFlistInner> pnfiter = pnfs.getPnFList().iterator();
+             Iterator<PNFlistInner> pnfiter = pnfs.getPnfList().iterator();
              while (pnfiter.hasNext()) {
                  PNFlistInner el = pnfiter.next();
                  pnflist.add(el.getPnfinfo());

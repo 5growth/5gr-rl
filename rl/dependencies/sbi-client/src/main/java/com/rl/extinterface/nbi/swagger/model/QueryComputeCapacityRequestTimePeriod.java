@@ -14,16 +14,25 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.IOException;
 import org.threeten.bp.OffsetDateTime;
 
 /**
  * The time interval for which capacity is queried. When omitted, an interval starting \&quot;now\&quot; is used. The time interval can be specified since resource reservations can be made for a specified time interval.
  */
 @ApiModel(description = "The time interval for which capacity is queried. When omitted, an interval starting \"now\" is used. The time interval can be specified since resource reservations can be made for a specified time interval.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class QueryComputeCapacityRequestTimePeriod {
   @SerializedName("startTime")
   private OffsetDateTime startTime = null;

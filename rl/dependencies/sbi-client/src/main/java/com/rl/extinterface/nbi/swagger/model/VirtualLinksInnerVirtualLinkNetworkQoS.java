@@ -11,19 +11,28 @@
  */
 
 
-package com.rl.extinterface.nbi.swagger.model;;
+package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
  * 5GT - Element providing information about Quality of Service attributes (cost and delay) that the network shall support.
  */
 @ApiModel(description = "5GT - Element providing information about Quality of Service attributes (cost and delay) that the network shall support.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class VirtualLinksInnerVirtualLinkNetworkQoS {
   @SerializedName("linkCostValue")
   private BigDecimal linkCostValue = null;

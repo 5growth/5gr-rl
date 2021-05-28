@@ -91,9 +91,8 @@ def subnet_has_gateway_interface(neutron, subnet_id):
     for port in  port_list['ports']:
         # TODO check if using [0] could be a problem, the first interface should be the one attached to the router
         try:
-            if port['fixed_ips'][0]['subnet_id'] == subnet_id:
-                tab_address = port['fixed_ips'][0]['ip_address'].split('.')
-                if tab_address[3] == '1':
+            if 'device_owner' in port.keys():
+                if 'router' in port['device_owner']:
                     return True
         except (KeyError, IndexError) as error:
             return False
@@ -1135,7 +1134,7 @@ blueprint.add_url_rule(
     methods=['DELETE'])
 
 blueprint.add_url_rule(
-    '/v1/network_resources/get_interpop_vlans',
+    '/v1/network_resources/free_vlan',
     strict_slashes=False,
     view_func=VirtualisedNetworkGetInterpopVlans.as_view('get_interpop_vlans'),
     methods=['GET'])

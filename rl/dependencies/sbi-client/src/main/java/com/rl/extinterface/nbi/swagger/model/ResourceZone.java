@@ -14,18 +14,27 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
-import java.util.List;
+import com.rl.extinterface.nbi.swagger.model.MetaData;
+import java.io.IOException;
 
 /**
  * ResourceZone
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class ResourceZone {
   @SerializedName("metadata")
-  private List<MetaDataInner> metadata = null;
+  private MetaData metadata = null;
 
   @SerializedName("nfviPopId")
   private String nfviPopId = null;
@@ -42,29 +51,21 @@ public class ResourceZone {
   @SerializedName("zoneState")
   private String zoneState = null;
 
-  public ResourceZone metadata(List<MetaDataInner> metadata) {
+  public ResourceZone metadata(MetaData metadata) {
     this.metadata = metadata;
     return this;
   }
 
-  public ResourceZone addMetadataItem(MetaDataInner metadataItem) {
-    if (this.metadata == null) {
-      this.metadata = new ArrayList<MetaDataInner>();
-    }
-    this.metadata.add(metadataItem);
-    return this;
-  }
-
    /**
-   * Other metadata associated to the Resource Zone.
+   * Get metadata
    * @return metadata
   **/
-  @ApiModelProperty(value = "Other metadata associated to the Resource Zone.")
-  public List<MetaDataInner> getMetadata() {
+  @ApiModelProperty(value = "")
+  public MetaData getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(List<MetaDataInner> metadata) {
+  public void setMetadata(MetaData metadata) {
     this.metadata = metadata;
   }
 

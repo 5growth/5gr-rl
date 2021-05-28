@@ -14,14 +14,27 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
+import com.rl.extinterface.nbi.swagger.model.MetaData;
+import com.rl.extinterface.nbi.swagger.model.NfviPopsInnerNfviPopAttributesCpuResourceAttributes;
+import com.rl.extinterface.nbi.swagger.model.NfviPopsInnerNfviPopAttributesMemoryResourceAttributes;
+import com.rl.extinterface.nbi.swagger.model.NfviPopsInnerNfviPopAttributesStorageResourceAttributes;
+import java.io.IOException;
 
 /**
  * NfviPopsInnerNfviPopAttributesResourceZoneAttributes
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class NfviPopsInnerNfviPopAttributesResourceZoneAttributes {
   @SerializedName("zoneId")
   private String zoneId = null;
@@ -36,7 +49,7 @@ public class NfviPopsInnerNfviPopAttributesResourceZoneAttributes {
   private String zoneProperty = null;
 
   @SerializedName("metadata")
-  private String metadata = null;
+  private MetaData metadata = null;
 
   @SerializedName("memoryResourceAttributes")
   private NfviPopsInnerNfviPopAttributesMemoryResourceAttributes memoryResourceAttributes = null;
@@ -119,21 +132,21 @@ public class NfviPopsInnerNfviPopAttributesResourceZoneAttributes {
     this.zoneProperty = zoneProperty;
   }
 
-  public NfviPopsInnerNfviPopAttributesResourceZoneAttributes metadata(String metadata) {
+  public NfviPopsInnerNfviPopAttributesResourceZoneAttributes metadata(MetaData metadata) {
     this.metadata = metadata;
     return this;
   }
 
    /**
-   * List of metadata key-value pairs used to associate meaningful metadata to the NFVI-PoP Zone.
+   * Get metadata
    * @return metadata
   **/
-  @ApiModelProperty(required = true, value = "List of metadata key-value pairs used to associate meaningful metadata to the NFVI-PoP Zone.")
-  public String getMetadata() {
+  @ApiModelProperty(required = true, value = "")
+  public MetaData getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(String metadata) {
+  public void setMetadata(MetaData metadata) {
     this.metadata = metadata;
   }
 

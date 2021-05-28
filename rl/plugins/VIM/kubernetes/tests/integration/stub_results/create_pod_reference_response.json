@@ -1,0 +1,73 @@
+{
+    "accelerationCapability": [],
+    "computeId": "fgt-91e0e29-3b9b-46de-9015-863cb2283795-0-darlvnf-1",
+    "computeName": "fgt-91e0e29-3b9b-46de-9015-863cb2283795-0-DARLVNF-1",
+    "flavourId": null,
+    "hostId": "192.168.100.150",
+    "operationalState": "enabled",
+    "vcImageId": "",
+    "virtualCpu": {
+        "cpuArchitecture": "",
+        "cpuClock": 0,
+        "numVirtualCpu": 0,
+        "virtualCpuOversubscriptionPolicy": "",
+        "virtualCpuPinning": {
+            "cpuMap": "",
+            "cpuPinningPolicy": "dynamic",
+            "cpuPinningRules": ""
+        }
+    },
+    "virtualDisks": "",
+    "virtualMemory": {
+        "numaEnabled": false,
+        "virtualMemOversubscriptionPolicy": null,
+        "virtualMemSize": 0
+    },
+    "virtualNetworkInterface": [
+        {
+            "accelerationCapability": "",
+            "bandwidth": "0",
+            "ipAddress": [
+                "10.244.0.94"
+            ],
+            "macAddress": "da:2a:11:f4:f1:24",
+            "metadata": [
+                {
+                    "key": "dc",
+                    "value": 1
+                }
+            ],
+            "networkId": "",
+            "networkName": null,
+            "networkPortId": "eth0",
+            "operationalState": "ACTIVE",
+            "ownerId": null,
+            "resourceId": "eth0",
+            "typeConfiguration": "Multus-cni",
+            "typeVirtualNic": "normal"
+        },
+        {
+            "accelerationCapability": "",
+            "bandwidth": "0",
+            "ipAddress": [
+                "192.168.10.17"
+            ],
+            "macAddress": "52:54:00:11:2a:27",
+            "metadata": [
+                {
+                    "key": "dc",
+                    "value": 1
+                }
+            ],
+            "networkId": "fgt-91e0e29-3b9b-46de-9015-863cb2283795-n6-cmm-vl",
+            "networkName": null,
+            "networkPortId": "net1",
+            "operationalState": "ACTIVE",
+            "ownerId": null,
+            "resourceId": "net1",
+            "typeConfiguration": "Multus-cni",
+            "typeVirtualNic": "normal"
+        }
+    ],
+    "zoneId": "nova"
+}

@@ -6,11 +6,11 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.inter_nfvi_pop_network_type import InterNfviPopNetworkType  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.logical_link_path_list import LogicalLinkPathList  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.meta_data import MetaData  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.network_layer import NetworkLayer  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
+from mtp_plugin_kubernetes.models.inter_nfvi_pop_network_type import InterNfviPopNetworkType
+from mtp_plugin_kubernetes.models.logical_link_path_list import LogicalLinkPathList
+from mtp_plugin_kubernetes.models.meta_data import MetaData
+from mtp_plugin_kubernetes.models.network_layer import NetworkLayer
 
 
 class InterNfviPopConnectivityRequest(Model):
@@ -19,15 +19,11 @@ class InterNfviPopConnectivityRequest(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, logical_link_path_list: LogicalLinkPathList=None, req_bandwidth: float=None, req_latency: float=None, network_layer: NetworkLayer=None, inter_nfvi_pop_network_type: InterNfviPopNetworkType=None, meta_data: MetaData=None):  # noqa: E501
+    def __init__(self, logical_link_path_list: LogicalLinkPathList=None, network_layer: NetworkLayer=None, inter_nfvi_pop_network_type: InterNfviPopNetworkType=None, meta_data: MetaData=None):  # noqa: E501
         """InterNfviPopConnectivityRequest - a model defined in Swagger
 
         :param logical_link_path_list: The logical_link_path_list of this InterNfviPopConnectivityRequest.  # noqa: E501
         :type logical_link_path_list: LogicalLinkPathList
-        :param req_bandwidth: The req_bandwidth of this InterNfviPopConnectivityRequest.  # noqa: E501
-        :type req_bandwidth: float
-        :param req_latency: The req_latency of this InterNfviPopConnectivityRequest.  # noqa: E501
-        :type req_latency: float
         :param network_layer: The network_layer of this InterNfviPopConnectivityRequest.  # noqa: E501
         :type network_layer: NetworkLayer
         :param inter_nfvi_pop_network_type: The inter_nfvi_pop_network_type of this InterNfviPopConnectivityRequest.  # noqa: E501
@@ -37,8 +33,6 @@ class InterNfviPopConnectivityRequest(Model):
         """
         self.swagger_types = {
             'logical_link_path_list': LogicalLinkPathList,
-            'req_bandwidth': float,
-            'req_latency': float,
             'network_layer': NetworkLayer,
             'inter_nfvi_pop_network_type': InterNfviPopNetworkType,
             'meta_data': MetaData
@@ -46,16 +40,12 @@ class InterNfviPopConnectivityRequest(Model):
 
         self.attribute_map = {
             'logical_link_path_list': 'logicalLinkPathList',
-            'req_bandwidth': 'reqBandwidth',
-            'req_latency': 'reqLatency',
             'network_layer': 'networkLayer',
             'inter_nfvi_pop_network_type': 'interNfviPopNetworkType',
             'meta_data': 'metaData'
         }
 
         self._logical_link_path_list = logical_link_path_list
-        self._req_bandwidth = req_bandwidth
-        self._req_latency = req_latency
         self._network_layer = network_layer
         self._inter_nfvi_pop_network_type = inter_nfvi_pop_network_type
         self._meta_data = meta_data
@@ -93,56 +83,6 @@ class InterNfviPopConnectivityRequest(Model):
             raise ValueError("Invalid value for `logical_link_path_list`, must not be `None`")  # noqa: E501
 
         self._logical_link_path_list = logical_link_path_list
-
-    @property
-    def req_bandwidth(self) -> float:
-        """Gets the req_bandwidth of this InterNfviPopConnectivityRequest.
-
-        requested bandwidth (in Mbps).  # noqa: E501
-
-        :return: The req_bandwidth of this InterNfviPopConnectivityRequest.
-        :rtype: float
-        """
-        return self._req_bandwidth
-
-    @req_bandwidth.setter
-    def req_bandwidth(self, req_bandwidth: float):
-        """Sets the req_bandwidth of this InterNfviPopConnectivityRequest.
-
-        requested bandwidth (in Mbps).  # noqa: E501
-
-        :param req_bandwidth: The req_bandwidth of this InterNfviPopConnectivityRequest.
-        :type req_bandwidth: float
-        """
-        if req_bandwidth is None:
-            raise ValueError("Invalid value for `req_bandwidth`, must not be `None`")  # noqa: E501
-
-        self._req_bandwidth = req_bandwidth
-
-    @property
-    def req_latency(self) -> float:
-        """Gets the req_latency of this InterNfviPopConnectivityRequest.
-
-        5GT - requested maximum end-to-end latency (expressed in ms)  # noqa: E501
-
-        :return: The req_latency of this InterNfviPopConnectivityRequest.
-        :rtype: float
-        """
-        return self._req_latency
-
-    @req_latency.setter
-    def req_latency(self, req_latency: float):
-        """Sets the req_latency of this InterNfviPopConnectivityRequest.
-
-        5GT - requested maximum end-to-end latency (expressed in ms)  # noqa: E501
-
-        :param req_latency: The req_latency of this InterNfviPopConnectivityRequest.
-        :type req_latency: float
-        """
-        if req_latency is None:
-            raise ValueError("Invalid value for `req_latency`, must not be `None`")  # noqa: E501
-
-        self._req_latency = req_latency
 
     @property
     def network_layer(self) -> NetworkLayer:

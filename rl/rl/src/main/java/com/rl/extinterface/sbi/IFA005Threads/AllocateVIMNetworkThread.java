@@ -11,6 +11,7 @@ import com.rl.events.resourcemanagement.NetworkAllocation.NetworkAllocateVIMRepl
 import com.rl.events.resourcemanagement.NetworkAllocation.NetworkAllocateVIMReq;
 import com.rl.extinterface.nbi.swagger.model.AllocateNetworkRequest;
 import com.rl.extinterface.nbi.swagger.model.AllocateNetworkResult;
+import com.rl.extinterface.nbi.swagger.model.MetaData;
 import com.rl.extinterface.nbi.swagger.model.MetaDataInner;
 import com.rl.extinterface.nbi.swagger.model.VirtualNetwork;
 import io.swagger.client.ApiClient;
@@ -66,7 +67,12 @@ public class AllocateVIMNetworkThread extends Thread {
             data.setValue(String.valueOf(vlanid));
             metadatas.add(data);
 
-            initreq.setMetadata(metadatas);
+            //initreq.setMetadata(metadatas);
+            MetaData senddata = new MetaData();
+            for (int i = 0; i < metadatas.size(); i++) {
+                senddata.add(metadatas.get(i));
+            }
+            initreq.setMetadata(senddata);
 
             try {
                 initrep = api.vIMallocateNetwork(initreq);
@@ -102,10 +108,9 @@ public class AllocateVIMNetworkThread extends Thread {
         netel.setIsShared(Boolean.TRUE);
         netel.setNetworkResourceName("dummy");
         netel.setOperationalState("enabled");
-        netel.setSegmentType("VXLAN");
+        netel.setSegmentType(request.getNetworkRequest().getNetworkLayer());
         netel.setSharingCriteria("");
         
-        //TODO: For xen send a start of VNF 
         return netel;
     } 
     
@@ -155,6 +160,7 @@ public class AllocateVIMNetworkThread extends Thread {
                     netel = AllocateVLAN(api, i);
                     break;
                 case ("VXLAN"):
+                case ("IP"):
                     netel = AllocateVXLAN(api, i);
                     break;
             }

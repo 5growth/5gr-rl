@@ -8,7 +8,8 @@ from kubernetes import client, config
 
 from sbi.kube_get_info import KubeGetInfo
 from mtp_plugin_kubernetes.config.config import ConfigurationFile
-from mtp_plugin_kubernetes.models.reserved_virtual_compute_virtualisation_container_reserved_virtual_network_interface import \
+from mtp_plugin_kubernetes.models.reserved_virtual_compute_virtualisation_container_reserved_virtual_network_interface \
+    import \
     ReservedVirtualComputeVirtualisationContainerReservedVirtualNetworkInterface  # noqa: F401,E501
 from mtp_plugin_kubernetes.models.virtual_compute import VirtualCompute
 from mtp_plugin_kubernetes.models.virtual_compute_resource_information_virtual_cpu import \
@@ -319,11 +320,3 @@ spec:\n\
         virtual_compute.virtual_network_interface = [interface]
         virtual_compute.zone_id = ConfigurationFile().config['VIM']['DomainInfo']['Zonelist']['Zone']['zoneId']
         return virtual_compute
-
-
-def main():
-    print("Run main")
-
-
-if __name__ == '__main__':
-    main()

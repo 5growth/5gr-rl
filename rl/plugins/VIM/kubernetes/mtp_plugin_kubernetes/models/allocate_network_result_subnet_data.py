@@ -5,8 +5,9 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
+from mtp_plugin_kubernetes.models.meta_data_inner import MetaDataInner
+
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.meta_data_inner import MetaDataInner  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
 
 
@@ -16,11 +17,11 @@ class AllocateNetworkResultSubnetData(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, address_pool: str=None, cidr: str=None, gateway_ip: str=None, ip_version: str=None, is_dhcp_enabled: bool=None, metadata: List[MetaDataInner]=None, network_id: str=None, operational_state: str=None, resource_id: str=None):  # noqa: E501
+    def __init__(self, address_pool: List[int]=None, cidr: str=None, gateway_ip: str=None, ip_version: str=None, is_dhcp_enabled: bool=None, metadata: List[MetaDataInner]=None, network_id: str=None, operational_state: str=None, resource_id: str=None):  # noqa: E501
         """AllocateNetworkResultSubnetData - a model defined in Swagger
 
         :param address_pool: The address_pool of this AllocateNetworkResultSubnetData.  # noqa: E501
-        :type address_pool: str
+        :type address_pool: List[int]
         :param cidr: The cidr of this AllocateNetworkResultSubnetData.  # noqa: E501
         :type cidr: str
         :param gateway_ip: The gateway_ip of this AllocateNetworkResultSubnetData.  # noqa: E501
@@ -39,7 +40,7 @@ class AllocateNetworkResultSubnetData(Model):
         :type resource_id: str
         """
         self.swagger_types = {
-            'address_pool': str,
+            'address_pool': List[int],
             'cidr': str,
             'gateway_ip': str,
             'ip_version': str,
@@ -84,24 +85,24 @@ class AllocateNetworkResultSubnetData(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def address_pool(self) -> str:
+    def address_pool(self) -> List[int]:
         """Gets the address_pool of this AllocateNetworkResultSubnetData.
 
         Address pools for the network/subnetwork. The cardinality can be 0 when VIM is allowed to allocate all addresses in the CIDR except for the address of the network/subnetwork gateway.  # noqa: E501
 
         :return: The address_pool of this AllocateNetworkResultSubnetData.
-        :rtype: str
+        :rtype: List[int]
         """
         return self._address_pool
 
     @address_pool.setter
-    def address_pool(self, address_pool: str):
+    def address_pool(self, address_pool: List[int]):
         """Sets the address_pool of this AllocateNetworkResultSubnetData.
 
         Address pools for the network/subnetwork. The cardinality can be 0 when VIM is allowed to allocate all addresses in the CIDR except for the address of the network/subnetwork gateway.  # noqa: E501
 
         :param address_pool: The address_pool of this AllocateNetworkResultSubnetData.
-        :type address_pool: str
+        :type address_pool: List[int]
         """
         if address_pool is None:
             raise ValueError("Invalid value for `address_pool`, must not be `None`")  # noqa: E501

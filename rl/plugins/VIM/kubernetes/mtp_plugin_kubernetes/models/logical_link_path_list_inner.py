@@ -6,8 +6,9 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.logical_link_attributes import LogicalLinkAttributes  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
+from mtp_plugin_kubernetes.models.logical_link_attributes import LogicalLinkAttributes
+from mtp_plugin_kubernetes.models.meta_data import MetaData
 
 
 class LogicalLinkPathListInner(Model):
@@ -16,21 +17,36 @@ class LogicalLinkPathListInner(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, logical_link_attributes: LogicalLinkAttributes=None):  # noqa: E501
+    def __init__(self, logical_link_attributes: LogicalLinkAttributes=None, req_bandwidth: float=None, req_latency: float=None, meta_data: MetaData=None):  # noqa: E501
         """LogicalLinkPathListInner - a model defined in Swagger
 
         :param logical_link_attributes: The logical_link_attributes of this LogicalLinkPathListInner.  # noqa: E501
         :type logical_link_attributes: LogicalLinkAttributes
+        :param req_bandwidth: The req_bandwidth of this LogicalLinkPathListInner.  # noqa: E501
+        :type req_bandwidth: float
+        :param req_latency: The req_latency of this LogicalLinkPathListInner.  # noqa: E501
+        :type req_latency: float
+        :param meta_data: The meta_data of this LogicalLinkPathListInner.  # noqa: E501
+        :type meta_data: MetaData
         """
         self.swagger_types = {
-            'logical_link_attributes': LogicalLinkAttributes
+            'logical_link_attributes': LogicalLinkAttributes,
+            'req_bandwidth': float,
+            'req_latency': float,
+            'meta_data': MetaData
         }
 
         self.attribute_map = {
-            'logical_link_attributes': 'logicalLinkAttributes'
+            'logical_link_attributes': 'logicalLinkAttributes',
+            'req_bandwidth': 'reqBandwidth',
+            'req_latency': 'reqLatency',
+            'meta_data': 'metaData'
         }
 
         self._logical_link_attributes = logical_link_attributes
+        self._req_bandwidth = req_bandwidth
+        self._req_latency = req_latency
+        self._meta_data = meta_data
 
     @classmethod
     def from_dict(cls, dikt) -> 'LogicalLinkPathListInner':
@@ -65,3 +81,74 @@ class LogicalLinkPathListInner(Model):
             raise ValueError("Invalid value for `logical_link_attributes`, must not be `None`")  # noqa: E501
 
         self._logical_link_attributes = logical_link_attributes
+
+    @property
+    def req_bandwidth(self) -> float:
+        """Gets the req_bandwidth of this LogicalLinkPathListInner.
+
+        requested bandwidth (in Mbps).  # noqa: E501
+
+        :return: The req_bandwidth of this LogicalLinkPathListInner.
+        :rtype: float
+        """
+        return self._req_bandwidth
+
+    @req_bandwidth.setter
+    def req_bandwidth(self, req_bandwidth: float):
+        """Sets the req_bandwidth of this LogicalLinkPathListInner.
+
+        requested bandwidth (in Mbps).  # noqa: E501
+
+        :param req_bandwidth: The req_bandwidth of this LogicalLinkPathListInner.
+        :type req_bandwidth: float
+        """
+        if req_bandwidth is None:
+            raise ValueError("Invalid value for `req_bandwidth`, must not be `None`")  # noqa: E501
+
+        self._req_bandwidth = req_bandwidth
+
+    @property
+    def req_latency(self) -> float:
+        """Gets the req_latency of this LogicalLinkPathListInner.
+
+        5GT - requested maximum end-to-end latency (expressed in ms)  # noqa: E501
+
+        :return: The req_latency of this LogicalLinkPathListInner.
+        :rtype: float
+        """
+        return self._req_latency
+
+    @req_latency.setter
+    def req_latency(self, req_latency: float):
+        """Sets the req_latency of this LogicalLinkPathListInner.
+
+        5GT - requested maximum end-to-end latency (expressed in ms)  # noqa: E501
+
+        :param req_latency: The req_latency of this LogicalLinkPathListInner.
+        :type req_latency: float
+        """
+        if req_latency is None:
+            raise ValueError("Invalid value for `req_latency`, must not be `None`")  # noqa: E501
+
+        self._req_latency = req_latency
+
+    @property
+    def meta_data(self) -> MetaData:
+        """Gets the meta_data of this LogicalLinkPathListInner.
+
+
+        :return: The meta_data of this LogicalLinkPathListInner.
+        :rtype: MetaData
+        """
+        return self._meta_data
+
+    @meta_data.setter
+    def meta_data(self, meta_data: MetaData):
+        """Sets the meta_data of this LogicalLinkPathListInner.
+
+
+        :param meta_data: The meta_data of this LogicalLinkPathListInner.
+        :type meta_data: MetaData
+        """
+
+        self._meta_data = meta_data

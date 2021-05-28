@@ -14,6 +14,7 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -27,7 +28,10 @@ import java.io.IOException;
  * Information about the transport in a transport binding.
  */
 @ApiModel(description = "Information about the transport in a transport binding.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class TransportDescriptor {
   /**
    * Type of the transport, as defined in the TransportTypes type in ETSI GS MEC 011.

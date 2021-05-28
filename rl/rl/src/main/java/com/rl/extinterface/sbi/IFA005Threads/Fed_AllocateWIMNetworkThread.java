@@ -66,7 +66,7 @@ public class Fed_AllocateWIMNetworkThread extends Thread {
             param.setEgressPointPortAddress(request.getFlowRuleEndPointList().get(i).getEgressPort());
             param.setIngressPointIPAddress(request.getFlowRuleEndPointList().get(i).getIngressIp());
             param.setIngressPointPortAddress(request.getFlowRuleEndPointList().get(i).getIngressPort());
-            param.setMetadata(request.getServid());
+            //param.setMetadata(request.getServid());
             param.setSegmentType(request.getNetworkRequest().getNetworkLayer());
             param.setWanLinkId(request.getWanLinks().get(i).toString());
 

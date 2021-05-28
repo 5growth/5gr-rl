@@ -14,15 +14,30 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import com.rl.extinterface.nbi.swagger.model.MECRegionInfo;
+import com.rl.extinterface.nbi.swagger.model.NfviPopsInnerNfviPopAttributesNetworkConnectivityEndpoint;
+import com.rl.extinterface.nbi.swagger.model.NfviPopsInnerNfviPopAttributesRadioCoverageAreas;
+import com.rl.extinterface.nbi.swagger.model.NfviPopsInnerNfviPopAttributesResourceZoneAttributes;
+import com.rl.extinterface.nbi.swagger.model.PNFlist;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * NfviPopsInnerNfviPopAttributes
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class NfviPopsInnerNfviPopAttributes {
   @SerializedName("pnflist")
   private PNFlist pnflist = null;

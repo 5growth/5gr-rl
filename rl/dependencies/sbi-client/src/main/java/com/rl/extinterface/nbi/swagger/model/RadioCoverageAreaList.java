@@ -14,12 +14,18 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.rl.extinterface.nbi.swagger.model.RadioCoverageAreaListInner;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * RadioCoverageAreaList
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class RadioCoverageAreaList extends ArrayList<RadioCoverageAreaListInner> {
 
   @Override

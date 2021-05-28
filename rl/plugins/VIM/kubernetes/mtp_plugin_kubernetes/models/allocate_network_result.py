@@ -5,10 +5,13 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
+from mtp_plugin_kubernetes.models.allocate_network_result_subnet_data import AllocateNetworkResultSubnetData
+
+from mtp_plugin_kubernetes.models.allocate_network_result_network_port_data import AllocateNetworkResultNetworkPortData
+
+from mtp_plugin_kubernetes.models.allocate_network_result_network_data import AllocateNetworkResultNetworkData
+
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.allocate_network_result_network_data import AllocateNetworkResultNetworkData  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.allocate_network_result_network_port_data import AllocateNetworkResultNetworkPortData  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.allocate_network_result_subnet_data import AllocateNetworkResultSubnetData  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
 
 

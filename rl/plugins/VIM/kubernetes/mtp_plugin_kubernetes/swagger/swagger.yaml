@@ -1,50 +1,431 @@
 ---
 swagger: "2.0"
-#basePath: "/kubernetes"
 info:
   description: "MTP Manager API"
-  version: "1.0"
+  version: "2.0"
   title: "MTP Manager API"
   termsOfService: "/tos"
 paths:
-  /compute_resources:
+  /service/requests:
     get:
       tags:
-      - "virtualisedComputeResources"
-      operationId: "query_resources"
+      - "MECResources"
+      summary: "Retrieve a list of MEC service requests."
+      description: "Retrieve a list of MEC service requests."
+      operationId: "service_requests_get"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "List of MEC service requests."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/MECTrafficServiceCreationRequest"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.mec_resources_controller"
+    post:
+      tags:
+      - "MECResources"
+      summary: "Create MEC service rules."
+      description: "Create MEC service rules."
+      operationId: "service_requests_post"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - name: "computeId"
-        in: "query"
-        description: "Identifier(s) of the abstract compute resource(s) to be terminated."
-        required: false
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "multi"
+      - in: "body"
+        name: "mecTrafficServiceCreationRequest"
+        description: "Information about the MEC app, including required services,\
+          \ traffic rules, etc."
+        required: true
+        schema:
+          $ref: "#/definitions/MECTrafficServiceCreationRequest"
       responses:
-        200:
-          description: "Element containing information about the virtual compute resource(s)\
-            \ matching the filter. The cardinality can be 0 if no matching compute\
+        "201":
+          description: "MEC service created successfully."
+          schema:
+            $ref: "#/definitions/MECTrafficServiceCreationResponse"
+        "401":
+          description: "MEC service creation failed."
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.mec_resources_controller"
+  /service/requests/{RequestId}:
+    get:
+      tags:
+      - "MECResources"
+      summary: "Retrieve information about a MEC service request."
+      description: "Retrieve information about a MEC service request."
+      operationId: "service_requests_request_id_get"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "RequestId"
+        in: "path"
+        description: "Request identifier."
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "MEC service request information."
+          schema:
+            $ref: "#/definitions/MECTrafficServiceCreationRequest"
+        "404":
+          description: "Service not found."
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.mec_resources_controller"
+    delete:
+      tags:
+      - "MECResources"
+      summary: "Delete service."
+      description: "Delete service identified by the given request ID."
+      operationId: "service_requests_request_id_delete"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "RequestId"
+        in: "path"
+        description: "Request identifier."
+        required: true
+        type: "string"
+      responses:
+        "201":
+          description: "MEC service deleted successfully."
+        "404":
+          description: "Service not found."
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.mec_resources_controller"
+  /service/regions:
+    get:
+      tags:
+      - "MECResources"
+      summary: "Retrieve a list of all covered regions."
+      description: "Retrieve a list of MEC regions, reporting their identifiers and\
+        \ location information."
+      operationId: "service_regions_get"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "List of regions."
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        "400":
+          description: "Bad request"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.mec_resources_controller"
+  /service/regions/{RegionId}:
+    get:
+      tags:
+      - "MECResources"
+      summary: "Retrieve a list of MEC service requests for the given region."
+      description: "Retrieve a list of MEC service requests for the given region."
+      operationId: "service_regions_region_id_get"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "RegionId"
+        in: "path"
+        description: "Region identifier."
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "List of MEC service requests."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/MECTrafficServiceCreationRequest"
+        "404":
+          description: "Region not found."
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.mec_resources_controller"
+  /abstract-radio-coveragearea:
+    get:
+      tags:
+      - "RadioResources"
+      summary: "Retrieve Radio Coverage Area info for Radio PoP capable"
+      description: "Retrieve Radio Coverage Area info for Radio PoP capable"
+      operationId: "collect_radio_coveragearea_information"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/inline_response_200_1"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.radio_resources_controller"
+  /abstract-network:
+    get:
+      tags:
+      - "WIMNetworkResources"
+      summary: "Retrieve aggregated WAN Connectivity"
+      description: "Retrieve aggregated WAN Connectivity"
+      operationId: "collect_wim_abstracted_information"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/inline_response_200_2"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.wim_network_resources_controller"
+  /network-resources/{networkId}:
+    delete:
+      tags:
+      - "WIMNetworkResources"
+      operationId: "terminate_networks"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "networkId"
+        in: "path"
+        description: "Identifier of the virtualised network resource(s) to be terminated."
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Identifier(s) of the virtualised network resource(s) successfully\
+            \ terminated."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/NetworkIds"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.wim_network_resources_controller"
+  /network-resources:
+    get:
+      tags:
+      - "WIMNetworkResources"
+      operationId: "query_networks"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "networkQueryFilter"
+        description: "Query filter based on e.g. name, identifier, meta-data information\
+          \ or status information, expressing the type of information to be retrieved.\
+          \ It can also be used to specify one or more resources to be queried by\
+          \ providing their identifiers."
+        required: true
+        schema:
+          $ref: "#/definitions/Filter"
+      responses:
+        "200":
+          description: "Element containing information about the virtual network resource(s)\
+            \ matching the filter. The cardinality can be 0 if no matching network\
             \ resources exist."
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/VirtualCompute"
-        400:
+              $ref: "#/definitions/VirtualNetwork"
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_compute_resources_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.wim_network_resources_controller"
     post:
       tags:
-      - "virtualisedComputeResources"
-      operationId: "allocate_compute"
+      - "WIMNetworkResources"
+      operationId: "allocate_network"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "params"
+        required: true
+        schema:
+          $ref: "#/definitions/AllocateParameters"
+      responses:
+        "201":
+          description: "Identifier of the created Compute Flavour."
+          schema:
+            $ref: "#/definitions/AllocateReply"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+        "409":
+          description: "flavour already added"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.wim_network_resources_controller"
+  /mecapp/onboard:
+    get:
+      tags:
+      - "SOInterface"
+      summary: "Retrieve a list of onboarded application packages."
+      description: "Retrieve a list of onboarded application packages."
+      operationId: "mecapp_onboard_get"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "List of onboarded application packages"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/AppD"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.so_interface_controller"
+  /mecapp/onboard/{AppDId}:
+    get:
+      tags:
+      - "SOInterface"
+      summary: "Retrieve information about a specific application package."
+      description: "Retrieve information about a specific application package."
+      operationId: "mecapp_onboard_app_d_id_get"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "AppDId"
+        in: "path"
+        description: "Application package identifier."
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Application package information."
+          schema:
+            $ref: "#/definitions/AppD"
+        "404":
+          description: "Application package not onboarded."
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.so_interface_controller"
+  /abstract-resources:
+    get:
+      tags:
+      - "SOInterface"
+      summary: "Retrieve aggregated Cloud NFVI-PoP and Inter-NFVI-PoP Connectivity"
+      description: "Retrieve aggregated Cloud NFVI-PoP and Inter-NFVI-PoP Connectivity"
+      operationId: "collect_mtp_cloud_network_resource_information"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/inline_response_200_3"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.so_interface_controller"
+  /abstract-federated-resources:
+    get:
+      tags:
+      - "SOInterface"
+      summary: "Retrieve aggregated Cloud NFVI-PoP and Inter-NFVI-PoP Connectivity\
+        \ for Federation"
+      description: "Retrieve aggregated Cloud NFVI-PoP and Inter-NFVI-PoP Connectivity\
+        \ for Federation"
+      operationId: "collect_mtp_federated_cloud_network_resource_information"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/inline_response_200_3"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.so_interface_controller"
+  /abstract-network-resources:
+    post:
+      tags:
+      - "SOInterface"
+      summary: "Create inter-NFVI-PoP connectivity"
+      description: ""
+      operationId: "create_inter_nfvi_po_p_connectivity"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Create inter-NfviPop Connectivity"
+        required: true
+        schema:
+          $ref: "#/definitions/interNfviPopConnectivityRequest"
+      responses:
+        "201":
+          description: "Successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/inline_response_201"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.so_interface_controller"
+    delete:
+      tags:
+      - "SOInterface"
+      summary: "Delete inter-NFVI-PoP connectivity"
+      description: ""
+      operationId: "delete_inter_nfvi_po_p_connectivity"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Delete inter-NfviPop Connectivity"
+        required: true
+        schema:
+          $ref: "#/definitions/deleteInterNfviPopConnectivityRequest"
+      responses:
+        "204":
+          description: "Successful operation"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.so_interface_controller"
+  /abstract-compute-resources:
+    post:
+      tags:
+      - "SOInterface"
+      summary: "Allocate abstract compute resources"
+      operationId: "allocate_abstract_compute"
       consumes:
       - "application/json"
       produces:
@@ -56,23 +437,141 @@ paths:
         schema:
           $ref: "#/definitions/AllocateComputeRequest"
       responses:
-        201:
+        "201":
+          description: "Element containing information of the newly instantiated abstracted\
+            \ virtualised compute resource."
+          schema:
+            $ref: "#/definitions/VirtualCompute"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+        "409":
+          description: "software image already added"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.so_interface_controller"
+    delete:
+      tags:
+      - "SOInterface"
+      summary: "Terminate abstract compute resources"
+      operationId: "terminate_resources"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "computeId"
+        in: "query"
+        description: "Identifier(s) of the virtualised compute resource(s) to be terminated."
+        required: true
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      responses:
+        "200":
+          description: "Identifier(s) of the virtualised compute resource(s) successfully\
+            \ terminated."
+          schema:
+            type: "array"
+            items:
+              type: "string"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.so_interface_controller"
+  /abstract_compute_operate_resources:
+    post:
+      tags:
+      - "SOInterface"
+      operationId: "abstract_operate_compute"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/OperateComputeRequest"
+      responses:
+        "201":
           description: "Element containing information of the newly instantiated virtualised\
             \ compute resource."
           schema:
             $ref: "#/definitions/VirtualCompute"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-        409:
+        "409":
           description: "software image already added"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_compute_resources_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.so_interface_controller"
+  /v1/compute_resources:
+    get:
+      tags:
+      - "VIMComputeResources"
+      operationId: "query_resources"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "Element containing information about the virtual compute resource(s)\
+            \ matching the filter. The cardinality can be 0 if no matching compute\
+            \ resources exist."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/VIMVirtualCompute"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_compute_resources_controller"
+    post:
+      tags:
+      - "VIMComputeResources"
+      operationId: "allocate_compute"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/VIMAllocateComputeRequest"
+      responses:
+        "201":
+          description: "Element containing information of the newly instantiated virtualised\
+            \ compute resource."
+          schema:
+            $ref: "#/definitions/VIMVirtualCompute"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+        "409":
+          description: "software image already added"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_compute_resources_controller"
     delete:
       tags:
-      - "virtualisedComputeResources"
+      - "VIMComputeResources"
       operationId: "terminate_abstract_resources"
       consumes:
       - "application/json"
@@ -88,24 +587,54 @@ paths:
           type: "string"
         collectionFormat: "multi"
       responses:
-        200:
+        "200":
           description: "Identifier(s) of the virtualised compute resource(s) successfully\
             \ terminated."
           schema:
             type: "array"
             items:
               type: "string"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_compute_resources_controller"
-  /compute_resources/capacities:
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_compute_resources_controller"
+  /compute_operate_resources:
+    post:
+      tags:
+      - "VIMComputeResources"
+      operationId: "operate_compute"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/OperateComputeRequest"
+      responses:
+        "201":
+          description: "Element containing information of the newly instantiated virtualised\
+            \ compute resource."
+          schema:
+            $ref: "#/definitions/VIMVirtualCompute"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+        "409":
+          description: "software image already added"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_compute_resources_controller"
+  /v1/compute_resources/capacities:
     get:
       tags:
-      - "virtualisedComputeResources"
+      - "VIMComputeResources"
       operationId: "query_compute_capacity"
       consumes:
       - "application/json"
@@ -117,22 +646,22 @@ paths:
         required: true
         type: "string"
       responses:
-        200:
+        "200":
           description: "The capacity during the requested time period. The scope is\
             \ according to parameter zoneId of the request during the time interval."
           schema:
             $ref: "#/definitions/CapacityInformation"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_compute_resources_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_compute_resources_controller"
   /compute_resources/flavours:
     get:
       tags:
-      - "virtualisedComputeResources"
+      - "VIMComputeResources"
       operationId: "query_flavors"
       consumes:
       - "application/json"
@@ -140,7 +669,7 @@ paths:
       - "application/json"
       parameters: []
       responses:
-        200:
+        "200":
           description: "Element containing information about the virtual compute resource(s)\
             \ matching the filter. The cardinality can be 0 if no matching compute\
             \ resources exist."
@@ -148,16 +677,16 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/VirtualComputeFlavour"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_compute_resources_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_compute_resources_controller"
     post:
       tags:
-      - "virtualisedComputeResources"
+      - "VIMComputeResources"
       operationId: "create_flavour"
       consumes:
       - "application/json"
@@ -170,23 +699,23 @@ paths:
         schema:
           $ref: "#/definitions/VirtualComputeFlavour"
       responses:
-        201:
+        "201":
           description: "Identifier of the created Compute Flavour."
           schema:
             type: "string"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-        409:
+        "409":
           description: "flavour already added"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_compute_resources_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_compute_resources_controller"
   /compute_resources/flavours/{id}:
     delete:
       tags:
-      - "virtualisedComputeResources"
+      - "VIMComputeResources"
       operationId: "delete_flavours"
       consumes:
       - "application/json"
@@ -199,19 +728,19 @@ paths:
         required: true
         type: "string"
       responses:
-        200:
+        "200":
           description: "No output parameters"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_compute_resources_controller"
-  /compute_resources/information:
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_compute_resources_controller"
+  /v1/compute_resources/information:
     get:
       tags:
-      - "virtualisedComputeResources"
+      - "VIMComputeResources"
       operationId: "query_compute_information"
       consumes:
       - "application/json"
@@ -225,24 +754,24 @@ paths:
         required: true
         type: "string"
       responses:
-        200:
+        "200":
           description: "Virtualised compute resource information in the VIM that satisfies\
             \ the query condition."
           schema:
             type: "array"
             items:
               $ref: "#/definitions/VirtualComputeResourceInformation"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_compute_resources_controller"
-  /compute_resources/nfvi_pop_compute_information:
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_compute_resources_controller"
+  /v1/compute_resources/nfvi_pop_compute_information:
     get:
       tags:
-      - "virtualisedComputeResources"
+      - "VIMComputeResources"
       operationId: "query_nfvi_po_p_compute_information"
       consumes:
       - "application/json"
@@ -250,24 +779,24 @@ paths:
       - "application/json"
       parameters: []
       responses:
-        200:
+        "200":
           description: "The filtered information that has been retrieved. The cardinality\
             \ can be 0 if no matching information exist."
           schema:
             type: "array"
             items:
               $ref: "#/definitions/NfviPop"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_compute_resources_controller"
-  /compute_resources/resource_zones:
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_compute_resources_controller"
+  /v1/compute_resources/resource_zones:
     get:
       tags:
-      - "virtualisedComputeResources"
+      - "VIMComputeResources"
       operationId: "query_compute_resource_zone"
       consumes:
       - "application/json"
@@ -275,20 +804,20 @@ paths:
       - "application/json"
       parameters: []
       responses:
-        200:
+        "200":
           description: "The filtered information that has been retrieved about the\
             \ Resource Zone. The cardinality can be 0 if no matching information exist."
           schema:
             type: "array"
             items:
               $ref: "#/definitions/ResourceZone"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_compute_resources_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_compute_resources_controller"
   /healthz:
     get:
       summary: "Healthcheck"
@@ -296,13 +825,13 @@ paths:
       operationId: "healthz_get"
       parameters: []
       responses:
-        200:
+        "200":
           description: "Healthcheck"
       x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.default_controller"
   /information:
     get:
       tags:
-      - "virtualisedNetworkResourcesInformation"
+      - "VIMNetworkResourcesInformation"
       operationId: "query_network_information"
       consumes:
       - "application/json"
@@ -317,24 +846,25 @@ paths:
         schema:
           $ref: "#/definitions/Filter"
       responses:
-        200:
+        "200":
           description: "Virtualised network resource information in the VIM that satisfies\
             \ the query condition."
           schema:
             type: "array"
             items:
               $ref: "#/definitions/VirtualNetworkResourceInformation"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_network_resources_information_controller"
-  /network_resources:
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_network_resources_information_controller"
+  /v1/network_resources:
     get:
       tags:
-      - "virtualisedNetworkResources"
+      - "VIMNetworkResources"
+      - "SOInterface"
       operationId: "vi_mquery_networks"
       consumes:
       - "application/json"
@@ -351,7 +881,7 @@ paths:
         schema:
           $ref: "#/definitions/Filter"
       responses:
-        200:
+        "200":
           description: "Element containing information about the virtual network resource(s)\
             \ matching the filter. The cardinality can be 0 if no matching network\
             \ resources exist."
@@ -359,16 +889,17 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/VirtualNetwork"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_network_resources_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_network_resources_controller"
     post:
       tags:
-      - "virtualisedNetworkResources"
+      - "VIMNetworkResources"
+      - "SOInterface"
       operationId: "vi_mallocate_network"
       consumes:
       - "application/json"
@@ -381,22 +912,23 @@ paths:
         schema:
           $ref: "#/definitions/AllocateNetworkRequest"
       responses:
-        201:
+        "201":
           description: "Identifier of the created Compute Flavour."
           schema:
             $ref: "#/definitions/AllocateNetworkResult"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-        409:
+        "409":
           description: "network already added"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_network_resources_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_network_resources_controller"
     delete:
       tags:
-      - "virtualisedNetworkResources"
+      - "VIMNetworkResources"
+      - "SOInterface"
       operationId: "vi_mterminate_networks"
       consumes:
       - "application/json"
@@ -412,24 +944,24 @@ paths:
           type: "string"
         collectionFormat: "multi"
       responses:
-        200:
+        "200":
           description: "Identifier(s) of the virtualised network resource(s) successfully\
             \ terminated."
           schema:
             type: "array"
             items:
               type: "string"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_network_resources_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_network_resources_controller"
   /network_resources/capacities:
     get:
       tags:
-      - "virtualisedNetworkResources"
+      - "VIMNetworkResources"
       operationId: "query_network_capacity"
       consumes:
       - "application/json"
@@ -442,22 +974,49 @@ paths:
         schema:
           $ref: "#/definitions/QueryNetworkCapacityRequest"
       responses:
-        200:
+        "200":
           description: "The capacity during the requested time period. The scope is\
             \ according to parameter zoneId of the request during the time interval."
           schema:
             $ref: "#/definitions/CapacityInformation"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_network_resources_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_network_resources_controller"
+  /v1/network_resources/free_vlan:
+    get:
+      tags:
+        - "VIMNetworkResources"
+      summary: "Retrieve free vlan tag from VIM domain"
+      description: "Retrieve free vlan tag from VIM domain"
+      operationId: "free_vlan"
+      produces:
+        - "application/json"
+      parameters: [ ]
+      responses:
+        "200":
+          description: "The filtered information that has been retrieved. The cardinality\
+            \ can be 0 if no matching information exist."
+          schema:
+            type: "array"
+            items:
+              type: "number"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_network_resources_controller"
+
+
   /network_resources/nfvi-pop-network-information:
     get:
       tags:
-      - "virtualisedNetworkResources"
+      - "VIMNetworkResources"
       operationId: "query_nfvi_po_p_network_information"
       consumes:
       - "application/json"
@@ -471,24 +1030,24 @@ paths:
         schema:
           $ref: "#/definitions/Filter"
       responses:
-        200:
+        "200":
           description: "The filtered information that has been retrieved. The cardinality\
             \ can be 0 if no matching information exist."
           schema:
             type: "array"
             items:
               $ref: "#/definitions/NfviPop"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_network_resources_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_network_resources_controller"
   /quotas/compute_resources:
     get:
       tags:
-      - "virtualisedResourceQuota"
+      - "VIMResourceQuota"
       operationId: "query_compute_quota"
       consumes:
       - "application/json"
@@ -496,23 +1055,23 @@ paths:
       - "application/json"
       parameters: []
       responses:
-        200:
+        "200":
           description: "Element containing information about the quota resource. The\
             \ cardinality can be 0 if no matching quota exists."
           schema:
             type: "array"
             items:
               $ref: "#/definitions/VirtualComputeQuota"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_resource_quota_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_resource_quota_controller"
     post:
       tags:
-      - "virtualisedResourceQuota"
+      - "VIMResourceQuota"
       operationId: "create_compute_quota"
       consumes:
       - "application/json"
@@ -525,20 +1084,20 @@ paths:
         schema:
           $ref: "#/definitions/CreateComputeResourceQuotaRequest"
       responses:
-        201:
+        "201":
           description: "Element containing information about the quota resource."
           schema:
             $ref: "#/definitions/VirtualComputeQuota"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_resource_quota_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_resource_quota_controller"
     delete:
       tags:
-      - "virtualisedResourceQuota"
+      - "VIMResourceQuota"
       operationId: "terminate_compute_quota"
       consumes:
       - "application/json"
@@ -556,7 +1115,7 @@ paths:
           type: "string"
         collectionFormat: "multi"
       responses:
-        200:
+        "200":
           description: "Unique identifier of the \"infrastructure resource group\"\
             , logical grouping of virtual resources assigned to a tenant within an\
             \ Infrastructure Domain."
@@ -564,17 +1123,17 @@ paths:
             type: "array"
             items:
               type: "string"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_resource_quota_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_resource_quota_controller"
   /quotas/network_resources:
     get:
       tags:
-      - "virtualisedResourceQuota"
+      - "VIMResourceQuota"
       operationId: "query_network_quota"
       consumes:
       - "application/json"
@@ -582,23 +1141,23 @@ paths:
       - "application/json"
       parameters: []
       responses:
-        200:
+        "200":
           description: "Element containing information about the quota resource(s)\
             \ matching the filter. The cardinality can be 0 if no matching quota exists."
           schema:
             type: "array"
             items:
               $ref: "#/definitions/VirtualNetworkQuota"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_resource_quota_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_resource_quota_controller"
     post:
       tags:
-      - "virtualisedResourceQuota"
+      - "VIMResourceQuota"
       operationId: "create_network_quota"
       consumes:
       - "application/json"
@@ -611,22 +1170,22 @@ paths:
         schema:
           $ref: "#/definitions/CreateNetworkResourceQuotaRequest"
       responses:
-        201:
+        "201":
           description: "Element containing information about the quota resource."
           schema:
             $ref: "#/definitions/VirtualNetworkQuota"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-        409:
+        "409":
           description: ""
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_resource_quota_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_resource_quota_controller"
     delete:
       tags:
-      - "virtualisedResourceQuota"
+      - "VIMResourceQuota"
       operationId: "terminate_network_quota"
       consumes:
       - "application/json"
@@ -644,23 +1203,23 @@ paths:
           type: "string"
         collectionFormat: "multi"
       responses:
-        200:
+        "200":
           description: "Unique identifier of the \"infrastructure resource group\"\
             , logical grouping of virtual resources assigned to a tenant within an\
             \ Infrastructure Domain."
           schema:
             $ref: "#/definitions/ResourceGroupIds"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_resource_quota_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_resource_quota_controller"
   /reservations/compute_resources:
     get:
       tags:
-      - "virtualisedResourceReservation"
+      - "VIMResourceReservation"
       operationId: "query_compute_reservation"
       consumes:
       - "application/json"
@@ -668,23 +1227,23 @@ paths:
       - "application/json"
       parameters: []
       responses:
-        200:
+        "200":
           description: "Element containing information about the reserved resource.\
             \ Cardinality is 0 if the query did not return any result."
           schema:
             type: "array"
             items:
               $ref: "#/definitions/ReservedVirtualCompute"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_resource_reservation_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_resource_reservation_controller"
     post:
       tags:
-      - "virtualisedResourceReservation"
+      - "VIMResourceReservation"
       operationId: "create_compute_reservation"
       consumes:
       - "application/json"
@@ -697,22 +1256,22 @@ paths:
         schema:
           $ref: "#/definitions/CreateComputeResourceReservationRequest"
       responses:
-        201:
+        "201":
           description: "Element containing information about the reserved resource."
           schema:
             $ref: "#/definitions/ReservedVirtualCompute"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-        409:
+        "409":
           description: ""
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_resource_reservation_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_resource_reservation_controller"
     delete:
       tags:
-      - "virtualisedResourceReservation"
+      - "VIMResourceReservation"
       operationId: "terminate_compute_reservation"
       consumes:
       - "application/json"
@@ -728,23 +1287,23 @@ paths:
           type: "string"
         collectionFormat: "multi"
       responses:
-        200:
+        "200":
           description: "Identifier of the resource reservation(s) successfully terminated."
           schema:
             type: "array"
             items:
               type: "string"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_resource_reservation_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_resource_reservation_controller"
   /reservations/network_resources:
     get:
       tags:
-      - "virtualisedResourceReservation"
+      - "VIMResourceReservation"
       operationId: "query_network_reservation"
       consumes:
       - "application/json"
@@ -752,23 +1311,23 @@ paths:
       - "application/json"
       parameters: []
       responses:
-        200:
+        "200":
           description: "Element containing information about the reserved resource.\
             \ Cardinality is 0 if the query did not return any result."
           schema:
             type: "array"
             items:
               $ref: "#/definitions/ReservedVirtualNetwork"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_resource_reservation_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_resource_reservation_controller"
     post:
       tags:
-      - "virtualisedResourceReservation"
+      - "VIMResourceReservation"
       operationId: "create_network_reservation"
       consumes:
       - "application/json"
@@ -781,22 +1340,22 @@ paths:
         schema:
           $ref: "#/definitions/CreateNetworkResourceReservationRequest"
       responses:
-        201:
+        "201":
           description: "Element containing information about the reserved resource."
           schema:
             $ref: "#/definitions/ReservedVirtualNetwork"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-        409:
+        "409":
           description: ""
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_resource_reservation_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_resource_reservation_controller"
     delete:
       tags:
-      - "virtualisedResourceReservation"
+      - "VIMResourceReservation"
       operationId: "terminate_network_reservation"
       consumes:
       - "application/json"
@@ -812,23 +1371,23 @@ paths:
           type: "string"
         collectionFormat: "multi"
       responses:
-        200:
+        "200":
           description: "Identifier of the resource reservation(s) successfully terminated."
           schema:
             type: "array"
             items:
               type: "string"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.virtualised_resource_reservation_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_resource_reservation_controller"
   /software_images:
     get:
       tags:
-      - "softwareImages"
+      - "VIMSoftwareImages"
       operationId: "query_software_images"
       consumes:
       - "application/json"
@@ -836,22 +1395,22 @@ paths:
       - "application/json"
       parameters: []
       responses:
-        200:
+        "200":
           description: "The information of all software images matching the query."
           schema:
             type: "array"
             items:
               $ref: "#/definitions/SoftwareImageInformation"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.software_images_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_software_images_controller"
     post:
       tags:
-      - "softwareImages"
+      - "VIMSoftwareImages"
       operationId: "add_software_image"
       consumes:
       - "application/json"
@@ -864,23 +1423,23 @@ paths:
         schema:
           $ref: "#/definitions/SoftwareImageAddQuery"
       responses:
-        201:
+        "201":
           description: "Metadata about the Software Image that has been added."
           schema:
             $ref: "#/definitions/SoftwareImageInformation"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-        409:
+        "409":
           description: "software image already added"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.software_images_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_software_images_controller"
   /software_images/{id}:
     get:
       tags:
-      - "softwareImages"
+      - "VIMSoftwareImages"
       operationId: "query_software_image"
       consumes:
       - "application/json"
@@ -893,20 +1452,20 @@ paths:
         required: true
         type: "string"
       responses:
-        200:
+        "200":
           description: "The information of the software image matching the query."
           schema:
             $ref: "#/definitions/SoftwareImageInformation"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.software_images_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_software_images_controller"
     delete:
       tags:
-      - "softwareImages"
+      - "VIMSoftwareImages"
       operationId: "delete_software_image"
       consumes:
       - "application/json"
@@ -919,24 +1478,1979 @@ paths:
         required: true
         type: "string"
       responses:
-        200:
+        "200":
           description: "The identifier of the software image successfully deleted."
           schema:
             type: "string"
-        400:
+        "400":
           description: "Bad request"
-        401:
+        "401":
           description: "Unauthorized"
-        403:
+        "403":
           description: "Forbidden"
-        404:
+        "404":
           description: "Not found"
-      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.software_images_controller"
+      x-swagger-router-controller: "mtp_plugin_kubernetes.controllers.vim_software_images_controller"
 definitions:
-  Gateways:
+  VLANInfo:
+    description: "info for VLAN"
+  PNFInfo:
+    description: "Info of PNF"
+  PNFlist:
+    type: "array"
+    description: "List of supported PNF"
+    items:
+      $ref: "#/definitions/PNFlist_inner"
+  VirtualMemoryData:
+    required:
+    - "virtualMemSize"
+    properties:
+      virtualMemSize:
+        type: "number"
+        description: "Amount of virtual memory (e.g. in MB)."
+      numaEnabled:
+        type: "boolean"
+        description: "It specifies the memory allocation to be  cognisant of the relevant\
+          \ process/core allocation. The cardinality can be 0 during the allocation\
+          \ request, if no particular value is requested."
+      virtualMemOversubscriptionPolicy:
+        type: "string"
+        description: "The memory core oversubscription policy in terms of virtual\
+          \ memory to physical memory on the platform. The cardinality can be 0 during\
+          \ the allocation request, if no particular value is requested."
+    description: "The virtual memory of the virtualised compute."
+    example:
+      numaEnabled: true
+      virtualMemSize: 0.80082819046101150206595775671303272247314453125
+      virtualMemOversubscriptionPolicy: "virtualMemOversubscriptionPolicy"
+  VirtualCpuData:
+    required:
+    - "numVirtualCpu"
+    properties:
+      cpuArchitecture:
+        type: "string"
+        description: "CPU architecture type. Examples are x86, ARM. The cardinality\
+          \ can be 0 during the allocation request, if no particular CPU architecture\
+          \ type is requested."
+      numVirtualCpu:
+        type: "number"
+        description: "Number of virtual CPUs"
+      virtualCpuClock:
+        type: "number"
+        description: "Minimum virtual CPU clock rate (e.g. in MHz). The cardinality\
+          \ can be 0 during the allocation request, if no particular value is requested."
+      virtualCpuOversubscriptionPolicy:
+        type: "string"
+        description: "The CPU core oversubscription policy e.g. the relation of virtual\
+          \ CPU cores to physical CPU cores/threads. The cardinality can be 0 during\
+          \ the allocation request, if no particular value is requested."
+      virtualCpuPinning:
+        $ref: "#/definitions/VirtualCpuPinningData"
+    description: "The virtual memory of the virtualised compute."
+    example:
+      numVirtualCpu: 6.02745618307040320615897144307382404804229736328125
+      virtualCpuOversubscriptionPolicy: "virtualCpuOversubscriptionPolicy"
+      cpuArchitecture: "cpuArchitecture"
+      virtualCpuPinning:
+        cpuPinningMap: "{}"
+        cpuPinningPolicy: "static"
+      virtualCpuClock: 1.46581298050294517310021547018550336360931396484375
+  VirtualCpuPinningData:
+    properties:
+      cpuPinningPolicy:
+        type: "string"
+        description: "ndicates the policy for CPU pinning. The policy can take values\
+          \ of \"static\" or \"dynamic\". The cardinality can be 0 during the allocation\
+          \ request, if no particular value is requested."
+        enum:
+        - "static"
+        - "dynamic"
+      cpuPinningMap:
+        type: "object"
+        description: "If cpuPinningPolicy is defined as \"static\", the cpuPinningMap\
+          \ provides the map of pinning virtual CPU cores to physical CPU cores/threads.\
+          \ Cardinality is 0 if cpuPinningPolicy has a different value than \"static\"\
+          ."
+        properties: {}
+    description: "The virtual CPU pinning configuration for the virtualised compute\
+      \ resource."
+    example:
+      cpuPinningMap: "{}"
+      cpuPinningPolicy: "static"
+  RequestAdditionalCapabilityData:
+    required:
+    - "requestedAdditionalCapabilityName"
+    properties:
+      requestedAdditionalCapabilityName:
+        type: "string"
+        description: "Identifies a requested additional capability for the VDU. ETSI\
+          \ GS NFV-IFA 002 describes acceleration capabilities."
+      supportMandatory:
+        type: "boolean"
+        description: "Indicates whether the requested additional capability is mandatory\
+          \ for successful operation."
+      minRequestedAdditionalCapabilityVersion:
+        type: "string"
+        description: "Identifies the minimum version of the requested additional capability."
+      preferredRequestedAdditionalCapabilityVersion:
+        type: "string"
+        description: "Identifies the preferred version of the requested additional\
+          \ capability."
+      targetPerformanceParameters:
+        type: "object"
+        description: "Identifies specific attributes, dependent on the requested additional\
+          \ capability type."
+        properties: {}
+    example:
+      targetPerformanceParameters: "{}"
+      requestedAdditionalCapabilityName: "requestedAdditionalCapabilityName"
+      minRequestedAdditionalCapabilityVersion: "minRequestedAdditionalCapabilityVersion"
+      preferredRequestedAdditionalCapabilityVersion: "preferredRequestedAdditionalCapabilityVersion"
+      supportMandatory: true
+  VirtualComputeDescription:
+    required:
+    - "virtualComputeDescId"
+    - "virtualCpu"
+    - "virtualMemory"
+    properties:
+      virtualComputeDescId:
+        type: "string"
+        description: "Unique identifier of this VirtualComputeDescription in the appD."
+      requestAdditionalCapabilities:
+        type: "array"
+        description: "Specifies requirements for additional  capabilities. These may\
+          \ be for a range of purposes. One example is acceleration related capabilities."
+        items:
+          $ref: "#/definitions/RequestAdditionalCapabilityData"
+      virtualMemory:
+        $ref: "#/definitions/VirtualMemoryData"
+      virtualCpu:
+        $ref: "#/definitions/VirtualCpuData"
+    description: "Describes CPU, Memory and acceleration requirements of the Virtualisation\
+      \ machine."
+    example:
+      requestAdditionalCapabilities:
+      - targetPerformanceParameters: "{}"
+        requestedAdditionalCapabilityName: "requestedAdditionalCapabilityName"
+        minRequestedAdditionalCapabilityVersion: "minRequestedAdditionalCapabilityVersion"
+        preferredRequestedAdditionalCapabilityVersion: "preferredRequestedAdditionalCapabilityVersion"
+        supportMandatory: true
+      - targetPerformanceParameters: "{}"
+        requestedAdditionalCapabilityName: "requestedAdditionalCapabilityName"
+        minRequestedAdditionalCapabilityVersion: "minRequestedAdditionalCapabilityVersion"
+        preferredRequestedAdditionalCapabilityVersion: "preferredRequestedAdditionalCapabilityVersion"
+        supportMandatory: true
+      virtualComputeDescId: "virtualComputeDescId"
+      virtualCpu:
+        numVirtualCpu: 6.02745618307040320615897144307382404804229736328125
+        virtualCpuOversubscriptionPolicy: "virtualCpuOversubscriptionPolicy"
+        cpuArchitecture: "cpuArchitecture"
+        virtualCpuPinning:
+          cpuPinningMap: "{}"
+          cpuPinningPolicy: "static"
+        virtualCpuClock: 1.46581298050294517310021547018550336360931396484375
+      virtualMemory:
+        numaEnabled: true
+        virtualMemSize: 0.80082819046101150206595775671303272247314453125
+        virtualMemOversubscriptionPolicy: "virtualMemOversubscriptionPolicy"
+  SwImageDescriptor:
+    required:
+    - "containerFormat"
+    - "id"
+    - "name"
+    - "swImage"
+    properties:
+      id:
+        type: "string"
+        description: "The identifier of this software image."
+      name:
+        type: "string"
+        description: "The name of this software image."
+      version:
+        type: "string"
+        description: "The version of this software image."
+      checksum:
+        type: "string"
+        description: "The checksum of this software image"
+      containerFormat:
+        type: "string"
+        description: "The container format describes the container file format in\
+          \ which software image is provided."
+      diskFormat:
+        type: "string"
+        description: "The disk format of a software image is the format of the underlying\
+          \ disk image."
+      minDisk:
+        type: "number"
+        description: "The minimal disk size requirement for this software image. The\
+          \ value of the \"size of storage\" attribute of the VirtualStorageDesc referencing\
+          \ this SwImageDesc shall not be smaller than the value of minDisk."
+      minRam:
+        type: "number"
+        description: "The minimal RAM requirement for this software image. The value\
+          \ of the \"size\" attribute of VirtualMemoryData of the Vdu referencing\
+          \ this SwImageDesc shall not be smaller than the value of minRam."
+      size:
+        type: "number"
+        description: "The size of this software image."
+      swImage:
+        type: "string"
+        description: "This is a reference to the actual software image. The reference\
+          \ can be relative to the root of the VNF Package or can be a URL."
+      operatingSystem:
+        type: "string"
+        description: "Identifies the operating system used in the software image.\
+          \ This attribute may also identify if a 32 bit or 64 bit software image\
+          \ is used."
+      supportedVirtualizationEnvironment:
+        type: "array"
+        description: "Identifies the virtualisation environments (e.g. hypervisor)\
+          \ compatible with this software image."
+        items:
+          type: "string"
+    description: "Describes the software image which is directly loaded on the virtualisation\
+      \ machine instantiating this Application."
+    example:
+      swImage: "swImage"
+      size: 2.3021358869347654518833223846741020679473876953125
+      minRam: 5.63737665663332876420099637471139430999755859375
+      name: "name"
+      checksum: "checksum"
+      containerFormat: "containerFormat"
+      supportedVirtualizationEnvironment:
+      - "supportedVirtualizationEnvironment"
+      - "supportedVirtualizationEnvironment"
+      id: "id"
+      diskFormat: "diskFormat"
+      version: "version"
+      minDisk: 5.962133916683182377482808078639209270477294921875
+      operatingSystem: "operatingSystem"
+  VirtualStorageDescriptor:
+    required:
+    - "id"
+    - "sizeOfStorage"
+    - "typeOfStorage"
+    properties:
+      id:
+        type: "string"
+        description: "The identifier of this virtual storage descriptor in the appD."
+      typeOfStorage:
+        type: "string"
+        description: "Type of virtualised storage resource (e.g. volume, object)."
+      sizeOfStorage:
+        type: "number"
+        description: "Size of virtualised storage resource (e.g. size of volume, in\
+          \ GB)."
+      rdmaEnabled:
+        type: "boolean"
+        description: "Indicate if the storage supports RDMA."
+      swImageDesc:
+        type: "string"
+        description: "Software image to be loaded on the VirtualStorage Resource created\
+          \ based on this VirtualStorageDescriptor identifier."
+    description: "Defines descriptors of virtual storage resources to be used by the\
+      \ mobile edge application."
+    example:
+      typeOfStorage: "typeOfStorage"
+      swImageDesc: "swImageDesc"
+      id: "id"
+      sizeOfStorage: 7.061401241503109105224211816675961017608642578125
+      rdmaEnabled: true
+  VirtualNetworkInterfaceRequirements:
+    required:
+    - "requirement"
+    - "supportMandatory"
+    properties:
+      name:
+        type: "string"
+        description: "Provides a human readable name for this requirement."
+      description:
+        type: "string"
+        description: "Provides a human readable description for this requirement."
+      supportMandatory:
+        type: "boolean"
+        description: "Indicates whether fulfilling the constraint is mandatory (TRUE)\
+          \ for successful operation or desirable (FALSE)."
+      requirement:
+        type: "object"
+        description: "Specifies a requirement such as the support of SR-IOV, a particular\
+          \ data plane acceleration library, an API to be exposed by a NIC, etc."
+        properties: {}
+    example:
+      name: "name"
+      description: "description"
+      requirement: "{}"
+      supportMandatory: true
+  AddressData:
+    required:
+    - "addressType"
+    properties:
+      addressType:
+        type: "string"
+        description: "Describes the type of the address to be assigned to the CP instantiated\
+          \ from the parent CPD. The content type shall be aligned with the address\
+          \ type supported by the layerProtocol attribute of the parent CPD."
+        enum:
+        - "MAC"
+        - "IPV4"
+        - "IPV6"
+      l2AddressData:
+        type: "object"
+        description: "Provides the information on the MAC addresses to be assigned\
+          \ to the CP(s) instantiated from the parent CPD. Shall be present when the\
+          \ addressType is MAC address."
+        properties: {}
+      l3AddressData:
+        type: "object"
+        description: "Provides the information on the IP addresses to be assigned\
+          \ to the CP instantiated from the parent CPD. Shall be present when the\
+          \ addressType is IP address."
+        properties: {}
+    example:
+      l3AddressData: "{}"
+      addressType: "MAC"
+      l2AddressData: "{}"
+  CategoryRef:
+    required:
+    - "href"
+    - "id"
+    - "name"
+    - "version"
+    properties:
+      href:
+        type: "string"
+        description: "Reference of the catalogue."
+      id:
+        type: "string"
+        description: "Unique identifier of the category."
+      name:
+        type: "string"
+        description: "Name of the category."
+      version:
+        type: "string"
+        description: "Category version."
+    description: "A category reference of the service."
+    example:
+      name: "name"
+      href: "href"
+      id: "id"
+      version: "version"
+  AppExternalCpd:
+    required:
+    - "cpdId"
+    - "layerProtocol"
+    properties:
+      cpdId:
+        type: "string"
+        description: "Identifier of this cpd information element."
+      layerProtocol:
+        type: "string"
+        description: "Identifies which protocol the CP uses for connectivity purposes\
+          \ (Ethernet, MPLS, ODU2, IPV4, IPV6, Pseudo-Wire, etc.)."
+        enum:
+        - "Ethernet"
+        - "MPLS"
+        - "ODU2"
+        - "IPV4"
+        - "IPV6"
+        - "Pseudo-Wire"
+      cpRole:
+        type: "string"
+        description: "Identifies the role of the port in the context of the traffic\
+          \ flow patterns in the VNF or parent NS. For example a VNF with a tree flow\
+          \ pattern within the VNF will have legal cpRoles of ROOT and LEAF."
+      description:
+        type: "string"
+        description: "Provides human-readable information on the purpose of the CP\
+          \ (e.g. CP for control plane traffic)."
+      addressData:
+        type: "array"
+        description: "Provides information on the addresses to be assigned to the\
+          \ CP(s) instantiated from this CPD."
+        items:
+          $ref: "#/definitions/AddressData"
+      virtualNetworkInterfaceRequirements:
+        type: "array"
+        description: "Specifies requirements on a virtual network interface realizing\
+          \ the CPs instantiated from this CPD."
+        items:
+          $ref: "#/definitions/VirtualNetworkInterfaceRequirements"
+    example:
+      cpRole: "cpRole"
+      cpdId: "cpdId"
+      description: "description"
+      virtualNetworkInterfaceRequirements:
+      - name: "name"
+        description: "description"
+        requirement: "{}"
+        supportMandatory: true
+      - name: "name"
+        description: "description"
+        requirement: "{}"
+        supportMandatory: true
+      addressData:
+      - l3AddressData: "{}"
+        addressType: "MAC"
+        l2AddressData: "{}"
+      - l3AddressData: "{}"
+        addressType: "MAC"
+        l2AddressData: "{}"
+      layerProtocol: "Ethernet"
+  ServiceDescriptor:
+    required:
+    - "serName"
+    - "version"
+    properties:
+      serName:
+        type: "string"
+        description: "The name of the service, for example, RNIS, LocationService,\
+          \ etc."
+      serCategory:
+        $ref: "#/definitions/CategoryRef"
+      version:
+        type: "string"
+        description: "The version of the service."
+      transportsSupported:
+        $ref: "#/definitions/ServiceDescriptor_transportsSupported"
+    example:
+      serCategory:
+        name: "name"
+        href: "href"
+        id: "id"
+        version: "version"
+      transportsSupported:
+        serializers: "JSON"
+        transport:
+          protocol: "protocol"
+          security: "{}"
+          type: "REST_HTTP"
+          version: "version"
+      serName: "serName"
+      version: "version"
+  ServiceDependency:
+    required:
+    - "serName"
+    - "version"
+    properties:
+      serName:
+        type: "string"
+        description: "The name of the service, for example, RNIS, LocationService,\
+          \ etc."
+      serCategory:
+        $ref: "#/definitions/CategoryRef"
+      version:
+        type: "string"
+        description: "The version of the service."
+      serTransportDependencies:
+        type: "array"
+        description: "Indicates transport and serialization format dependencies of\
+          \ consuming the service. Defaults to REST + JSON if absent. This attribute\
+          \ indicates groups of transport bindings that a service-consuming ME application\
+          \ supports for the consumption of the ME service defined by this ServiceDependency\
+          \ structure. If at leastone of the indicated groups is supported by the\
+          \ service it may be consumed by the application."
+        items:
+          $ref: "#/definitions/TransportDependency"
+      requestedPermissions:
+        type: "object"
+        description: "Requested permissions regarding the access of the application\
+          \ to the service. See clause 8.2 of ETSI GS MEC 009. The format of this\
+          \ attribute is left for the data model design stage."
+        properties: {}
+    example:
+      serCategory:
+        name: "name"
+        href: "href"
+        id: "id"
+        version: "version"
+      requestedPermissions: "{}"
+      serName: "serName"
+      serTransportDependencies:
+      - serializers: "JSON"
+        transport:
+          protocol: "protocol"
+          security: "{}"
+          type: "REST_HTTP"
+          version: "version"
+        labels:
+        - "labels"
+        - "labels"
+      - serializers: "JSON"
+        transport:
+          protocol: "protocol"
+          security: "{}"
+          type: "REST_HTTP"
+          version: "version"
+        labels:
+        - "labels"
+        - "labels"
+      version: "version"
+  TransportDescriptor:
+    required:
+    - "protocol"
+    - "security"
+    - "type"
+    - "version"
+    properties:
+      type:
+        type: "string"
+        description: "Type of the transport, as defined in the TransportTypes type\
+          \ in ETSI GS MEC 011."
+        enum:
+        - "REST_HTTP"
+        - "MB_TOPIC_BASED"
+        - "MB_ROUTING"
+        - "MB_PUBSUB"
+        - "RPC"
+        - "RPC_STREAMING"
+        - "WEBSOCKET"
+      protocol:
+        type: "string"
+        description: "The name of the protocol used. Shall be set to \"HTTP\" for\
+          \ a REST API."
+      version:
+        type: "string"
+        description: "The version of the protocol used."
+      security:
+        type: "object"
+        description: "Information about the security used by the transport in ETSI\
+          \ GS MEC 011. (not implemented)"
+        properties: {}
+    description: "Information about the transport in a transport binding."
+    example:
+      protocol: "protocol"
+      security: "{}"
+      type: "REST_HTTP"
+      version: "version"
+  TransportDependency:
+    required:
+    - "labels"
+    - "serializers"
+    - "transport"
+    properties:
+      transport:
+        $ref: "#/definitions/TransportDescriptor"
+      serializers:
+        type: "string"
+        description: "Information about the serializers in this transport binding,\
+          \ as defined in the SerializerTypes type in ETSI GS MEC 011. Support for\
+          \ at least one of the entries is required in conjunction with the transport."
+        enum:
+        - "JSON"
+        - "XML"
+        - "PROTOBUF3"
+      labels:
+        type: "array"
+        description: "Set of labels that allow to define groups of transport bindings."
+        items:
+          type: "string"
+    example:
+      serializers: "JSON"
+      transport:
+        protocol: "protocol"
+        security: "{}"
+        type: "REST_HTTP"
+        version: "version"
+      labels:
+      - "labels"
+      - "labels"
+  TunnelInfo:
+    required:
+    - "tunnelDstAddress"
+    - "tunnelSrcAddress"
+    - "tunnelType"
+    properties:
+      tunnelType:
+        type: "string"
+        description: "TType of tunnel (GTP-U, GRE, etc.)"
+        enum:
+        - "GTP-U"
+        - "GRE"
+      tunnelDstAddress:
+        type: "string"
+        description: "Destination address of the tunnel."
+      tunnelSrcAddress:
+        type: "string"
+        description: "Source address of the tunnel."
+      tunnelSpecificData:
+        type: "object"
+        description: "Parameters specific to the tunnel."
+        properties: {}
+    example:
+      tunnelSrcAddress: "tunnelSrcAddress"
+      tunnelType: "GTP-U"
+      tunnelSpecificData: "{}"
+      tunnelDstAddress: "tunnelDstAddress"
+  InterfaceDescriptor:
+    required:
+    - "interfaceType"
+    properties:
+      interfaceType:
+        type: "string"
+        description: "Type of interface (TUNNEL, MAC, IP, etc.)"
+        enum:
+        - "TUNNEL"
+        - "MAC"
+        - "IP"
+      tunnelInfo:
+        $ref: "#/definitions/TunnelInfo"
+      srcMACAddress:
+        type: "string"
+        description: "If the interface type is MAC, the source address identifies\
+          \ the MAC address of the interface."
+      dstMACAddress:
+        type: "string"
+        description: "If the interface type is MAC, the destination address identifies\
+          \ the MAC address of the interface. Only used for dstInterface."
+      dstIPAddress:
+        type: "string"
+        description: "f the interface type is IP, the destination address identifies\
+          \ the IP address of the destination. Only used for dstInterface."
+    example:
+      interfaceType: "TUNNEL"
+      dstIPAddress: "dstIPAddress"
+      srcMACAddress: "srcMACAddress"
+      dstMACAddress: "dstMACAddress"
+      tunnelInfo:
+        tunnelSrcAddress: "tunnelSrcAddress"
+        tunnelType: "GTP-U"
+        tunnelSpecificData: "{}"
+        tunnelDstAddress: "tunnelDstAddress"
+  TrafficFilter:
+    properties:
+      srcAddress:
+        type: "array"
+        description: "An IP address or a range of IP addresses. For IPv4, the IP address\
+          \ could be an IP address plus mask, or an individual IP address, or a range\
+          \ of IP addresses. For IPv6, the IP address could be an IP prefix, or a\
+          \ range of IP prefixes."
+        items:
+          type: "string"
+      dstAddress:
+        type: "array"
+        description: "An IP address or a range of IP addresses. For IPv4, the IP address\
+          \ could be an IP address plus mask, or an individual IP address, or a range\
+          \ of IP addresses. For IPv6, the IP address could be an IP prefix, or a\
+          \ range of IP prefixes."
+        items:
+          type: "string"
+      srcPort:
+        type: "array"
+        description: "A port or a range of ports."
+        items:
+          type: "string"
+      dstPort:
+        type: "array"
+        description: "A port or a range of ports."
+        items:
+          type: "string"
+      protocol:
+        type: "array"
+        description: "Specifies the protocol of the traffic rule."
+        items:
+          type: "string"
+      token:
+        type: "array"
+        description: "Used for token based traffic rule."
+        items:
+          type: "string"
+      srcTunnelAddress:
+        type: "array"
+        description: "Used for GTP tunnel based traffic rule."
+        items:
+          type: "string"
+      dstTunnelAddress:
+        type: "array"
+        description: "Used for GTP tunnel based traffic rule."
+        items:
+          type: "string"
+      srcTunnelPort:
+        type: "array"
+        description: "Used for GTP tunnel based traffic rule."
+        items:
+          type: "string"
+      dstTunnelPort:
+        type: "array"
+        description: "Used for GTP tunnel based traffic rule."
+        items:
+          type: "string"
+      qci:
+        type: "number"
+        description: "Used to match all packets that have the same QCI."
+      dscp:
+        type: "number"
+        description: "Used to match all IPv4 packets that have the same DSCP."
+      tc:
+        type: "number"
+        description: "Used to match all IPv6 packets that have the same TC."
+    example:
+      srcTunnelPort:
+      - "srcTunnelPort"
+      - "srcTunnelPort"
+      dstAddress:
+      - "dstAddress"
+      - "dstAddress"
+      srcAddress:
+      - "srcAddress"
+      - "srcAddress"
+      srcPort:
+      - "srcPort"
+      - "srcPort"
+      token:
+      - "token"
+      - "token"
+      tc: 5.962133916683182377482808078639209270477294921875
+      protocol:
+      - "protocol"
+      - "protocol"
+      dstTunnelPort:
+      - "dstTunnelPort"
+      - "dstTunnelPort"
+      dstPort:
+      - "dstPort"
+      - "dstPort"
+      dscp: 1.46581298050294517310021547018550336360931396484375
+      qci: 6.02745618307040320615897144307382404804229736328125
+      srcTunnelAddress:
+      - "srcTunnelAddress"
+      - "srcTunnelAddress"
+      dstTunnelAddress:
+      - "dstTunnelAddress"
+      - "dstTunnelAddress"
+  TrafficRuleDescriptor:
+    required:
+    - "action"
+    - "filterType"
+    - "priority"
+    - "trafficFilter"
+    - "trafficRuleId"
+    properties:
+      trafficRuleId:
+        type: "string"
+        description: "Identifies the traffic rule."
+      filterType:
+        type: "string"
+        description: "Definition of filter type, i.e., per FLOW or PACKET. If it is\
+          \ per FLOW, the filter matches UE->EPC packets and the reverse packets are\
+          \ handled by the same context."
+        enum:
+        - "FLOW"
+        - "PACKET"
+      priority:
+        type: "number"
+        description: "Priority of this traffic rule. If traffic rule conflicts, the\
+          \ one with higher priority take precedence."
+      trafficFilter:
+        type: "array"
+        description: "The filter used to identify specific flow/packets that need\
+          \ to be handled by the MEC host."
+        items:
+          $ref: "#/definitions/TrafficFilter"
+      action:
+        type: "string"
+        description: "Identifies the action of the ME host data plane, when a packet\
+          \ matches the trafficFilter. The example actions include DROP, FORWARD,\
+          \ DECAPSULATED, FORWARD_AS_IS, PASSTHROUGH, DUPLICATED_DECAPSULATED, DUPLICATE_AS_IS."
+        enum:
+        - "DROP"
+        - "FORWARD"
+        - "DECAPSULATED"
+        - "FORWARD_AS_IS"
+        - "PASSTHROUGH"
+        - "DUPLICATED_DECAPSULATED"
+        - "DUPLICATE_AS_IS"
+      dstInterface:
+        type: "array"
+        description: "Describes the destination interface information, if the action\
+          \ is FORWARD. Some applications (e.g. inline/tap) require two interfaces,\
+          \ where the first is on the UE side and the second is on the EPC side."
+        items:
+          $ref: "#/definitions/InterfaceDescriptor"
+    example:
+      action: "DROP"
+      trafficRuleId: "trafficRuleId"
+      dstInterface:
+      - interfaceType: "TUNNEL"
+        dstIPAddress: "dstIPAddress"
+        srcMACAddress: "srcMACAddress"
+        dstMACAddress: "dstMACAddress"
+        tunnelInfo:
+          tunnelSrcAddress: "tunnelSrcAddress"
+          tunnelType: "GTP-U"
+          tunnelSpecificData: "{}"
+          tunnelDstAddress: "tunnelDstAddress"
+      - interfaceType: "TUNNEL"
+        dstIPAddress: "dstIPAddress"
+        srcMACAddress: "srcMACAddress"
+        dstMACAddress: "dstMACAddress"
+        tunnelInfo:
+          tunnelSrcAddress: "tunnelSrcAddress"
+          tunnelType: "GTP-U"
+          tunnelSpecificData: "{}"
+          tunnelDstAddress: "tunnelDstAddress"
+      filterType: "FLOW"
+      priority: 0.80082819046101150206595775671303272247314453125
+      trafficFilter:
+      - srcTunnelPort:
+        - "srcTunnelPort"
+        - "srcTunnelPort"
+        dstAddress:
+        - "dstAddress"
+        - "dstAddress"
+        srcAddress:
+        - "srcAddress"
+        - "srcAddress"
+        srcPort:
+        - "srcPort"
+        - "srcPort"
+        token:
+        - "token"
+        - "token"
+        tc: 5.962133916683182377482808078639209270477294921875
+        protocol:
+        - "protocol"
+        - "protocol"
+        dstTunnelPort:
+        - "dstTunnelPort"
+        - "dstTunnelPort"
+        dstPort:
+        - "dstPort"
+        - "dstPort"
+        dscp: 1.46581298050294517310021547018550336360931396484375
+        qci: 6.02745618307040320615897144307382404804229736328125
+        srcTunnelAddress:
+        - "srcTunnelAddress"
+        - "srcTunnelAddress"
+        dstTunnelAddress:
+        - "dstTunnelAddress"
+        - "dstTunnelAddress"
+      - srcTunnelPort:
+        - "srcTunnelPort"
+        - "srcTunnelPort"
+        dstAddress:
+        - "dstAddress"
+        - "dstAddress"
+        srcAddress:
+        - "srcAddress"
+        - "srcAddress"
+        srcPort:
+        - "srcPort"
+        - "srcPort"
+        token:
+        - "token"
+        - "token"
+        tc: 5.962133916683182377482808078639209270477294921875
+        protocol:
+        - "protocol"
+        - "protocol"
+        dstTunnelPort:
+        - "dstTunnelPort"
+        - "dstTunnelPort"
+        dstPort:
+        - "dstPort"
+        - "dstPort"
+        dscp: 1.46581298050294517310021547018550336360931396484375
+        qci: 6.02745618307040320615897144307382404804229736328125
+        srcTunnelAddress:
+        - "srcTunnelAddress"
+        - "srcTunnelAddress"
+        dstTunnelAddress:
+        - "dstTunnelAddress"
+        - "dstTunnelAddress"
+  DNSRuleDescriptor:
+    required:
+    - "dnsRuleId"
+    - "domainName"
+    - "ipAddress"
+    - "ipAddressType"
+    properties:
+      dnsRuleId:
+        type: "string"
+        description: "Identifies the DNS rule."
+      domainName:
+        type: "string"
+        description: "FQDN of the DNS rule."
+      ipAddressType:
+        type: "string"
+        description: "Specifies the IP address type (IP_V6, IP_V4)"
+        enum:
+        - "IP_V6"
+        - "IP_V4"
+      ipAddress:
+        type: "string"
+        description: "IP address given by the DNS rule."
+      ttl:
+        type: "number"
+        description: "Time-to-live value."
+    example:
+      domainName: "domainName"
+      ipAddress: "ipAddress"
+      dnsRuleId: "dnsRuleId"
+      ttl: 5.63737665663332876420099637471139430999755859375
+      ipAddressType: "IP_V6"
+  LatencyDescriptor:
+    required:
+    - "latency"
+    - "timeUnit"
+    properties:
+      timeUnit:
+        type: "string"
+        description: "Time unit, e.g., ms"
+      latency:
+        type: "number"
+        description: "The value of the latency"
+    description: "This is used to describe the maximum latency tolerated by the mobile\
+      \ edge application."
+    example:
+      latency: 2.3021358869347654518833223846741020679473876953125
+      timeUnit: "timeUnit"
+  MECTrafficServiceCreationRequest:
+    required:
+    - "regionId"
+    properties:
+      requestId:
+        type: "string"
+        description: "Identifier of the request, assigned by the MEC plugin at creation\
+          \ time."
+      regionId:
+        type: "string"
+        description: "Identifier of the region where the MEC app will be instantiated."
+      appServiceRequired:
+        type: "array"
+        description: "Describes services a mobile edge application requires to run."
+        items:
+          $ref: "#/definitions/ServiceDependency"
+      appServiceOptional:
+        type: "array"
+        description: "Describes services a mobile edge application may use if available."
+        items:
+          $ref: "#/definitions/ServiceDependency"
+      appServiceProduced:
+        type: "array"
+        description: "Describes services a mobile edge application is able to produce\
+          \ to the platform or other mobile edge applications. Only relevant for service-producing\
+          \ apps."
+        items:
+          $ref: "#/definitions/ServiceDescriptor"
+      transportDependencies:
+        type: "array"
+        description: "Transports, if any, that this application requires to be provided\
+          \ by the platform. These transports will be used by the application to deliver\
+          \ services provided by this application. Only relevant for service-producing\
+          \ apps."
+        items:
+          $ref: "#/definitions/TransportDependency"
+      appTrafficRule:
+        type: "array"
+        description: "Describes traffic rules the mobile edge application requires."
+        items:
+          $ref: "#/definitions/TrafficRuleDescriptor"
+      appDNSRule:
+        type: "array"
+        description: "Describes DNS rules the mobile edge application requires."
+        items:
+          $ref: "#/definitions/DNSRuleDescriptor"
+      appLatency:
+        $ref: "#/definitions/LatencyDescriptor"
+      status:
+        type: "string"
+        description: "Status of the request."
+        enum:
+        - "CREATED"
+        - "FAILED"
+        - "PENDING"
+        - "DELETED"
+      createdAt:
+        type: "string"
+        description: "Timestamp of when service request was created."
+      lastModified:
+        type: "string"
+        description: "Timestamp of when service was last modified (e.g., deleted)."
+    example:
+      createdAt: "createdAt"
+      appServiceRequired:
+      - serCategory:
+          name: "name"
+          href: "href"
+          id: "id"
+          version: "version"
+        requestedPermissions: "{}"
+        serName: "serName"
+        serTransportDependencies:
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        version: "version"
+      - serCategory:
+          name: "name"
+          href: "href"
+          id: "id"
+          version: "version"
+        requestedPermissions: "{}"
+        serName: "serName"
+        serTransportDependencies:
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        version: "version"
+      appServiceOptional:
+      - serCategory:
+          name: "name"
+          href: "href"
+          id: "id"
+          version: "version"
+        requestedPermissions: "{}"
+        serName: "serName"
+        serTransportDependencies:
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        version: "version"
+      - serCategory:
+          name: "name"
+          href: "href"
+          id: "id"
+          version: "version"
+        requestedPermissions: "{}"
+        serName: "serName"
+        serTransportDependencies:
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        version: "version"
+      transportDependencies:
+      - serializers: "JSON"
+        transport:
+          protocol: "protocol"
+          security: "{}"
+          type: "REST_HTTP"
+          version: "version"
+        labels:
+        - "labels"
+        - "labels"
+      - serializers: "JSON"
+        transport:
+          protocol: "protocol"
+          security: "{}"
+          type: "REST_HTTP"
+          version: "version"
+        labels:
+        - "labels"
+        - "labels"
+      appTrafficRule:
+      - action: "DROP"
+        trafficRuleId: "trafficRuleId"
+        dstInterface:
+        - interfaceType: "TUNNEL"
+          dstIPAddress: "dstIPAddress"
+          srcMACAddress: "srcMACAddress"
+          dstMACAddress: "dstMACAddress"
+          tunnelInfo:
+            tunnelSrcAddress: "tunnelSrcAddress"
+            tunnelType: "GTP-U"
+            tunnelSpecificData: "{}"
+            tunnelDstAddress: "tunnelDstAddress"
+        - interfaceType: "TUNNEL"
+          dstIPAddress: "dstIPAddress"
+          srcMACAddress: "srcMACAddress"
+          dstMACAddress: "dstMACAddress"
+          tunnelInfo:
+            tunnelSrcAddress: "tunnelSrcAddress"
+            tunnelType: "GTP-U"
+            tunnelSpecificData: "{}"
+            tunnelDstAddress: "tunnelDstAddress"
+        filterType: "FLOW"
+        priority: 0.80082819046101150206595775671303272247314453125
+        trafficFilter:
+        - srcTunnelPort:
+          - "srcTunnelPort"
+          - "srcTunnelPort"
+          dstAddress:
+          - "dstAddress"
+          - "dstAddress"
+          srcAddress:
+          - "srcAddress"
+          - "srcAddress"
+          srcPort:
+          - "srcPort"
+          - "srcPort"
+          token:
+          - "token"
+          - "token"
+          tc: 5.962133916683182377482808078639209270477294921875
+          protocol:
+          - "protocol"
+          - "protocol"
+          dstTunnelPort:
+          - "dstTunnelPort"
+          - "dstTunnelPort"
+          dstPort:
+          - "dstPort"
+          - "dstPort"
+          dscp: 1.46581298050294517310021547018550336360931396484375
+          qci: 6.02745618307040320615897144307382404804229736328125
+          srcTunnelAddress:
+          - "srcTunnelAddress"
+          - "srcTunnelAddress"
+          dstTunnelAddress:
+          - "dstTunnelAddress"
+          - "dstTunnelAddress"
+        - srcTunnelPort:
+          - "srcTunnelPort"
+          - "srcTunnelPort"
+          dstAddress:
+          - "dstAddress"
+          - "dstAddress"
+          srcAddress:
+          - "srcAddress"
+          - "srcAddress"
+          srcPort:
+          - "srcPort"
+          - "srcPort"
+          token:
+          - "token"
+          - "token"
+          tc: 5.962133916683182377482808078639209270477294921875
+          protocol:
+          - "protocol"
+          - "protocol"
+          dstTunnelPort:
+          - "dstTunnelPort"
+          - "dstTunnelPort"
+          dstPort:
+          - "dstPort"
+          - "dstPort"
+          dscp: 1.46581298050294517310021547018550336360931396484375
+          qci: 6.02745618307040320615897144307382404804229736328125
+          srcTunnelAddress:
+          - "srcTunnelAddress"
+          - "srcTunnelAddress"
+          dstTunnelAddress:
+          - "dstTunnelAddress"
+          - "dstTunnelAddress"
+      - action: "DROP"
+        trafficRuleId: "trafficRuleId"
+        dstInterface:
+        - interfaceType: "TUNNEL"
+          dstIPAddress: "dstIPAddress"
+          srcMACAddress: "srcMACAddress"
+          dstMACAddress: "dstMACAddress"
+          tunnelInfo:
+            tunnelSrcAddress: "tunnelSrcAddress"
+            tunnelType: "GTP-U"
+            tunnelSpecificData: "{}"
+            tunnelDstAddress: "tunnelDstAddress"
+        - interfaceType: "TUNNEL"
+          dstIPAddress: "dstIPAddress"
+          srcMACAddress: "srcMACAddress"
+          dstMACAddress: "dstMACAddress"
+          tunnelInfo:
+            tunnelSrcAddress: "tunnelSrcAddress"
+            tunnelType: "GTP-U"
+            tunnelSpecificData: "{}"
+            tunnelDstAddress: "tunnelDstAddress"
+        filterType: "FLOW"
+        priority: 0.80082819046101150206595775671303272247314453125
+        trafficFilter:
+        - srcTunnelPort:
+          - "srcTunnelPort"
+          - "srcTunnelPort"
+          dstAddress:
+          - "dstAddress"
+          - "dstAddress"
+          srcAddress:
+          - "srcAddress"
+          - "srcAddress"
+          srcPort:
+          - "srcPort"
+          - "srcPort"
+          token:
+          - "token"
+          - "token"
+          tc: 5.962133916683182377482808078639209270477294921875
+          protocol:
+          - "protocol"
+          - "protocol"
+          dstTunnelPort:
+          - "dstTunnelPort"
+          - "dstTunnelPort"
+          dstPort:
+          - "dstPort"
+          - "dstPort"
+          dscp: 1.46581298050294517310021547018550336360931396484375
+          qci: 6.02745618307040320615897144307382404804229736328125
+          srcTunnelAddress:
+          - "srcTunnelAddress"
+          - "srcTunnelAddress"
+          dstTunnelAddress:
+          - "dstTunnelAddress"
+          - "dstTunnelAddress"
+        - srcTunnelPort:
+          - "srcTunnelPort"
+          - "srcTunnelPort"
+          dstAddress:
+          - "dstAddress"
+          - "dstAddress"
+          srcAddress:
+          - "srcAddress"
+          - "srcAddress"
+          srcPort:
+          - "srcPort"
+          - "srcPort"
+          token:
+          - "token"
+          - "token"
+          tc: 5.962133916683182377482808078639209270477294921875
+          protocol:
+          - "protocol"
+          - "protocol"
+          dstTunnelPort:
+          - "dstTunnelPort"
+          - "dstTunnelPort"
+          dstPort:
+          - "dstPort"
+          - "dstPort"
+          dscp: 1.46581298050294517310021547018550336360931396484375
+          qci: 6.02745618307040320615897144307382404804229736328125
+          srcTunnelAddress:
+          - "srcTunnelAddress"
+          - "srcTunnelAddress"
+          dstTunnelAddress:
+          - "dstTunnelAddress"
+          - "dstTunnelAddress"
+      appLatency:
+        latency: 2.3021358869347654518833223846741020679473876953125
+        timeUnit: "timeUnit"
+      regionId: "regionId"
+      requestId: "requestId"
+      appDNSRule:
+      - domainName: "domainName"
+        ipAddress: "ipAddress"
+        dnsRuleId: "dnsRuleId"
+        ttl: 5.63737665663332876420099637471139430999755859375
+        ipAddressType: "IP_V6"
+      - domainName: "domainName"
+        ipAddress: "ipAddress"
+        dnsRuleId: "dnsRuleId"
+        ttl: 5.63737665663332876420099637471139430999755859375
+        ipAddressType: "IP_V6"
+      appServiceProduced:
+      - serCategory:
+          name: "name"
+          href: "href"
+          id: "id"
+          version: "version"
+        transportsSupported:
+          serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+        serName: "serName"
+        version: "version"
+      - serCategory:
+          name: "name"
+          href: "href"
+          id: "id"
+          version: "version"
+        transportsSupported:
+          serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+        serName: "serName"
+        version: "version"
+      lastModified: "lastModified"
+      status: "CREATED"
+  MECTrafficServiceCreationResponse:
+    required:
+    - "requestId"
+    properties:
+      requestId:
+        type: "string"
+        description: "Request identifier assigned by the MEC plugin. This will be\
+          \ used for future queries or service deletion requests."
+    example:
+      requestId: "requestId"
+  TerminateAppInstanceOpConfig:
+    required:
+    - "minGracefulTerminationTimeout"
+    properties:
+      minGracefulTerminationTimeout:
+        type: "number"
+        description: "Minimum timeout value for graceful termination of application\
+          \ instance."
+      macRecommendedGracefulTerminationTimeout:
+        type: "number"
+        description: "Maximum recommended timeout value that can be needed to gracefully\
+          \ terminate an application instance of a particular type under certain conditions,\
+          \ such as maximum load condition. This is provided by application provider\
+          \ as information for the operator facilitating the selection of optimal\
+          \ timeout value. This value is not used as constraint."
+    description: "Configuration parameters for the Terminate application instance\
+      \ operation. This follows the TerminateVnfInstanceOpConfig definition of IFA\
+      \ 011."
+    example:
+      macRecommendedGracefulTerminationTimeout: 3.61607674925191080461672754609026014804840087890625
+      minGracefulTerminationTimeout: 9.301444243932575517419536481611430644989013671875
+  ChangeAppInstanceStateOpConfig:
+    required:
+    - "minGracefulStopTimeout"
+    properties:
+      minGracefulStopTimeout:
+        type: "number"
+        description: "Minimum timeout value for graceful stop of application instance."
+      macRecommendedGracefulStopTimeout:
+        type: "number"
+        description: "Maximum recommended timeout value that can be needed to gracefully\
+          \ stop an application instance of a particular type under certain conditions,\
+          \ such as maximum load condition. This is provided by application provider\
+          \ as information for the operator facilitating the selection of optimal\
+          \ timeout value. This value is not used as constraint."
+    description: "Configuration parameters for the change application instance state\
+      \ operation. This follows the OperateVnfOpConfig definition of IFA 011."
+    example:
+      minGracefulStopTimeout: 2.027123023002321833274663731572218239307403564453125
+      macRecommendedGracefulStopTimeout: 4.1456080298839363962315474054776132106781005859375
+  AppD:
+    required:
+    - "appDId"
+    properties:
+      appDId:
+        type: "string"
+        description: "Identifier of this mobile edge application descriptor. This\
+          \ attribute shall be globally unique."
+      appName:
+        type: "string"
+        description: "Name to identify the mobile edge application."
+      appProvider:
+        type: "string"
+        description: "Provider of the application and of the AppD."
+      appSoftVersion:
+        type: "string"
+        description: "AvailableIdentifies the version of software of the mobile edge\
+          \ application."
+      appDVersion:
+        type: "string"
+        description: "Identifies the version of the application descriptor."
+      mecVersion:
+        type: "array"
+        description: "Identifies version(s) of ME system compatible with the mobile\
+          \ edge application described in this version of the AppD."
+        items:
+          type: "string"
+      appInfoName:
+        type: "string"
+        description: "Human readable name for the ME application product. May change\
+          \ during the ME application product lifetime."
+      appDescription:
+        type: "string"
+        description: "Human readable description of the mobile edge application."
+      virtualComputeDescriptor:
+        $ref: "#/definitions/VirtualComputeDescription"
+      swImageDescriptor:
+        type: "array"
+        items:
+          $ref: "#/definitions/SwImageDescriptor"
+      virtualStorageDescriptor:
+        type: "array"
+        items:
+          $ref: "#/definitions/VirtualStorageDescriptor"
+      appExtCpd:
+        type: "array"
+        items:
+          $ref: "#/definitions/AppExternalCpd"
+      appServiceRequired:
+        type: "array"
+        description: "Describes services a mobile edge application requires to run."
+        items:
+          $ref: "#/definitions/ServiceDependency"
+      appServiceOptional:
+        type: "array"
+        description: "Describes services a mobile edge application may use if available."
+        items:
+          $ref: "#/definitions/ServiceDependency"
+      transportDependencies:
+        type: "array"
+        description: "Transports, if any, that this application requires to be provided\
+          \ by the platform. These transports will be used by the application to deliver\
+          \ services provided by this application. Only relevant for service-producing\
+          \ apps."
+        items:
+          $ref: "#/definitions/TransportDependency"
+      appTrafficRule:
+        type: "array"
+        description: "Describes traffic rules the mobile edge application requires."
+        items:
+          $ref: "#/definitions/TrafficRuleDescriptor"
+      appDNSRule:
+        type: "array"
+        description: "Describes DNS rules the mobile edge application requires."
+        items:
+          $ref: "#/definitions/DNSRuleDescriptor"
+      appLatency:
+        $ref: "#/definitions/LatencyDescriptor"
+      terminateAppInstanceOpConfig:
+        $ref: "#/definitions/TerminateAppInstanceOpConfig"
+      changeAppInstanceStateOpConfig:
+        $ref: "#/definitions/ChangeAppInstanceStateOpConfig"
+    example:
+      appSoftVersion: "appSoftVersion"
+      appDVersion: "appDVersion"
+      virtualComputeDescriptor:
+        requestAdditionalCapabilities:
+        - targetPerformanceParameters: "{}"
+          requestedAdditionalCapabilityName: "requestedAdditionalCapabilityName"
+          minRequestedAdditionalCapabilityVersion: "minRequestedAdditionalCapabilityVersion"
+          preferredRequestedAdditionalCapabilityVersion: "preferredRequestedAdditionalCapabilityVersion"
+          supportMandatory: true
+        - targetPerformanceParameters: "{}"
+          requestedAdditionalCapabilityName: "requestedAdditionalCapabilityName"
+          minRequestedAdditionalCapabilityVersion: "minRequestedAdditionalCapabilityVersion"
+          preferredRequestedAdditionalCapabilityVersion: "preferredRequestedAdditionalCapabilityVersion"
+          supportMandatory: true
+        virtualComputeDescId: "virtualComputeDescId"
+        virtualCpu:
+          numVirtualCpu: 6.02745618307040320615897144307382404804229736328125
+          virtualCpuOversubscriptionPolicy: "virtualCpuOversubscriptionPolicy"
+          cpuArchitecture: "cpuArchitecture"
+          virtualCpuPinning:
+            cpuPinningMap: "{}"
+            cpuPinningPolicy: "static"
+          virtualCpuClock: 1.46581298050294517310021547018550336360931396484375
+        virtualMemory:
+          numaEnabled: true
+          virtualMemSize: 0.80082819046101150206595775671303272247314453125
+          virtualMemOversubscriptionPolicy: "virtualMemOversubscriptionPolicy"
+      transportDependencies:
+      - serializers: "JSON"
+        transport:
+          protocol: "protocol"
+          security: "{}"
+          type: "REST_HTTP"
+          version: "version"
+        labels:
+        - "labels"
+        - "labels"
+      - serializers: "JSON"
+        transport:
+          protocol: "protocol"
+          security: "{}"
+          type: "REST_HTTP"
+          version: "version"
+        labels:
+        - "labels"
+        - "labels"
+      appTrafficRule:
+      - action: "DROP"
+        trafficRuleId: "trafficRuleId"
+        dstInterface:
+        - interfaceType: "TUNNEL"
+          dstIPAddress: "dstIPAddress"
+          srcMACAddress: "srcMACAddress"
+          dstMACAddress: "dstMACAddress"
+          tunnelInfo:
+            tunnelSrcAddress: "tunnelSrcAddress"
+            tunnelType: "GTP-U"
+            tunnelSpecificData: "{}"
+            tunnelDstAddress: "tunnelDstAddress"
+        - interfaceType: "TUNNEL"
+          dstIPAddress: "dstIPAddress"
+          srcMACAddress: "srcMACAddress"
+          dstMACAddress: "dstMACAddress"
+          tunnelInfo:
+            tunnelSrcAddress: "tunnelSrcAddress"
+            tunnelType: "GTP-U"
+            tunnelSpecificData: "{}"
+            tunnelDstAddress: "tunnelDstAddress"
+        filterType: "FLOW"
+        priority: 0.80082819046101150206595775671303272247314453125
+        trafficFilter:
+        - srcTunnelPort:
+          - "srcTunnelPort"
+          - "srcTunnelPort"
+          dstAddress:
+          - "dstAddress"
+          - "dstAddress"
+          srcAddress:
+          - "srcAddress"
+          - "srcAddress"
+          srcPort:
+          - "srcPort"
+          - "srcPort"
+          token:
+          - "token"
+          - "token"
+          tc: 5.962133916683182377482808078639209270477294921875
+          protocol:
+          - "protocol"
+          - "protocol"
+          dstTunnelPort:
+          - "dstTunnelPort"
+          - "dstTunnelPort"
+          dstPort:
+          - "dstPort"
+          - "dstPort"
+          dscp: 1.46581298050294517310021547018550336360931396484375
+          qci: 6.02745618307040320615897144307382404804229736328125
+          srcTunnelAddress:
+          - "srcTunnelAddress"
+          - "srcTunnelAddress"
+          dstTunnelAddress:
+          - "dstTunnelAddress"
+          - "dstTunnelAddress"
+        - srcTunnelPort:
+          - "srcTunnelPort"
+          - "srcTunnelPort"
+          dstAddress:
+          - "dstAddress"
+          - "dstAddress"
+          srcAddress:
+          - "srcAddress"
+          - "srcAddress"
+          srcPort:
+          - "srcPort"
+          - "srcPort"
+          token:
+          - "token"
+          - "token"
+          tc: 5.962133916683182377482808078639209270477294921875
+          protocol:
+          - "protocol"
+          - "protocol"
+          dstTunnelPort:
+          - "dstTunnelPort"
+          - "dstTunnelPort"
+          dstPort:
+          - "dstPort"
+          - "dstPort"
+          dscp: 1.46581298050294517310021547018550336360931396484375
+          qci: 6.02745618307040320615897144307382404804229736328125
+          srcTunnelAddress:
+          - "srcTunnelAddress"
+          - "srcTunnelAddress"
+          dstTunnelAddress:
+          - "dstTunnelAddress"
+          - "dstTunnelAddress"
+      - action: "DROP"
+        trafficRuleId: "trafficRuleId"
+        dstInterface:
+        - interfaceType: "TUNNEL"
+          dstIPAddress: "dstIPAddress"
+          srcMACAddress: "srcMACAddress"
+          dstMACAddress: "dstMACAddress"
+          tunnelInfo:
+            tunnelSrcAddress: "tunnelSrcAddress"
+            tunnelType: "GTP-U"
+            tunnelSpecificData: "{}"
+            tunnelDstAddress: "tunnelDstAddress"
+        - interfaceType: "TUNNEL"
+          dstIPAddress: "dstIPAddress"
+          srcMACAddress: "srcMACAddress"
+          dstMACAddress: "dstMACAddress"
+          tunnelInfo:
+            tunnelSrcAddress: "tunnelSrcAddress"
+            tunnelType: "GTP-U"
+            tunnelSpecificData: "{}"
+            tunnelDstAddress: "tunnelDstAddress"
+        filterType: "FLOW"
+        priority: 0.80082819046101150206595775671303272247314453125
+        trafficFilter:
+        - srcTunnelPort:
+          - "srcTunnelPort"
+          - "srcTunnelPort"
+          dstAddress:
+          - "dstAddress"
+          - "dstAddress"
+          srcAddress:
+          - "srcAddress"
+          - "srcAddress"
+          srcPort:
+          - "srcPort"
+          - "srcPort"
+          token:
+          - "token"
+          - "token"
+          tc: 5.962133916683182377482808078639209270477294921875
+          protocol:
+          - "protocol"
+          - "protocol"
+          dstTunnelPort:
+          - "dstTunnelPort"
+          - "dstTunnelPort"
+          dstPort:
+          - "dstPort"
+          - "dstPort"
+          dscp: 1.46581298050294517310021547018550336360931396484375
+          qci: 6.02745618307040320615897144307382404804229736328125
+          srcTunnelAddress:
+          - "srcTunnelAddress"
+          - "srcTunnelAddress"
+          dstTunnelAddress:
+          - "dstTunnelAddress"
+          - "dstTunnelAddress"
+        - srcTunnelPort:
+          - "srcTunnelPort"
+          - "srcTunnelPort"
+          dstAddress:
+          - "dstAddress"
+          - "dstAddress"
+          srcAddress:
+          - "srcAddress"
+          - "srcAddress"
+          srcPort:
+          - "srcPort"
+          - "srcPort"
+          token:
+          - "token"
+          - "token"
+          tc: 5.962133916683182377482808078639209270477294921875
+          protocol:
+          - "protocol"
+          - "protocol"
+          dstTunnelPort:
+          - "dstTunnelPort"
+          - "dstTunnelPort"
+          dstPort:
+          - "dstPort"
+          - "dstPort"
+          dscp: 1.46581298050294517310021547018550336360931396484375
+          qci: 6.02745618307040320615897144307382404804229736328125
+          srcTunnelAddress:
+          - "srcTunnelAddress"
+          - "srcTunnelAddress"
+          dstTunnelAddress:
+          - "dstTunnelAddress"
+          - "dstTunnelAddress"
+      appLatency:
+        latency: 2.3021358869347654518833223846741020679473876953125
+        timeUnit: "timeUnit"
+      appName: "appName"
+      appDNSRule:
+      - domainName: "domainName"
+        ipAddress: "ipAddress"
+        dnsRuleId: "dnsRuleId"
+        ttl: 5.63737665663332876420099637471139430999755859375
+        ipAddressType: "IP_V6"
+      - domainName: "domainName"
+        ipAddress: "ipAddress"
+        dnsRuleId: "dnsRuleId"
+        ttl: 5.63737665663332876420099637471139430999755859375
+        ipAddressType: "IP_V6"
+      appDescription: "appDescription"
+      terminateAppInstanceOpConfig:
+        macRecommendedGracefulTerminationTimeout: 3.61607674925191080461672754609026014804840087890625
+        minGracefulTerminationTimeout: 9.301444243932575517419536481611430644989013671875
+      appProvider: "appProvider"
+      mecVersion:
+      - "mecVersion"
+      - "mecVersion"
+      swImageDescriptor:
+      - swImage: "swImage"
+        size: 2.3021358869347654518833223846741020679473876953125
+        minRam: 5.63737665663332876420099637471139430999755859375
+        name: "name"
+        checksum: "checksum"
+        containerFormat: "containerFormat"
+        supportedVirtualizationEnvironment:
+        - "supportedVirtualizationEnvironment"
+        - "supportedVirtualizationEnvironment"
+        id: "id"
+        diskFormat: "diskFormat"
+        version: "version"
+        minDisk: 5.962133916683182377482808078639209270477294921875
+        operatingSystem: "operatingSystem"
+      - swImage: "swImage"
+        size: 2.3021358869347654518833223846741020679473876953125
+        minRam: 5.63737665663332876420099637471139430999755859375
+        name: "name"
+        checksum: "checksum"
+        containerFormat: "containerFormat"
+        supportedVirtualizationEnvironment:
+        - "supportedVirtualizationEnvironment"
+        - "supportedVirtualizationEnvironment"
+        id: "id"
+        diskFormat: "diskFormat"
+        version: "version"
+        minDisk: 5.962133916683182377482808078639209270477294921875
+        operatingSystem: "operatingSystem"
+      appExtCpd:
+      - cpRole: "cpRole"
+        cpdId: "cpdId"
+        description: "description"
+        virtualNetworkInterfaceRequirements:
+        - name: "name"
+          description: "description"
+          requirement: "{}"
+          supportMandatory: true
+        - name: "name"
+          description: "description"
+          requirement: "{}"
+          supportMandatory: true
+        addressData:
+        - l3AddressData: "{}"
+          addressType: "MAC"
+          l2AddressData: "{}"
+        - l3AddressData: "{}"
+          addressType: "MAC"
+          l2AddressData: "{}"
+        layerProtocol: "Ethernet"
+      - cpRole: "cpRole"
+        cpdId: "cpdId"
+        description: "description"
+        virtualNetworkInterfaceRequirements:
+        - name: "name"
+          description: "description"
+          requirement: "{}"
+          supportMandatory: true
+        - name: "name"
+          description: "description"
+          requirement: "{}"
+          supportMandatory: true
+        addressData:
+        - l3AddressData: "{}"
+          addressType: "MAC"
+          l2AddressData: "{}"
+        - l3AddressData: "{}"
+          addressType: "MAC"
+          l2AddressData: "{}"
+        layerProtocol: "Ethernet"
+      appServiceRequired:
+      - serCategory:
+          name: "name"
+          href: "href"
+          id: "id"
+          version: "version"
+        requestedPermissions: "{}"
+        serName: "serName"
+        serTransportDependencies:
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        version: "version"
+      - serCategory:
+          name: "name"
+          href: "href"
+          id: "id"
+          version: "version"
+        requestedPermissions: "{}"
+        serName: "serName"
+        serTransportDependencies:
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        version: "version"
+      appServiceOptional:
+      - serCategory:
+          name: "name"
+          href: "href"
+          id: "id"
+          version: "version"
+        requestedPermissions: "{}"
+        serName: "serName"
+        serTransportDependencies:
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        version: "version"
+      - serCategory:
+          name: "name"
+          href: "href"
+          id: "id"
+          version: "version"
+        requestedPermissions: "{}"
+        serName: "serName"
+        serTransportDependencies:
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        - serializers: "JSON"
+          transport:
+            protocol: "protocol"
+            security: "{}"
+            type: "REST_HTTP"
+            version: "version"
+          labels:
+          - "labels"
+          - "labels"
+        version: "version"
+      appInfoName: "appInfoName"
+      appDId: "appDId"
+      changeAppInstanceStateOpConfig:
+        minGracefulStopTimeout: 2.027123023002321833274663731572218239307403564453125
+        macRecommendedGracefulStopTimeout: 4.1456080298839363962315474054776132106781005859375
+      virtualStorageDescriptor:
+      - typeOfStorage: "typeOfStorage"
+        swImageDesc: "swImageDesc"
+        id: "id"
+        sizeOfStorage: 7.061401241503109105224211816675961017608642578125
+        rdmaEnabled: true
+      - typeOfStorage: "typeOfStorage"
+        swImageDesc: "swImageDesc"
+        id: "id"
+        sizeOfStorage: 7.061401241503109105224211816675961017608642578125
+        rdmaEnabled: true
+  RadioCoverageAreaList:
     type: "array"
     items:
-      $ref: "#/definitions/Gateways_inner"
+      $ref: "#/definitions/RadioCoverageAreaList_inner"
+  LocationInfo:
+    required:
+    - "altitude"
+    - "latitude"
+    - "longitude"
+    - "range"
+    properties:
+      latitude:
+        type: "number"
+        description: "Latitude coordinate"
+      longitude:
+        type: "number"
+        description: "Longitude coordinate"
+      altitude:
+        type: "number"
+        description: "Altitude coordinate"
+      range:
+        type: "number"
+        description: "Coverage radius (in km)"
+    description: "Geographical location info of a region, expressed as a circle centered\
+      \ at specific coordinates and with a specified range."
+    example:
+      altitude: 1.46581298050294517310021547018550336360931396484375
+      latitude: 0.80082819046101150206595775671303272247314453125
+      range: 5.962133916683182377482808078639209270477294921875
+      longitude: 6.02745618307040320615897144307382404804229736328125
+  MECRegionInfo:
+    properties:
+      mecRegionInfo:
+        $ref: "#/definitions/MECRegionInfo_mecRegionInfo"
+    description: "Information about a region."
+    example:
+      mecRegionInfo:
+        locationInfo:
+          altitude: 1.46581298050294517310021547018550336360931396484375
+          latitude: 0.80082819046101150206595775671303272247314453125
+          range: 5.962133916683182377482808078639209270477294921875
+          longitude: 6.02745618307040320615897144307382404804229736328125
+        regionId: "regionId"
+  gateways:
+    type: "array"
+    items:
+      $ref: "#/definitions/gateways_inner"
   virtualLinks:
     type: "array"
     items:
@@ -951,6 +3465,53 @@ definitions:
         description: "Identifier of the virtualised network resource(s) to be terminated."
     example:
       networkId: "networkId"
+  SubnetData:
+    type: "object"
+    required:
+    - "addressPool"
+    - "cidr"
+    - "ipVersion"
+    - "isDhcpEnabled"
+    - "metadata"
+    - "networkId"
+    - "resourceId"
+    properties:
+      resourceId:
+        type: "string"
+        description: "Identifiers of the network Resource"
+      networkId:
+        type: "string"
+        description: "Network identifier the subnetwork Resource"
+      ipVersion:
+        type: "string"
+        description: "IP version of the subnetwork Resource"
+      gatewayIp:
+        type: "string"
+        description: "gateway of the subnetwork Resource"
+      cidr:
+        type: "string"
+        description: "cidr of the subnetwork Resource"
+      isDhcpEnabled:
+        type: "boolean"
+        description: "enable if dhcp of the network Resource"
+      addressPool:
+        type: "array"
+        description: "optional AddressPool to be used"
+        items:
+          type: "integer"
+      metadata:
+        $ref: "#/definitions/metaData"
+    example:
+      resourceId: "resourceId"
+      metadata: ""
+      ipVersion: "ipVersion"
+      isDhcpEnabled: true
+      addressPool:
+      - 0
+      - 0
+      networkId: "networkId"
+      gatewayIp: "gatewayIp"
+      cidr: "cidr"
   AllocateParameters:
     type: "object"
     required:
@@ -976,7 +3537,6 @@ definitions:
     - "segmentType"
     - "sharingCriteria"
     - "typeNetworkData"
-    - "typeNetworkPortData"
     - "typeSubnetData"
     - "wanLinkId"
     properties:
@@ -1121,6 +3681,10 @@ definitions:
       networkId: "networkId"
       networkType: "networkType"
       segmentType: "segmentType"
+  MECAppDInfo:
+    type: "array"
+    items:
+      $ref: "#/definitions/MECAppDInfo_inner"
   NfviPops:
     type: "array"
     items:
@@ -1148,17 +3712,9 @@ definitions:
     - "logicalLinkPathList"
     - "metaData"
     - "networkLayer"
-    - "reqBandwidth"
-    - "reqLatency"
     properties:
       logicalLinkPathList:
         $ref: "#/definitions/logicalLinkPathList"
-      reqBandwidth:
-        type: "number"
-        description: "requested bandwidth (in Mbps)."
-      reqLatency:
-        type: "number"
-        description: "5GT - requested maximum end-to-end latency (expressed in ms)"
       networkLayer:
         $ref: "#/definitions/networkLayer"
       interNfviPopNetworkType:
@@ -1223,7 +3779,127 @@ definitions:
     type: "array"
     items:
       $ref: "#/definitions/interNfviPopConnnectivityIdList_inner"
+  OperateComputeRequest:
+    type: "object"
+    required:
+    - "computeId"
+    - "computeOperation"
+    properties:
+      computeId:
+        type: "string"
+        description: "Identifier of the compute resource"
+      computeOperation:
+        type: "string"
+        description: "Operation Type on the compute resource"
+    description: "Message for request the operating change of the compute resources"
+    example:
+      computeId: "computeId"
+      computeOperation: "computeOperation"
   AllocateComputeRequest:
+    type: "object"
+    required:
+    - "affinityOrAntiAffinityConstraints"
+    - "computeFlavourId"
+    - "computeName"
+    - "interfaceData"
+    - "locationConstraints"
+    - "mecAppDId"
+    - "metadata"
+    - "reservationId"
+    - "resourceGroupId"
+    - "userData"
+    - "vcImageId"
+    properties:
+      affinityOrAntiAffinityConstraints:
+        type: "array"
+        description: "A list of elements with affinity or anti affinity information\
+          \ of the virtualised compute resource to allocate. There should be a relation\
+          \ between the constraints defined in the different elements of the list."
+        items:
+          $ref: "#/definitions/AllocateComputeRequest_affinityOrAntiAffinityConstraints"
+      computeFlavourId:
+        type: "string"
+        description: "Identifier of the Compute Flavour that provides information\
+          \ about the particular memory, CPU and disk resources for virtualised compute\
+          \ resource to allocate. The Compute Flavour is created with Create Compute\
+          \ Flavour operation"
+      computeName:
+        type: "string"
+        description: "Name provided by the consumer for the virtualised compute resource\
+          \ to allocate. It can be used for identifying resources from consumer side."
+      interfaceData:
+        type: "array"
+        description: "The data of network interfaces which are specific to a Virtual\
+          \ Compute Resource instance."
+        items:
+          $ref: "#/definitions/AllocateComputeRequest_interfaceData"
+      locationConstraints:
+        type: "string"
+        description: "If present, it defines location constraints for the resource(s)\
+          \ is (are) requested to be allocated, e.g. in what particular Resource Zone."
+      metadata:
+        type: "array"
+        description: "The binary software image file."
+        items:
+          $ref: "#/definitions/metaData_inner"
+      reservationId:
+        type: "string"
+        description: "Identifier of the resource reservation applicable to this virtualised\
+          \ resource management operation. Cardinality can be 0 if no resource reservation\
+          \ was used."
+      resourceGroupId:
+        type: "string"
+        description: "Unique identifier of the \"infrastructure resource group\",\
+          \ logical grouping of virtual resources assigned to a tenant within an Infrastructure\
+          \ Domain."
+      userData:
+        $ref: "#/definitions/AllocateComputeRequest_userData"
+      vcImageId:
+        type: "string"
+        description: "Identifier of the virtualisation container software image (e.g.\
+          \ a virtual machine image). Cardinality can be 0 if an \"empty\" virtualisation\
+          \ container is allocated. "
+      mecAppDId:
+        type: "string"
+        description: "Identifier of the MEC AppD reference identifier. Cardinality\
+          \ can be 0 if an VM is not allocated for a MEC application. "
+    example:
+      metadata:
+      - value: "value"
+        key: "key"
+      - value: "value"
+        key: "key"
+      userData:
+        method: "method"
+        content: "content"
+      affinityOrAntiAffinityConstraints:
+      - affinityAntiAffinityResourceGroup: "affinityAntiAffinityResourceGroup"
+        scope: "scope"
+        type: "type"
+        affinityAntiAffinityResourceList:
+          resource:
+          - "resource"
+          - "resource"
+      - affinityAntiAffinityResourceGroup: "affinityAntiAffinityResourceGroup"
+        scope: "scope"
+        type: "type"
+        affinityAntiAffinityResourceList:
+          resource:
+          - "resource"
+          - "resource"
+      reservationId: "reservationId"
+      vcImageId: "vcImageId"
+      mecAppDId: "mecAppDId"
+      locationConstraints: "locationConstraints"
+      interfaceData:
+      - macAddress: "macAddress"
+        ipAddress: "ipAddress"
+      - macAddress: "macAddress"
+        ipAddress: "ipAddress"
+      resourceGroupId: "resourceGroupId"
+      computeFlavourId: "computeFlavourId"
+      computeName: "computeName"
+  VIMAllocateComputeRequest:
     type: "object"
     required:
     - "affinityOrAntiAffinityConstraints"
@@ -1324,16 +4000,10 @@ definitions:
   AllocateNetworkRequest:
     type: "object"
     required:
-    - "affinityOrAntiAffinityConstraints"
-    - "locationConstraints"
     - "metadata"
     - "networkResourceName"
     - "networkResourceType"
     - "reservationId"
-    - "resourceGroupId"
-    - "typeNetworkData"
-    - "typeNetworkPortData"
-    - "typeSubnetData"
     properties:
       affinityOrAntiAffinityConstraints:
         type: "string"
@@ -1375,8 +4045,8 @@ definitions:
         type: "string"
         description: "The binary software image file."
       typeSubnetData:
-        type: "string"
         description: "The binary software image file."
+        $ref: "#/definitions/SubnetData"
     example:
       networkResourceType: "networkResourceType"
       metadata:
@@ -1384,11 +4054,20 @@ definitions:
         key: "key"
       - value: "value"
         key: "key"
-      typeSubnetData: "typeSubnetData"
+      typeSubnetData:
+        resourceId: "resourceId"
+        metadata: ""
+        ipVersion: "ipVersion"
+        isDhcpEnabled: true
+        addressPool:
+        - 0
+        - 0
+        networkId: "networkId"
+        gatewayIp: "gatewayIp"
+        cidr: "cidr"
       networkResourceName: "networkResourceName"
       affinityOrAntiAffinityConstraints: "affinityOrAntiAffinityConstraints"
       reservationId: "reservationId"
-      typeNetworkPortData: "typeNetworkPortData"
       locationConstraints: "locationConstraints"
       resourceGroupId: "resourceGroupId"
       typeNetworkData: "typeNetworkData"
@@ -1407,9 +4086,16 @@ definitions:
         $ref: "#/definitions/AllocateNetworkResult_subnetData"
     example:
       networkData:
-        subnet: "subnet"
-        networkResourceName: "networkResourceName"
+        subnet:
+        - "subnet"
+        - "subnet"
+        metadata:
+        - value: "value"
+          key: "key"
+        - value: "value"
+          key: "key"
         bandwidth: 0.80082819046101150206595775671303272247314453125
+        networkResourceName: "networkResourceName"
         networkQoS:
         - qosName: "qosName"
           qosValue: "qosValue"
@@ -1456,7 +4142,9 @@ definitions:
         resourceId: "resourceId"
         ipVersion: "ipVersion"
         isDhcpEnabled: true
-        addressPool: "addressPool"
+        addressPool:
+        - 1
+        - 1
         cidr: "cidr"
         gatewayIp: "gatewayIp"
         networkId: "networkId"
@@ -2416,6 +5104,7 @@ definitions:
     - "computeName"
     - "flavourId"
     - "hostId"
+    - "mecappID"
     - "operationalState"
     - "vcImageId"
     - "virtualCpu"
@@ -2472,6 +5161,125 @@ definitions:
         type: "string"
         description: "If present, it identifies the Resource Zone where the virtual\
           \ compute resources have been allocated."
+      mecappID:
+        type: "string"
+        description: "If present, it identifies the reference MEC AppD reference Descritptor\
+          \ to apply for the allocated compute resources"
+    example:
+      mecappID: "mecappID"
+      flavourId: "flavourId"
+      vcImageId: "vcImageId"
+      hostId: "hostId"
+      virtualCpu:
+        numVirtualCpu: 6
+        virtualCpuOversubscriptionPolicy: "virtualCpuOversubscriptionPolicy"
+        cpuArchitecture: "cpuArchitecture"
+        virtualCpuPinning:
+          cpuMap: "cpuMap"
+          cpuPinningRules: "cpuPinningRules"
+          cpuPinningPolicy: "cpuPinningPolicy"
+        cpuClock: 0.80082819046101150206595775671303272247314453125
+      virtualDisks: "virtualDisks"
+      computeName: "computeName"
+      virtualMemory:
+        numaEnabled: true
+        virtualMemSize: 1.46581298050294517310021547018550336360931396484375
+        virtualMemOversubscriptionPolicy: "virtualMemOversubscriptionPolicy"
+      virtualNetworkInterface:
+      - typeConfiguration: "typeConfiguration"
+        typeVirtualNic: "typeVirtualNic"
+        macAddress: "macAddress"
+        metadata: "metadata"
+        resourceId: "resourceId"
+        networkPortId: "networkPortId"
+        accelerationCapability: "accelerationCapability"
+        bandwidth: "bandwidth"
+        ipAddress: "ipAddress"
+        networkId: "networkId"
+        operationalState: "operationalState"
+        ownerId: "ownerId"
+      - typeConfiguration: "typeConfiguration"
+        typeVirtualNic: "typeVirtualNic"
+        macAddress: "macAddress"
+        metadata: "metadata"
+        resourceId: "resourceId"
+        networkPortId: "networkPortId"
+        accelerationCapability: "accelerationCapability"
+        bandwidth: "bandwidth"
+        ipAddress: "ipAddress"
+        networkId: "networkId"
+        operationalState: "operationalState"
+        ownerId: "ownerId"
+      computeId: "computeId"
+      accelerationCapability:
+      - "accelerationCapability"
+      - "accelerationCapability"
+      zoneId: "zoneId"
+      operationalState: "operationalState"
+  VIMVirtualCompute:
+    type: "object"
+    required:
+    - "accelerationCapability"
+    - "computeId"
+    - "computeName"
+    - "flavourId"
+    - "hostId"
+    - "operationalState"
+    - "vcImageId"
+    - "virtualCpu"
+    - "virtualDisks"
+    - "virtualMemory"
+    - "virtualNetworkInterface"
+    - "zoneId"
+    properties:
+      accelerationCapability:
+        type: "array"
+        description: "Selected acceleration capabilities (e.g. crypto, GPU) from the\
+          \ set of capabilities offered by the compute node acceleration resources.\
+          \ The cardinality can be 0, if no particular acceleration capability is\
+          \ provided."
+        items:
+          type: "string"
+      computeId:
+        type: "string"
+        description: "Identifier of the virtualised compute resource."
+      computeName:
+        type: "string"
+        description: "Name of the virtualised compute resource."
+      flavourId:
+        type: "string"
+        description: "Identifier of the given compute flavour used to instantiate\
+          \ this virtual compute."
+      hostId:
+        type: "string"
+        description: "Identifier of the host the virtualised compute resource is allocated\
+          \ on."
+      operationalState:
+        type: "string"
+        description: "Operational state of the compute resource."
+      vcImageId:
+        type: "string"
+        description: "Identifier of the virtualisation container software image (e.g.\
+          \ virtual machine image). Cardinality can be 0 if an \"empty\" virtualisation\
+          \ container is allocated."
+      virtualCpu:
+        $ref: "#/definitions/VirtualCompute_virtualCpu"
+      virtualDisks:
+        type: "string"
+        description: "Element with information of the virtualised storage resources\
+          \ (volumes, ephemeral that are attached to the compute resource.)"
+      virtualMemory:
+        $ref: "#/definitions/VirtualCompute_virtualMemory"
+      virtualNetworkInterface:
+        type: "array"
+        description: "Element with information of the instantiated virtual network\
+          \ interfaces of the compute resource."
+        items:
+          $ref: "#/definitions/VIMVirtualCompute_virtualNetworkInterface"
+      zoneId:
+        type: "string"
+        description: "If present, it identifies the Resource Zone where the virtual\
+          \ compute resources have been allocated."
     example:
       flavourId: "flavourId"
       computeId: "computeId"
@@ -2506,7 +5314,9 @@ definitions:
         networkPortId: "networkPortId"
         accelerationCapability: "accelerationCapability"
         bandwidth: "bandwidth"
-        ipAddress: "ipAddress"
+        ipAddress:
+        - "ipAddress"
+        - "ipAddress"
         networkId: "networkId"
         operationalState: "operationalState"
         ownerId: "ownerId"
@@ -2518,7 +5328,9 @@ definitions:
         networkPortId: "networkPortId"
         accelerationCapability: "accelerationCapability"
         bandwidth: "bandwidth"
-        ipAddress: "ipAddress"
+        ipAddress:
+        - "ipAddress"
+        - "ipAddress"
         networkId: "networkId"
         operationalState: "operationalState"
         ownerId: "ownerId"
@@ -2743,14 +5555,18 @@ definitions:
         description: "Only present for shared networks. Indicate the sharing criteria\
           \ for this network. This criteria might be a list of authorized consumers."
       subnet:
-        type: "string"
+        type: "array"
         description: "Only present if the network provides layer 3 connectivity."
+        items:
+          type: "string"
       zoneId:
         type: "string"
         description: "If present, it identifies the Resource Zone where the virtual\
           \ network resources have been allocated."
     example:
-      subnet: "subnet"
+      subnet:
+      - "subnet"
+      - "subnet"
       networkResourceName: "networkResourceName"
       bandwidth: 0.80082819046101150206595775671303272247314453125
       networkQoS:
@@ -2860,15 +5676,47 @@ definitions:
         qosValue: "qosValue"
       networkType: "networkType"
   inline_response_200:
+    type: "object"
     properties:
-      Gateways:
-        $ref: "#/definitions/Gateways"
+      regions:
+        type: "array"
+        items:
+          $ref: "#/definitions/MECRegionInfo"
+    example:
+      regions:
+      - mecRegionInfo:
+          locationInfo:
+            altitude: 1.46581298050294517310021547018550336360931396484375
+            latitude: 0.80082819046101150206595775671303272247314453125
+            range: 5.962133916683182377482808078639209270477294921875
+            longitude: 6.02745618307040320615897144307382404804229736328125
+          regionId: "regionId"
+      - mecRegionInfo:
+          locationInfo:
+            altitude: 1.46581298050294517310021547018550336360931396484375
+            latitude: 0.80082819046101150206595775671303272247314453125
+            range: 5.962133916683182377482808078639209270477294921875
+            longitude: 6.02745618307040320615897144307382404804229736328125
+          regionId: "regionId"
+  inline_response_200_1:
+    type: "object"
+    properties:
+      Regions:
+        $ref: "#/definitions/RadioCoverageAreaList"
+    example:
+      Regions: ""
+  inline_response_200_2:
+    type: "object"
+    properties:
+      gateways:
+        $ref: "#/definitions/gateways"
       virtualLinks:
         $ref: "#/definitions/virtualLinks"
     example:
-      Gateways: ""
+      gateways: ""
       virtualLinks: ""
-  inline_response_200_1:
+  inline_response_200_3:
+    type: "object"
     properties:
       NfviPops:
         $ref: "#/definitions/NfviPops"
@@ -2878,6 +5726,7 @@ definitions:
       NfviPops: ""
       logicalLinkInterNfviPops: ""
   inline_response_201:
+    type: "object"
     required:
     - "interNfviPopConnnectivityId"
     - "interNfviPopNetworkSegmentType"
@@ -2889,7 +5738,87 @@ definitions:
     example:
       interNfviPopNetworkSegmentType: {}
       interNfviPopConnnectivityId: {}
-  Gateways_inner_gatewayAttributes_networkConnectivityEndpoint:
+  PNFlist_inner:
+    type: "object"
+    required:
+    - "pnfinfo"
+    properties:
+      pnfinfo:
+        $ref: "#/definitions/PNFInfo"
+  ServiceDescriptor_transportsSupported:
+    type: "object"
+    properties:
+      transport:
+        $ref: "#/definitions/TransportDescriptor"
+      serializers:
+        type: "string"
+        description: "Information about the serializers in this binding, as defined\
+          \ in the SerializerTypes type in ETSI GS MEC 011."
+        enum:
+        - "JSON"
+        - "XML"
+        - "PROTOBUF3"
+    description: "Indicates transport and serialization formats supported made available\
+      \ to the service-consuming application. Defaults to REST+JSON if absent."
+    example:
+      serializers: "JSON"
+      transport:
+        protocol: "protocol"
+        security: "{}"
+        type: "REST_HTTP"
+        version: "version"
+  RadioCoverageAreaList_inner_radioCoverageAreaInfo:
+    type: "object"
+    required:
+    - "coverageAreaDelay"
+    - "coverageAreaId"
+    - "coverageAreaMaxBandwidth"
+    - "coverageAreaMinBandwidth"
+    - "locationInfo"
+    properties:
+      coverageAreaId:
+        type: "string"
+        description: "(numbered) Identifier of the Radio Coverage Area"
+      coverageAreaGoegraphicalInfo:
+        type: "string"
+        description: "Identifier of the Radio Coverage Area Geographical Information"
+      coverageAreaMinBandwidth:
+        type: "number"
+        description: "Minimum Bandwidth of the Radio Coverage Area"
+      coverageAreaMaxBandwidth:
+        type: "number"
+        description: "Maximum Bandwidth of the Radio Coverage Area"
+      coverageAreaDelay:
+        type: "number"
+        description: "Minimum delay supported by the Radio Coverage Area."
+      locationInfo:
+        $ref: "#/definitions/LocationInfo"
+    description: "5GT - Element providing information for Radio Coverage Area supported\
+      \ by PoP."
+  RadioCoverageAreaList_inner:
+    type: "object"
+    required:
+    - "radioCoverageAreaInfo"
+    properties:
+      radioCoverageAreaInfo:
+        $ref: "#/definitions/RadioCoverageAreaList_inner_radioCoverageAreaInfo"
+  MECRegionInfo_mecRegionInfo:
+    type: "object"
+    properties:
+      regionId:
+        type: "string"
+        description: "Identifier of the region."
+      locationInfo:
+        $ref: "#/definitions/LocationInfo"
+    example:
+      locationInfo:
+        altitude: 1.46581298050294517310021547018550336360931396484375
+        latitude: 0.80082819046101150206595775671303272247314453125
+        range: 5.962133916683182377482808078639209270477294921875
+        longitude: 6.02745618307040320615897144307382404804229736328125
+      regionId: "regionId"
+  gateways_inner_gatewayAttributes_networkConnectivityEndpoint:
+    type: "object"
     required:
     - "netGwInterfceId"
     - "netGwIpAddress"
@@ -2902,7 +5831,8 @@ definitions:
         description: "5GT - Reachable Gw interface ID."
     description: "Information about network connectivity endpoints to the NFVI-PoP\
       \ that the WIM manage."
-  Gateways_inner_gatewayAttributes:
+  gateways_inner_gatewayAttributes:
+    type: "object"
     required:
     - "gatewayId"
     - "geographicalLocationInfo"
@@ -2920,17 +5850,19 @@ definitions:
       networkConnectivityEndpoint:
         type: "array"
         items:
-          $ref: "#/definitions/Gateways_inner_gatewayAttributes_networkConnectivityEndpoint"
+          $ref: "#/definitions/gateways_inner_gatewayAttributes_networkConnectivityEndpoint"
       gatewayId:
         type: "string"
         description: "Identification of the gateway in the format IPv4."
-  Gateways_inner:
+  gateways_inner:
+    type: "object"
     required:
     - "gatewayAttributes"
     properties:
       gatewayAttributes:
-        $ref: "#/definitions/Gateways_inner_gatewayAttributes"
+        $ref: "#/definitions/gateways_inner_gatewayAttributes"
   virtualLinks_inner_virtualLink_networkQoS:
+    type: "object"
     required:
     - "linkCostValue"
     - "linkDelayValue"
@@ -2948,6 +5880,7 @@ definitions:
     description: "5GT - Element providing information about Quality of Service attributes\
       \ (cost and delay) that the network shall support."
   virtualLinks_inner_virtualLink:
+    type: "object"
     required:
     - "availableBandwidth"
     - "dstGwId"
@@ -2988,12 +5921,33 @@ definitions:
     description: "5GT - Element providing information the attributes related to particular\
       \ logical links between pair of NFVI-PoPs."
   virtualLinks_inner:
+    type: "object"
     required:
     - "virtualLink"
     properties:
       virtualLink:
         $ref: "#/definitions/virtualLinks_inner_virtualLink"
+  MECAppDInfo_inner_appDAttributes:
+    type: "object"
+    required:
+    - "appDInfo"
+    - "mecAppDId"
+    properties:
+      appDInfo:
+        type: "string"
+        description: "It provides information about MEC APPD (TBD)"
+      mecAppDId:
+        type: "string"
+        description: "Identification of the MEC APPdId"
+  MECAppDInfo_inner:
+    type: "object"
+    required:
+    - "appDAttributes"
+    properties:
+      appDAttributes:
+        $ref: "#/definitions/MECAppDInfo_inner_appDAttributes"
   NfviPops_inner_nfviPopAttributes_networkConnectivityEndpoint:
+    type: "object"
     required:
     - "netGwIpAddress"
     properties:
@@ -3004,6 +5958,7 @@ definitions:
       \ that the VIM manages which helps build topology information relative to NFVI-PoP\
       \ connectivity to other NFVI-PoP or N-PoP."
   NfviPops_inner_nfviPopAttributes_memoryResourceAttributes:
+    type: "object"
     required:
     - "allocatedCapacity"
     - "availableCapacity"
@@ -3024,6 +5979,7 @@ definitions:
         type: "string"
         description: "The allocated capacity of memory resources."
   NfviPops_inner_nfviPopAttributes_cpuResourceAttributes:
+    type: "object"
     required:
     - "allocatedCapacity"
     - "availableCapacity"
@@ -3044,6 +6000,7 @@ definitions:
         type: "string"
         description: "The allocated capacity of CPU resources."
   NfviPops_inner_nfviPopAttributes_storageResourceAttributes:
+    type: "object"
     required:
     - "allocatedCapacity"
     - "availableCapacity"
@@ -3064,6 +6021,7 @@ definitions:
         type: "string"
         description: "The allocated capacity of storage resources."
   NfviPops_inner_nfviPopAttributes_resourceZoneAttributes:
+    type: "object"
     required:
     - "cpuResourceAttributes"
     - "memoryResourceAttributes"
@@ -3102,14 +6060,65 @@ definitions:
         $ref: "#/definitions/NfviPops_inner_nfviPopAttributes_cpuResourceAttributes"
       storageResourceAttributes:
         $ref: "#/definitions/NfviPops_inner_nfviPopAttributes_storageResourceAttributes"
-  NfviPops_inner_nfviPopAttributes:
+  NfviPops_inner_nfviPopAttributes_covrageLocationInfo:
+    type: "object"
     required:
+    - "altitude"
+    - "latitude"
+    - "longitude"
+    - "range"
+    properties:
+      latitude:
+        type: "number"
+        format: "double"
+        description: "latitude of location Info."
+      longitude:
+        type: "number"
+        format: "double"
+        description: "longitude of location Info."
+      altitude:
+        type: "number"
+        format: "float"
+        description: "altitude of location Info."
+      range:
+        type: "number"
+        format: "float"
+        description: "radius of location Info."
+    description: "geographical location info covered by radio region"
+  NfviPops_inner_nfviPopAttributes_RadioCoverageAreas:
+    type: "object"
+    properties:
+      coverageAreaId:
+        type: "string"
+        description: "Coverage Area Identifier supported by Radio PoP"
+      covrageLocationInfo:
+        $ref: "#/definitions/NfviPops_inner_nfviPopAttributes_covrageLocationInfo"
+      minBandwidth:
+        type: "number"
+        description: "Minimummum bandwidth provided by the coverage area"
+      maxBandwidth:
+        type: "number"
+        description: "Maximum bandwidth provided by the coverage area"
+      delay:
+        type: "number"
+        description: "minimum delay guaranteed by the coverage area"
+    description: "Information about Mec Specific parameters."
+  NfviPops_inner_nfviPopAttributes:
+    type: "object"
+    required:
+    - "MecCapable"
+    - "MecRegions"
+    - "RadioCapable"
+    - "federatedVimId"
     - "geographicalLocationInfo"
     - "networkConnectivityEndpoint"
     - "nfviPopId"
+    - "pnflist"
     - "resourceZoneAttributes"
     - "vimId"
     properties:
+      pnflist:
+        $ref: "#/definitions/PNFlist"
       geographicalLocationInfo:
         type: "string"
         description: "It provides information about the geographic location (e.g.\
@@ -3118,6 +6127,9 @@ definitions:
       vimId:
         type: "string"
         description: "Identification of the VIM."
+      federatedVimId:
+        type: "string"
+        description: "Identification of the Federated VIM."
       networkConnectivityEndpoint:
         type: "array"
         items:
@@ -3129,13 +6141,29 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/NfviPops_inner_nfviPopAttributes_resourceZoneAttributes"
+      MecCapable:
+        type: "string"
+        description: "Set if PoP contains MEC attributes"
+      MecRegions:
+        type: "array"
+        items:
+          $ref: "#/definitions/MECRegionInfo"
+      RadioCapable:
+        type: "string"
+        description: "Set if PoP contains Radio attributes"
+      RadioCoverageAreas:
+        type: "array"
+        items:
+          $ref: "#/definitions/NfviPops_inner_nfviPopAttributes_RadioCoverageAreas"
   NfviPops_inner:
+    type: "object"
     required:
     - "nfviPopAttributes"
     properties:
       nfviPopAttributes:
         $ref: "#/definitions/NfviPops_inner_nfviPopAttributes"
   logicalLinkInterNfviPops_inner_logicalLinks_networkQoS:
+    type: "object"
     required:
     - "linkCost"
     - "linkCostValue"
@@ -3157,6 +6185,7 @@ definitions:
     description: "5GT - Element providing information about Quality of Service attributes\
       \ (cost and delay) that the network shall support."
   logicalLinkInterNfviPops_inner_logicalLinks:
+    type: "object"
     required:
     - "availableBandwidth"
     - "dstGwIpAddress"
@@ -3206,12 +6235,14 @@ definitions:
     description: "5GT - Element providing information the attributes related to particular\
       \ logical links between pair of NFVI-PoPs."
   logicalLinkInterNfviPops_inner:
+    type: "object"
     required:
     - "logicalLinks"
     properties:
       logicalLinks:
         $ref: "#/definitions/logicalLinkInterNfviPops_inner_logicalLinks"
   metaData_inner:
+    type: "object"
     required:
     - "key"
     - "value"
@@ -3224,18 +6255,31 @@ definitions:
       value: "value"
       key: "key"
   logicalLinkPathList_inner:
+    type: "object"
     required:
     - "logicalLinkAttributes"
+    - "reqBandwidth"
+    - "reqLatency"
     properties:
       logicalLinkAttributes:
         $ref: "#/definitions/logicalLinkAttributes"
+      reqBandwidth:
+        type: "number"
+        description: "requested bandwidth (in Mbps)."
+      reqLatency:
+        type: "number"
+        description: "5GT - requested maximum end-to-end latency (expressed in ms)"
+      metaData:
+        $ref: "#/definitions/metaData"
   interNfviPopConnnectivityIdList_inner:
+    type: "object"
     required:
     - "interNfviPopConnnectivityId"
     properties:
       interNfviPopConnnectivityId:
         $ref: "#/definitions/interNfviPopConnnectivityId"
   AllocateComputeRequest_affinityAntiAffinityResourceList:
+    type: "object"
     required:
     - "resource"
     properties:
@@ -3253,6 +6297,7 @@ definitions:
       - "resource"
       - "resource"
   AllocateComputeRequest_affinityOrAntiAffinityConstraints:
+    type: "object"
     required:
     - "affinityAntiAffinityResourceGroup"
     - "affinityAntiAffinityResourceList"
@@ -3287,6 +6332,7 @@ definitions:
         - "resource"
         - "resource"
   AllocateComputeRequest_interfaceData:
+    type: "object"
     required:
     - "ipAddress"
     - "macAddress"
@@ -3307,6 +6353,7 @@ definitions:
       macAddress: "macAddress"
       ipAddress: "ipAddress"
   AllocateComputeRequest_userData:
+    type: "object"
     required:
     - "content"
     - "method"
@@ -3325,6 +6372,7 @@ definitions:
       method: "method"
       content: "content"
   AllocateNetworkResult_networkData_networkPort:
+    type: "object"
     required:
     - "attachedResourceId"
     - "bandwidth"
@@ -3386,6 +6434,7 @@ definitions:
       operationalState: "operationalState"
       attachedResourceId: "attachedResourceId"
   AllocateNetworkResult_networkData_networkQoS:
+    type: "object"
     required:
     - "qosName"
     - "qosValue"
@@ -3400,9 +6449,11 @@ definitions:
       qosName: "qosName"
       qosValue: "qosValue"
   AllocateNetworkResult_networkData:
+    type: "object"
     required:
     - "bandwidth"
     - "isShared"
+    - "metadata"
     - "networkPort"
     - "networkQoS"
     - "networkResourceId"
@@ -3459,19 +6510,34 @@ definitions:
         description: "Only present for shared networks. Indicate the sharing criteria\
           \ for this network. This criteria might be a list of authorized consumers."
       subnet:
-        type: "string"
+        type: "array"
         description: "Only present if the network provides layer 3 connectivity."
+        items:
+          type: "string"
       zoneId:
         type: "string"
         description: "If present, it identifies the Resource Zone where the virtual\
           \ network resources have been allocated."
+      metadata:
+        type: "array"
+        description: "List of metadata key-value pairs used by the consumer to\n \
+          \ associate meaningful metadata to the related virtualised resource."
+        items:
+          $ref: "#/definitions/metaData_inner"
     description: "If network types are created satisfactorily, it contains the data\
       \ relative to the instantiated virtualised network resource. Cardinality can\
       \ be \"0\" if the request did not include creation of such type of resource."
     example:
-      subnet: "subnet"
-      networkResourceName: "networkResourceName"
+      subnet:
+      - "subnet"
+      - "subnet"
+      metadata:
+      - value: "value"
+        key: "key"
+      - value: "value"
+        key: "key"
       bandwidth: 0.80082819046101150206595775671303272247314453125
+      networkResourceName: "networkResourceName"
       networkQoS:
       - qosName: "qosName"
         qosValue: "qosValue"
@@ -3510,6 +6576,7 @@ definitions:
       segmentType: "segmentType"
       sharingCriteria: "sharingCriteria"
   AllocateNetworkResult_networkPortData:
+    type: "object"
     required:
     - "attachedResourceId"
     - "bandwidth"
@@ -3574,10 +6641,10 @@ definitions:
       operationalState: "operationalState"
       attachedResourceId: "attachedResourceId"
   AllocateNetworkResult_subnetData:
+    type: "object"
     required:
     - "addressPool"
     - "cidr"
-    - "gatewayIp"
     - "ipVersion"
     - "isDhcpEnabled"
     - "networkId"
@@ -3585,10 +6652,12 @@ definitions:
     - "resourceId"
     properties:
       addressPool:
-        type: "string"
+        type: "array"
         description: "Address pools for the network/subnetwork. The cardinality can\
           \ be 0 when VIM is allowed to allocate all addresses in the CIDR except\
           \ for the address of the network/subnetwork gateway."
+        items:
+          type: "integer"
       cidr:
         type: "string"
         description: "The CIDR of the network/subnetwork, i.e. network address and\
@@ -3633,12 +6702,15 @@ definitions:
       resourceId: "resourceId"
       ipVersion: "ipVersion"
       isDhcpEnabled: true
-      addressPool: "addressPool"
+      addressPool:
+      - 1
+      - 1
       cidr: "cidr"
       gatewayIp: "gatewayIp"
       networkId: "networkId"
       operationalState: "operationalState"
   CreateComputeResourceQuotaRequest_virtualComputeQuota:
+    type: "object"
     required:
     - "numVCPUs"
     - "numVcInstances"
@@ -3670,6 +6742,7 @@ definitions:
       virtualMemSize: 1.46581298050294517310021547018550336360931396484375
       numVCPUs: 0
   CreateComputeResourceReservationRequest_computePoolReservation_computeAttributes:
+    type: "object"
     required:
     - "accelerationCapability"
     - "cpuArchitecture"
@@ -3697,6 +6770,7 @@ definitions:
       accelerationCapability: "accelerationCapability"
       cpuArchitecture: "cpuArchitecture"
   CreateComputeResourceReservationRequest_computePoolReservation:
+    type: "object"
     required:
     - "computeAttributes"
     - "numCpuCores"
@@ -3727,6 +6801,7 @@ definitions:
       virtualMemSize: 1.46581298050294517310021547018550336360931396484375
       numCpuCores: 0
   CreateComputeResourceReservationRequest_containerFlavour_storageAttributes:
+    type: "object"
     required:
     - "flavourId"
     - "hostId"
@@ -3782,6 +6857,7 @@ definitions:
       storageId: "storageId"
       storageName: "storageName"
   CreateComputeResourceReservationRequest_containerFlavour_virtualCpuPinning:
+    type: "object"
     required:
     - "cpuMap"
     - "cpuPinningPolicy"
@@ -3808,6 +6884,7 @@ definitions:
       cpuPinningRules: "cpuPinningRules"
       cpuPinningPolicy: "cpuPinningPolicy"
   CreateComputeResourceReservationRequest_containerFlavour_virtualCpu:
+    type: "object"
     required:
     - "cpuArchitecture"
     - "cpuClock"
@@ -3843,6 +6920,7 @@ definitions:
         cpuPinningPolicy: "cpuPinningPolicy"
       cpuClock: 6.02745618307040320615897144307382404804229736328125
   CreateComputeResourceReservationRequest_containerFlavour_virtualMemory:
+    type: "object"
     required:
     - "numaEnabled"
     - "virtualMemOversubscriptionPolicy"
@@ -3866,6 +6944,7 @@ definitions:
       virtualMemSize: 5.962133916683182377482808078639209270477294921875
       virtualMemOversubscriptionPolicy: "virtualMemOversubscriptionPolicy"
   CreateComputeResourceReservationRequest_containerFlavour_virtualNetworkInterface:
+    type: "object"
     required:
     - "accelerationCapability"
     - "bandwidth"
@@ -3949,6 +7028,7 @@ definitions:
       operationalState: "operationalState"
       ownerId: "ownerId"
   CreateComputeResourceReservationRequest_containerFlavour:
+    type: "object"
     required:
     - "accelerationCapability"
     - "flavourId"
@@ -4041,6 +7121,7 @@ definitions:
         operationalState: "operationalState"
         ownerId: "ownerId"
   CreateComputeResourceReservationRequest_virtualisationContainerReservation:
+    type: "object"
     required:
     - "containerFlavour"
     - "containerId"
@@ -4109,6 +7190,7 @@ definitions:
           ownerId: "ownerId"
       containerId: "containerId"
   CreateNetworkResourceQuotaRequest_virtualComputeQuota:
+    type: "object"
     required:
     - "numPorts"
     - "numPublicIps"
@@ -4140,6 +7222,7 @@ definitions:
       numPorts: 0
       numSubnets: 1
   CreateNetworkResourceReservationRequest_networkReservation_networkAttributes:
+    type: "object"
     required:
     - "bandwidth"
     - "isShared"
@@ -4181,6 +7264,7 @@ definitions:
       isShared: true
       segmentType: "segmentType"
   CreateNetworkResourceReservationRequest_networkReservation_networkPorts:
+    type: "object"
     required:
     - "bandwidth"
     - "portId"
@@ -4222,6 +7306,7 @@ definitions:
       segmentId: "segmentId"
       portId: 1
   CreateNetworkResourceReservationRequest_networkReservation:
+    type: "object"
     required:
     - "networkAttributes"
     - "networkPorts"
@@ -4272,6 +7357,7 @@ definitions:
         segmentId: "segmentId"
         portId: 1
   QueryComputeCapacityRequest_timePeriod:
+    type: "object"
     required:
     - "startTime"
     - "stopTime"
@@ -4291,6 +7377,7 @@ definitions:
       startTime: "2000-01-23T04:56:07.000+00:00"
       stopTime: "2000-01-23T04:56:07.000+00:00"
   ReservedVirtualCompute_computePoolReserved_computeAttributes:
+    type: "object"
     required:
     - "accelerationCapability"
     - "cpuArchitecture"
@@ -4318,6 +7405,7 @@ definitions:
       accelerationCapability: "accelerationCapability"
       cpuArchitecture: "cpuArchitecture"
   ReservedVirtualCompute_computePoolReserved:
+    type: "object"
     required:
     - "computeAttributes"
     - "numCpuCores"
@@ -4355,6 +7443,7 @@ definitions:
       zoneId: "zoneId"
       numCpuCores: 0
   ReservedVirtualCompute_virtualisationContainerReserved_flavourId:
+    type: "object"
     required:
     - "computeAttributes"
     - "numCpuCores"
@@ -4390,6 +7479,7 @@ definitions:
       zoneId: "zoneId"
       numCpuCores: 5
   ReservedVirtualCompute_virtualisationContainerReserved_virtualCpu:
+    type: "object"
     required:
     - "cpuArchitecture"
     - "cpuClock"
@@ -4426,6 +7516,7 @@ definitions:
         cpuPinningPolicy: "cpuPinningPolicy"
       cpuClock: 7.061401241503109105224211816675961017608642578125
   ReservedVirtualCompute_virtualisationContainerReserved_virtualMemory:
+    type: "object"
     required:
     - "numaEnabled"
     - "virtualMemOversubscriptionPolicy"
@@ -4449,6 +7540,7 @@ definitions:
       virtualMemSize: 3.61607674925191080461672754609026014804840087890625
       virtualMemOversubscriptionPolicy: "virtualMemOversubscriptionPolicy"
   ReservedVirtualCompute_virtualisationContainerReserved_virtualNetworkInterface:
+    type: "object"
     required:
     - "accelerationCapability"
     - "bandwidth"
@@ -4531,6 +7623,7 @@ definitions:
       operationalState: "operationalState"
       ownerId: "ownerId"
   ReservedVirtualCompute_virtualisationContainerReserved:
+    type: "object"
     required:
     - "accelerationCapability"
     - "containerId"
@@ -4659,6 +7752,7 @@ definitions:
         operationalState: "operationalState"
         ownerId: "ownerId"
   ReservedVirtualNetwork_networkAttributes:
+    type: "object"
     required:
     - "bandwidth"
     - "isShared"
@@ -4702,6 +7796,7 @@ definitions:
       isShared: true
       segmentType: "segmentType"
   ReservedVirtualNetwork_networkPorts:
+    type: "object"
     required:
     - "bandwidth"
     - "portId"
@@ -4742,6 +7837,7 @@ definitions:
       segmentId: "segmentId"
       portId: "portId"
   VirtualCompute_virtualCpu:
+    type: "object"
     required:
     - "cpuArchitecture"
     - "cpuClock"
@@ -4778,6 +7874,7 @@ definitions:
         cpuPinningPolicy: "cpuPinningPolicy"
       cpuClock: 0.80082819046101150206595775671303272247314453125
   VirtualCompute_virtualMemory:
+    type: "object"
     required:
     - "numaEnabled"
     - "virtualMemOversubscriptionPolicy"
@@ -4800,7 +7897,95 @@ definitions:
       numaEnabled: true
       virtualMemSize: 1.46581298050294517310021547018550336360931396484375
       virtualMemOversubscriptionPolicy: "virtualMemOversubscriptionPolicy"
+  VIMVirtualCompute_virtualNetworkInterface:
+    type: "object"
+    required:
+    - "accelerationCapability"
+    - "bandwidth"
+    - "ipAddress"
+    - "macAddress"
+    - "metadata"
+    - "networkId"
+    - "networkPortId"
+    - "operationalState"
+    - "ownerId"
+    - "resourceId"
+    - "typeConfiguration"
+    - "typeVirtualNic"
+    properties:
+      accelerationCapability:
+        type: "string"
+        description: "Shows the acceleration capabilities utilized by the virtual\
+          \ network interface. The cardinality can be 0, if no acceleration capability\
+          \ is utilized."
+      bandwidth:
+        type: "string"
+        description: "The bandwidth of the virtual network interface (in Mbps)."
+      ipAddress:
+        type: "array"
+        description: "The virtual network interface can be configured with specific\
+          \ IP address(es) associated to the network to be attached to. The cardinality\
+          \ can be 0 in the case that a network interface is created without being\
+          \ attached to any specific network, or when an IP address can be automatically\
+          \ configured, e.g. by DHCP."
+        items:
+          type: "string"
+      macAddress:
+        type: "string"
+        description: "The MAC address of the virtual network interface."
+      metadata:
+        type: "string"
+        description: "List of metadata key-value pairs used by the consumer to associate\
+          \ meaningful metadata to the related virtualised resource."
+      networkId:
+        type: "string"
+        description: "In the case when the virtual network interface is attached to\
+          \ the network, it identifies such a network. The cardinality can be 0 in\
+          \ the case that a network interface is created without being attached to\
+          \ any specific network."
+      networkPortId:
+        type: "string"
+        description: "If the virtual network interface is attached to a specific network\
+          \ port, it identifies such a network port. The cardinality can be 0 in the\
+          \ case that a network interface is created without any specific network\
+          \ port attachment."
+      operationalState:
+        type: "string"
+        description: "The operational state of the virtual network interface."
+      ownerId:
+        type: "string"
+        description: "Identifier of the owner of the network interface (e.g. a virtualised\
+          \ compute resource). "
+      resourceId:
+        type: "string"
+        description: "Identifier of the virtual network interface."
+      typeConfiguration:
+        type: "string"
+        description: "Extra configuration that the virtual network interface supports\
+          \ based on the type of virtual network interface, including support for\
+          \ SR-IOV with configuration of virtual functions (VF)."
+      typeVirtualNic:
+        type: "string"
+        description: "Type of network interface. The type allows for defining how\
+          \ such interface is to be realized, e.g. normal virtual NIC, with direct\
+          \ PCI passthrough, etc."
+    example:
+      typeConfiguration: "typeConfiguration"
+      typeVirtualNic: "typeVirtualNic"
+      macAddress: "macAddress"
+      metadata: "metadata"
+      resourceId: "resourceId"
+      networkPortId: "networkPortId"
+      accelerationCapability: "accelerationCapability"
+      bandwidth: "bandwidth"
+      ipAddress:
+      - "ipAddress"
+      - "ipAddress"
+      networkId: "networkId"
+      operationalState: "operationalState"
+      ownerId: "ownerId"
   VirtualComputeResourceInformation_virtualCPU:
+    type: "object"
     required:
     - "cpuArchitecture"
     - "cpuClock"
@@ -4837,6 +8022,7 @@ definitions:
       cpuClock: 0.80082819046101150206595775671303272247314453125
       virtualCpuPinningSupported: true
   VirtualComputeResourceInformation_virtualMemory:
+    type: "object"
     required:
     - "numaSupported"
     - "virtualMemOversubscriptionPolicy"

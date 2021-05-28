@@ -27,7 +27,10 @@ import java.io.IOException;
 /**
  * ResourceGroupIds
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class ResourceGroupIds {
   @SerializedName("resourceGroupId")
   private String resourceGroupId = null;

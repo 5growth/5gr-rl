@@ -14,9 +14,16 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import com.rl.extinterface.nbi.swagger.model.MetaData;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +31,10 @@ import java.util.List;
  * If subnet types are created satisfactorily, it contains the data relative to the allocated subnet. Cardinality can be \&quot;0\&quot; if the request did not include creation of such type of resource.
  */
 @ApiModel(description = "If subnet types are created satisfactorily, it contains the data relative to the allocated subnet. Cardinality can be \"0\" if the request did not include creation of such type of resource.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class AllocateNetworkResultSubnetData {
   @SerializedName("addressPool")
   private List<Integer> addressPool = new ArrayList<Integer>();
@@ -42,7 +52,7 @@ public class AllocateNetworkResultSubnetData {
   private Boolean isDhcpEnabled = null;
 
   @SerializedName("metadata")
-  private List<MetaDataInner> metadata = null;
+  private MetaData metadata = null;
 
   @SerializedName("networkId")
   private String networkId = null;
@@ -148,29 +158,21 @@ public class AllocateNetworkResultSubnetData {
     this.isDhcpEnabled = isDhcpEnabled;
   }
 
-  public AllocateNetworkResultSubnetData metadata(List<MetaDataInner> metadata) {
+  public AllocateNetworkResultSubnetData metadata(MetaData metadata) {
     this.metadata = metadata;
     return this;
   }
 
-  public AllocateNetworkResultSubnetData addMetadataItem(MetaDataInner metadataItem) {
-    if (this.metadata == null) {
-      this.metadata = new ArrayList<MetaDataInner>();
-    }
-    this.metadata.add(metadataItem);
-    return this;
-  }
-
    /**
-   * List of metadata key-value pairs used by the consumer to associate meaningful metadata to the related virtualised resource.
+   * Get metadata
    * @return metadata
   **/
-  @ApiModelProperty(value = "List of metadata key-value pairs used by the consumer to associate meaningful metadata to the related virtualised resource.")
-  public List<MetaDataInner> getMetadata() {
+  @ApiModelProperty(value = "")
+  public MetaData getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(List<MetaDataInner> metadata) {
+  public void setMetadata(MetaData metadata) {
     this.metadata = metadata;
   }
 

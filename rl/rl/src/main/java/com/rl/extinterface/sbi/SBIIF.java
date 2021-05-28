@@ -5,7 +5,6 @@
  */
 package com.rl.extinterface.sbi;
 
-import com.rl.events.resourcemanagement.VirtualQueueAssignment.QosPerformanceIsolationReq;
 import com.rl.extinterface.sbi.IFA005Threads.QueryWIMThread;
 import com.rl.extinterface.sbi.IFA005Threads.QueryMECThread;
 import com.rl.extinterface.sbi.IFA005Threads.TerminateVIMComputeThread;
@@ -78,7 +77,6 @@ import com.rl.extinterface.sbi.StubThreads.TerminateMECThreadStub;
 import com.rl.extinterface.sbi.StubThreads.TerminateVIMComputeStub;
 import com.rl.extinterface.sbi.StubThreads.TerminateVIMNetworkStub;
 import com.rl.extinterface.sbi.StubThreads.TerminateWIMNetworkStub;
-import com.rl.extinterface.sbi.P4SlicerThreads.AssignQosQueueThread;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -1415,49 +1413,6 @@ public class SBIIF {
 //                                                    allwimreq.getWIMElem(),true);
 //        System.out.println("SBIIF --> Post NetworkTerminateWIMReply Event");
 //        SingletonEventBus.getBus().post(allwimrep);
-    }
-
-    @Subscribe
-    public void handle_QoSPerfomanceIsolationReq(QosPerformanceIsolationReq qosPerfReq) {
-        System.out.println("SBIIF --> QoSPerfomanceIsolationReq Event");
-
-        //START - Retrieve Domain el from domid using database connection
-        String typeval = null;
-        String nameval = null;
-        String ipval = null;
-        Long portval = null;
-        Long idval = null;
-
-        try {
-            java.sql.Connection conn = DbDomainDatasource.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("Select domId,name,type,ip,port from domain where domId=?");
-            ps.setLong(1, qosPerfReq.getDomid());
-            java.sql.ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-
-                typeval = rs.getString("type");
-                nameval = rs.getString("name");
-                ipval = rs.getString("ip");
-                portval = rs.getLong("port");
-                idval = rs.getLong("domId");
-
-            }
-            rs.close();
-            ps.close();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(SBIIF.class
-                    .getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-
-        DomainElem el = new DomainElem(typeval, nameval, ipval, portval, idval);
-        // END - Retrieve
-        if (el == null) {
-            //TODO: handle error reply
-        } else {
-            AssignQosQueueThread thr = new AssignQosQueueThread(el, qosPerfReq);
-            thr.start();
-        }
     }
     
 }

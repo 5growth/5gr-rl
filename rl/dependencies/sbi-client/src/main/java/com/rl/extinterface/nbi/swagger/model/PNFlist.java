@@ -14,14 +14,20 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
 import io.swagger.annotations.ApiModel;
+import com.rl.extinterface.nbi.swagger.model.PNFlistInner;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * List of supported PNF
  */
 @ApiModel(description = "List of supported PNF")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class PNFlist extends ArrayList<PNFlistInner> {
 
   @Override

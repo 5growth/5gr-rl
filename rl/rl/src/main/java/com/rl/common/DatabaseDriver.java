@@ -1458,7 +1458,7 @@ public class DatabaseDriver {
                     zonel.setZoneName(rs.getString("zoneName"));
                     zonel.setZoneProperty(rs.getString("zoneProperty"));
                     zonel.setZoneState(rs.getString("zoneState"));
-                    zonel.setMetadata(rs.getString("metadata"));
+                    //zonel.setMetadata(rs.getString("metadata"));
 
                     System.out.println("zoneid.zoneid: " + zonel.getZoneId() + "");
                     System.out.println("zoneid.zonename: " + zonel.getZoneName() + "");
@@ -3785,7 +3785,7 @@ public class DatabaseDriver {
                             + "macAddress, "
                             + "computeServiceId) "
                             + "VALUES(?,?,?)");
-                    ps_interfacedata.setString(1, interfacedata.getIpAddress().get(0));
+                    ps_interfacedata.setString(1, interfacedata.getIpAddress());
                     ps_interfacedata.setString(2, interfacedata.getMacAddress());
                     ps_interfacedata.setLong(3, computeServId);
                     ps_interfacedata.executeUpdate();
@@ -6013,7 +6013,7 @@ public class DatabaseDriver {
                 java.sql.ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     vnflist.add(rs.getString("vnfId"));
-                    System.out.println("DatabaseDriver.handle_ComputeTerminateDBQuery ---> VM ID: " + rs.getString("computeId") + "");
+                    System.out.println("DatabaseDriver.handle_ComputeTerminateDBQuery ---> VM ID: " + rs.getString("vnfId") + "");
                 }
                 rs.close();
                 ps.close();

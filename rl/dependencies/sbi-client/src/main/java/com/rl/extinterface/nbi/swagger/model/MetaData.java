@@ -14,14 +14,20 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
 import io.swagger.annotations.ApiModel;
+import com.rl.extinterface.nbi.swagger.model.MetaDataInner;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * metaData information used to carry ionformat metadata.
  */
 @ApiModel(description = "metaData information used to carry ionformat metadata.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class MetaData extends ArrayList<MetaDataInner> {
 
   @Override

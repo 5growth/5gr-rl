@@ -1,9 +1,5 @@
 package com.ericsson.dummyplugin.nbi.swagger.model;
 
-import com.ericsson.dummyplugin.nbi.swagger.model.AllocateComputeRequestAffinityOrAntiAffinityConstraints;
-import com.ericsson.dummyplugin.nbi.swagger.model.AllocateComputeRequestUserData;
-import com.ericsson.dummyplugin.nbi.swagger.model.MetaDataInner;
-import com.ericsson.dummyplugin.nbi.swagger.model.VIMAllocateComputeRequestInterfaceData;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.*;
@@ -20,7 +16,7 @@ public class VIMAllocateComputeRequest   {
   private @Valid List<AllocateComputeRequestAffinityOrAntiAffinityConstraints> affinityOrAntiAffinityConstraints = new ArrayList<AllocateComputeRequestAffinityOrAntiAffinityConstraints>();
   private @Valid String computeFlavourId = null;
   private @Valid String computeName = null;
-  private @Valid List<VIMAllocateComputeRequestInterfaceData> interfaceData = new ArrayList<VIMAllocateComputeRequestInterfaceData>();
+  private @Valid List<AllocateComputeRequestInterfaceData> interfaceData = new ArrayList<AllocateComputeRequestInterfaceData>();
   private @Valid String locationConstraints = null;
   private @Valid List<MetaDataInner> metadata = new ArrayList<MetaDataInner>();
   private @Valid String reservationId = null;
@@ -88,7 +84,7 @@ public class VIMAllocateComputeRequest   {
   /**
    * The data of network interfaces which are specific to a Virtual Compute Resource instance.
    **/
-  public VIMAllocateComputeRequest interfaceData(List<VIMAllocateComputeRequestInterfaceData> interfaceData) {
+  public VIMAllocateComputeRequest interfaceData(List<AllocateComputeRequestInterfaceData> interfaceData) {
     this.interfaceData = interfaceData;
     return this;
   }
@@ -97,10 +93,10 @@ public class VIMAllocateComputeRequest   {
   @ApiModelProperty(required = true, value = "The data of network interfaces which are specific to a Virtual Compute Resource instance.")
   @JsonProperty("interfaceData")
   @NotNull
-  public List<VIMAllocateComputeRequestInterfaceData> getInterfaceData() {
+  public List<AllocateComputeRequestInterfaceData> getInterfaceData() {
     return interfaceData;
   }
-  public void setInterfaceData(List<VIMAllocateComputeRequestInterfaceData> interfaceData) {
+  public void setInterfaceData(List<AllocateComputeRequestInterfaceData> interfaceData) {
     this.interfaceData = interfaceData;
   }
 

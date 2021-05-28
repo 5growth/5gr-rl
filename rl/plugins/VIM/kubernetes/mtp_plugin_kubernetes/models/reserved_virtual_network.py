@@ -6,9 +6,10 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.reserved_virtual_network_network_attributes import ReservedVirtualNetworkNetworkAttributes  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.reserved_virtual_network_network_ports import ReservedVirtualNetworkNetworkPorts  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
+from mtp_plugin_kubernetes.models.reserved_virtual_network_network_attributes import \
+    ReservedVirtualNetworkNetworkAttributes
+from mtp_plugin_kubernetes.models.reserved_virtual_network_network_ports import ReservedVirtualNetworkNetworkPorts
 
 
 class ReservedVirtualNetwork(Model):

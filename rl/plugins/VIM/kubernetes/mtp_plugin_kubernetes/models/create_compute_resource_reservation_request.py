@@ -5,11 +5,14 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
+from mtp_plugin_kubernetes.models.allocate_compute_request_affinity_or_anti_affinity_constraints import \
+    AllocateComputeRequestAffinityOrAntiAffinityConstraints
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.allocate_compute_request_affinity_or_anti_affinity_constraints import AllocateComputeRequestAffinityOrAntiAffinityConstraints  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.create_compute_resource_reservation_request_compute_pool_reservation import CreateComputeResourceReservationRequestComputePoolReservation  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.create_compute_resource_reservation_request_virtualisation_container_reservation import CreateComputeResourceReservationRequestVirtualisationContainerReservation  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
+from mtp_plugin_kubernetes.models.create_compute_resource_reservation_request_compute_pool_reservation import \
+    CreateComputeResourceReservationRequestComputePoolReservation
+from mtp_plugin_kubernetes.models.create_compute_resource_reservation_request_virtualisation_container_reservation import \
+    CreateComputeResourceReservationRequestVirtualisationContainerReservation
 
 
 class CreateComputeResourceReservationRequest(Model):

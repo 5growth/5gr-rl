@@ -49,7 +49,7 @@ public class NetworkResourcesApi {
     }
     @GET
     @ManagedAsync
-    @Path("/get_interpop_vlans")
+    @Path("/free_vlan")
     @Produces({ "application/json" })
     @ApiOperation(value = "Retrieve free vlan tag from VIM domain", notes = "Retrieve free vlan tag from VIM domain", response = BigDecimal.class, responseContainer = "List", tags={ "VIMNetworkResources",  })
     @ApiResponses(value = { 

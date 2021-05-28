@@ -14,16 +14,26 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import com.rl.extinterface.nbi.swagger.model.LocationInfo;
+import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
  * 5GT - Element providing information for Radio Coverage Area supported by PoP.
  */
 @ApiModel(description = "5GT - Element providing information for Radio Coverage Area supported by PoP.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class RadioCoverageAreaListInnerRadioCoverageAreaInfo {
   @SerializedName("coverageAreaId")
   private String coverageAreaId = null;

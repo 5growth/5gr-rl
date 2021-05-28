@@ -10,9 +10,9 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
             </goals>
             <properties>
-                <exec.args>-D"stub_enable=no" -classpath %classpath com.rl.rl domainlist_local.xml 127.0.0.1 50000</exec.args>
+                <exec.args>-classpath %classpath com.rl.rl domainlist_local.xml 127.0.0.1 50000</exec.args>
                 <exec.executable>java</exec.executable>
-                <exec.workingdir>/home/osboxes/Desktop/ever/rl_repo/rl/rl/xml_domain</exec.workingdir>
+                <exec.workingdir>/home/fhuser/Desktop/projs/ever/rl_repo/rl/rl/xml_domain</exec.workingdir>
             </properties>
         </action>
         <action>
@@ -25,10 +25,10 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
             </goals>
             <properties>
-                <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -D"stub_enable=no" -classpath %classpath com.rl.rl domainlist_local.xml 127.0.0.1 50000</exec.args>
+                <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath com.rl.rl domainlist_local.xml 127.0.0.1 50000</exec.args>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
-                <exec.workingdir>/home/osboxes/Desktop/ever/rl_repo/rl/rl/xml_domain</exec.workingdir>
+                <exec.workingdir>/home/fhuser/Desktop/projs/ever/rl_repo/rl/rl/xml_domain</exec.workingdir>
             </properties>
         </action>
         <action>
@@ -41,9 +41,9 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
             </goals>
             <properties>
-                <exec.args>-D"stub_enable=no" -classpath %classpath com.rl.rl domainlist_local.xml 127.0.0.1 50000</exec.args>
+                <exec.args>-classpath %classpath com.rl.rl domainlist_local.xml 127.0.0.1 50000</exec.args>
                 <exec.executable>java</exec.executable>
-                <exec.workingdir>/home/osboxes/Desktop/ever/rl_repo/rl/rl/xml_domain</exec.workingdir>
+                <exec.workingdir>/home/fhuser/Desktop/projs/ever/rl_repo/rl/rl/xml_domain</exec.workingdir>
             </properties>
         </action>
     </actions>

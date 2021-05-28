@@ -5,10 +5,12 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
+from mtp_plugin_kubernetes.models.allocate_compute_request_affinity_or_anti_affinity_constraints import \
+    AllocateComputeRequestAffinityOrAntiAffinityConstraints
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.allocate_compute_request_affinity_or_anti_affinity_constraints import AllocateComputeRequestAffinityOrAntiAffinityConstraints  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.create_network_resource_reservation_request_network_reservation import CreateNetworkResourceReservationRequestNetworkReservation  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
+from mtp_plugin_kubernetes.models.create_network_resource_reservation_request_network_reservation import \
+    CreateNetworkResourceReservationRequestNetworkReservation
 
 
 class CreateNetworkResourceReservationRequest(Model):

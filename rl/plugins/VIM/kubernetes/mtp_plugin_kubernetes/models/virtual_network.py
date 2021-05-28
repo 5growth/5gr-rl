@@ -5,9 +5,11 @@ from datetime import date, datetime  # noqa: F401
 
 from typing import List, Dict  # noqa: F401
 
+from mtp_plugin_kubernetes.models.allocate_network_result_network_data_network_port import \
+    AllocateNetworkResultNetworkDataNetworkPort
+from mtp_plugin_kubernetes.models.allocate_network_result_network_data_network_qo_s import \
+    AllocateNetworkResultNetworkDataNetworkQoS
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.allocate_network_result_network_data_network_port import AllocateNetworkResultNetworkDataNetworkPort  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.allocate_network_result_network_data_network_qo_s import AllocateNetworkResultNetworkDataNetworkQoS  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
 
 
@@ -17,7 +19,7 @@ class VirtualNetwork(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, bandwidth: float=None, is_shared: bool=None, network_port: List[AllocateNetworkResultNetworkDataNetworkPort]=None, network_qo_s: List[AllocateNetworkResultNetworkDataNetworkQoS]=None, network_resource_id: str=None, network_resource_name: str=None, network_type: str=None, operational_state: str=None, segment_type: str=None, sharing_criteria: str=None, subnet: str=None, zone_id: str=None):  # noqa: E501
+    def __init__(self, bandwidth: float=None, is_shared: bool=None, network_port: List[AllocateNetworkResultNetworkDataNetworkPort]=None, network_qo_s: List[AllocateNetworkResultNetworkDataNetworkQoS]=None, network_resource_id: str=None, network_resource_name: str=None, network_type: str=None, operational_state: str=None, segment_type: str=None, sharing_criteria: str=None, subnet: List[str]=None, zone_id: str=None):  # noqa: E501
         """VirtualNetwork - a model defined in Swagger
 
         :param bandwidth: The bandwidth of this VirtualNetwork.  # noqa: E501
@@ -41,7 +43,7 @@ class VirtualNetwork(Model):
         :param sharing_criteria: The sharing_criteria of this VirtualNetwork.  # noqa: E501
         :type sharing_criteria: str
         :param subnet: The subnet of this VirtualNetwork.  # noqa: E501
-        :type subnet: str
+        :type subnet: List[str]
         :param zone_id: The zone_id of this VirtualNetwork.  # noqa: E501
         :type zone_id: str
         """
@@ -56,7 +58,7 @@ class VirtualNetwork(Model):
             'operational_state': str,
             'segment_type': str,
             'sharing_criteria': str,
-            'subnet': str,
+            'subnet': List[str],
             'zone_id': str
         }
 
@@ -350,24 +352,24 @@ class VirtualNetwork(Model):
         self._sharing_criteria = sharing_criteria
 
     @property
-    def subnet(self) -> str:
+    def subnet(self) -> List[str]:
         """Gets the subnet of this VirtualNetwork.
 
         Only present if the network provides layer 3 connectivity.  # noqa: E501
 
         :return: The subnet of this VirtualNetwork.
-        :rtype: str
+        :rtype: List[str]
         """
         return self._subnet
 
     @subnet.setter
-    def subnet(self, subnet: str):
+    def subnet(self, subnet: List[str]):
         """Sets the subnet of this VirtualNetwork.
 
         Only present if the network provides layer 3 connectivity.  # noqa: E501
 
         :param subnet: The subnet of this VirtualNetwork.
-        :type subnet: str
+        :type subnet: List[str]
         """
         if subnet is None:
             raise ValueError("Invalid value for `subnet`, must not be `None`")  # noqa: E501

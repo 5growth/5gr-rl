@@ -9,10 +9,10 @@ import com.rl.SingletonEventBus;
 import com.rl.common.objects.DomainElem;
 import com.rl.events.resourcemanagement.ComputeAllocation.ComputeAllocateRadioReply;
 import com.rl.events.resourcemanagement.ComputeAllocation.ComputeAllocateReq;
+import com.rl.extinterface.nbi.swagger.model.AllocateComputeRequestInterfaceData;
 import com.rl.extinterface.nbi.swagger.model.MFRequest;
 import com.rl.extinterface.nbi.swagger.model.MFRequestInner;
 import com.rl.extinterface.nbi.swagger.model.VIMAllocateComputeRequest;
-import com.rl.extinterface.nbi.swagger.model.VIMAllocateComputeRequestInterfaceData;
 import com.rl.extinterface.nbi.swagger.model.VIMVirtualCompute;
 import com.rl.extinterface.nbi.swagger.model.VirtualCompute;
 import io.swagger.client.ApiClient;
@@ -62,9 +62,9 @@ public class AllocateRadioComputeThread extends Thread  {
             VirtualCompute computeresponse = new VirtualCompute();
             VIMVirtualCompute vimcomputeresp;
             VIMAllocateComputeRequest vimallocreq = new VIMAllocateComputeRequest();
-            List<VIMAllocateComputeRequestInterfaceData> intflist = new ArrayList();
+            List<AllocateComputeRequestInterfaceData> intflist = new ArrayList();
             for (int j = 0; j < request.getComputereq().getInterfaceData().size(); j++) {
-                VIMAllocateComputeRequestInterfaceData intf = new VIMAllocateComputeRequestInterfaceData();
+                AllocateComputeRequestInterfaceData intf = new AllocateComputeRequestInterfaceData();
                 intf.setIpAddress(request.getComputereq().getInterfaceData().get(j).getIpAddress());
                 intf.setMacAddress(request.getComputereq().getInterfaceData().get(j).getMacAddress());
                 intflist.add(intf);
@@ -162,9 +162,9 @@ public class AllocateRadioComputeThread extends Thread  {
             VirtualCompute computeresponse = new VirtualCompute();
             VIMVirtualCompute vimcomputeresp;
             VIMAllocateComputeRequest vimallocreq = new VIMAllocateComputeRequest();
-            List<VIMAllocateComputeRequestInterfaceData> intflist = new ArrayList();
+            List<AllocateComputeRequestInterfaceData> intflist = new ArrayList();
             for (int j = 0; j < request.getComputereq().getInterfaceData().size(); j++) {
-                VIMAllocateComputeRequestInterfaceData intf = new VIMAllocateComputeRequestInterfaceData();
+                AllocateComputeRequestInterfaceData intf = new AllocateComputeRequestInterfaceData();
                 intf.setIpAddress(request.getComputereq().getInterfaceData().get(j).getIpAddress());
                 intf.setMacAddress(request.getComputereq().getInterfaceData().get(j).getMacAddress());
                 intflist.add(intf);

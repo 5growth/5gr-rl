@@ -14,29 +14,38 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
 /**
  * AllocateComputeRequestInterfaceData
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class AllocateComputeRequestInterfaceData {
   @SerializedName("ipAddress")
-  private List<String> ipAddress = new ArrayList<String>();
+  private String ipAddress = null;
 
   @SerializedName("macAddress")
   private String macAddress = null;
 
-  public AllocateComputeRequestInterfaceData ipAddress(List<String> ipAddress) {
-    this.ipAddress = ipAddress;
-    return this;
-  }
+  @SerializedName("networkId")
+  private String networkId = null;
 
-  public AllocateComputeRequestInterfaceData addIpAddressItem(String ipAddressItem) {
-    this.ipAddress.add(ipAddressItem);
+  @SerializedName("floatingIP")
+  private String floatingIP = null;
+
+  public AllocateComputeRequestInterfaceData ipAddress(String ipAddress) {
+    this.ipAddress = ipAddress;
     return this;
   }
 
@@ -45,11 +54,11 @@ public class AllocateComputeRequestInterfaceData {
    * @return ipAddress
   **/
   @ApiModelProperty(required = true, value = "The virtual network interface can be configured with specific IP address(es) associated to the network to be attached to. The cardinality can be 0 in the case that a network interface is created without being attached to any specific network, or when an IP address can be automatically configured, e.g. by DHCP.")
-  public List<String> getIpAddress() {
+  public String getIpAddress() {
     return ipAddress;
   }
 
-  public void setIpAddress(List<String> ipAddress) {
+  public void setIpAddress(String ipAddress) {
     this.ipAddress = ipAddress;
   }
 
@@ -71,6 +80,42 @@ public class AllocateComputeRequestInterfaceData {
     this.macAddress = macAddress;
   }
 
+  public AllocateComputeRequestInterfaceData networkId(String networkId) {
+    this.networkId = networkId;
+    return this;
+  }
+
+   /**
+   * The network ID for the virtual network interface. The cardinality can be 0 to allow for network interface without specific MAC address configuration.
+   * @return networkId
+  **/
+  @ApiModelProperty(required = true, value = "The network ID for the virtual network interface. The cardinality can be 0 to allow for network interface without specific MAC address configuration.")
+  public String getNetworkId() {
+    return networkId;
+  }
+
+  public void setNetworkId(String networkId) {
+    this.networkId = networkId;
+  }
+
+  public AllocateComputeRequestInterfaceData floatingIP(String floatingIP) {
+    this.floatingIP = floatingIP;
+    return this;
+  }
+
+   /**
+   * The floating IP for the virtual network interface. The cardinality can be 0 to allow for network interface without specific MAC address configuration.
+   * @return floatingIP
+  **/
+  @ApiModelProperty(required = true, value = "The floating IP for the virtual network interface. The cardinality can be 0 to allow for network interface without specific MAC address configuration.")
+  public String getFloatingIP() {
+    return floatingIP;
+  }
+
+  public void setFloatingIP(String floatingIP) {
+    this.floatingIP = floatingIP;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -82,12 +127,14 @@ public class AllocateComputeRequestInterfaceData {
     }
     AllocateComputeRequestInterfaceData allocateComputeRequestInterfaceData = (AllocateComputeRequestInterfaceData) o;
     return Objects.equals(this.ipAddress, allocateComputeRequestInterfaceData.ipAddress) &&
-        Objects.equals(this.macAddress, allocateComputeRequestInterfaceData.macAddress);
+        Objects.equals(this.macAddress, allocateComputeRequestInterfaceData.macAddress) &&
+        Objects.equals(this.networkId, allocateComputeRequestInterfaceData.networkId) &&
+        Objects.equals(this.floatingIP, allocateComputeRequestInterfaceData.floatingIP);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(ipAddress, macAddress);
+    return Objects.hash(ipAddress, macAddress, networkId, floatingIP);
   }
 
 
@@ -98,6 +145,8 @@ public class AllocateComputeRequestInterfaceData {
     
     sb.append("    ipAddress: ").append(toIndentedString(ipAddress)).append("\n");
     sb.append("    macAddress: ").append(toIndentedString(macAddress)).append("\n");
+    sb.append("    networkId: ").append(toIndentedString(networkId)).append("\n");
+    sb.append("    floatingIP: ").append(toIndentedString(floatingIP)).append("\n");
     sb.append("}");
     return sb.toString();
   }

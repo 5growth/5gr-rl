@@ -65,7 +65,7 @@ public class AllocateWIMNetworkThread extends Thread {
             param.setEgressPointPortAddress(endpoints.get(i).getEgressPort());
             param.setIngressPointIPAddress(endpoints.get(i).getIngressIp());
             param.setIngressPointPortAddress(endpoints.get(i).getIngressPort());
-            param.setMetadata(request.getServid());            
+            //param.setMetadata(request.ge);            
             param.setSegmentType(request.getNetworkRequest().getNetworkLayer());
             param.setWanLinkId(request.getWanLinks().get(i).toString());
             

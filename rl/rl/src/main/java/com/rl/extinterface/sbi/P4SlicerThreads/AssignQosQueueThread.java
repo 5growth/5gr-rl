@@ -9,11 +9,9 @@ import com.rl.SingletonEventBus;
 import com.rl.common.objects.DomainElem;
 import com.rl.events.resourcemanagement.VirtualQueueAssignment.QosPerformanceIsolationReply;
 import com.rl.events.resourcemanagement.VirtualQueueAssignment.QosPerformanceIsolationReq;
-import com.rl.extinterface.nbi.swagger.model.AssignQosQueueOnosRequest;
-import com.rl.extinterface.nbi.swagger.model.AssignQosQueueOnosResponse;
+
 import io.swagger.client.ApiClient;
 import io.swagger.client.ApiException;
-import io.swagger.client.api.QosQueueApi;
 
 
 /**
@@ -42,33 +40,33 @@ public class AssignQosQueueThread extends Thread {
         capi.setUsername("onos");
         capi.setPassword("rocks");
         //TODO: Extend Client api
-        QosQueueApi api = new QosQueueApi(capi);
+        //QosQueueApi api = new QosQueueApi(capi);
         QosPerformanceIsolationReply qosperfrep;
 
-        AssignQosQueueOnosResponse qosQueueOnosResponse;
+        //AssignQosQueueOnosResponse qosQueueOnosResponse;
         //Convert AssignQosQueueRequest to AssignQosQueueOnosRequest
-        AssignQosQueueOnosRequest assignQosQueueOnosRequest = new AssignQosQueueOnosRequest();
-        assignQosQueueOnosRequest.setSrcEndpoint(request.getQosQueuereq().getSrcEndpoint());
-        assignQosQueueOnosRequest.setDstEndpoint(request.getQosQueuereq().getDstEndpoint());
-        assignQosQueueOnosRequest.setMaxCapacity(request.getQosQueuereq().getMaxCapacity());
-        assignQosQueueOnosRequest.setPolicy(request.getQosQueuereq().getPolicy());
-        assignQosQueueOnosRequest.setSwitchIdentifiers(request.getQosQueuereq().getSwitchIdentifiers());
-        assignQosQueueOnosRequest.setSliceId(request.getQosQueuereq().getSliceId());
+        //AssignQosQueueOnosRequest assignQosQueueOnosRequest = new AssignQosQueueOnosRequest();
+        //assignQosQueueOnosRequest.setSrcEndpoint(request.getQosQueuereq().getSrcEndpoint());
+        //assignQosQueueOnosRequest.setDstEndpoint(request.getQosQueuereq().getDstEndpoint());
+        //assignQosQueueOnosRequest.setMaxCapacity(request.getQosQueuereq().getMaxCapacity());
+        //assignQosQueueOnosRequest.setPolicy(request.getQosQueuereq().getPolicy());
+        //assignQosQueueOnosRequest.setSwitchIdentifiers(request.getQosQueuereq().getSwitchIdentifiers());
+        //assignQosQueueOnosRequest.setSliceId(request.getQosQueuereq().getSliceId());
 
-        try {
-            //Send Request
-            qosQueueOnosResponse = api.assignQueue(assignQosQueueOnosRequest);
-        } catch (ApiException e) {
-            System.out.println("ApiException inside allocateCompute().");
-            System.out.println("Val= " + e.getCode() + ";Message = " + e.getMessage());
-            //TODO: Handle error response
-            return;
-        }
-
-        //send event
-        qosperfrep= new QosPerformanceIsolationReply(request.getReqid(), request.getServid(),
-                request.getDomid(), request.getQosQueuereq(), request.getNfvipopid());
-        SingletonEventBus.getBus().post(qosperfrep);
+//        try {
+//            //Send Request
+//            qosQueueOnosResponse = api.assignQueue(assignQosQueueOnosRequest);
+//        } catch (ApiException e) {
+//            System.out.println("ApiException inside allocateCompute().");
+//            System.out.println("Val= " + e.getCode() + ";Message = " + e.getMessage());
+//            //TODO: Handle error response
+//            return;
+//        }
+//
+//        //send event
+//        qosperfrep= new QosPerformanceIsolationReply(request.getReqid(), request.getServid(),
+//                request.getDomid(), request.getQosQueuereq(), request.getNfvipopid());
+//        SingletonEventBus.getBus().post(qosperfrep);
 
     }
 }

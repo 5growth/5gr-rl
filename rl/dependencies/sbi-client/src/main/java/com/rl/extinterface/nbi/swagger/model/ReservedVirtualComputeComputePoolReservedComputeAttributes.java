@@ -28,7 +28,10 @@ import java.io.IOException;
  * Information specifying additional attributes of the virtual compute resource that have been reserved.
  */
 @ApiModel(description = "Information specifying additional attributes of the virtual compute resource that have been reserved.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class ReservedVirtualComputeComputePoolReservedComputeAttributes {
   @SerializedName("accelerationCapability")
   private String accelerationCapability = null;

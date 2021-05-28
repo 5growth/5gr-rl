@@ -1,0 +1,22 @@
+[
+    {
+        "accelerationCapability": "null",
+        "computeResourceTypeId": 0,
+        "virtualMemory": {
+            "numaSupported": false,
+            "virtualMemOversubscriptionPolicy": "null",
+            "virtualMemSize": 1743776
+        }
+    },
+    {
+        "accelerationCapability": "null",
+        "computeResourceTypeId": 1,
+        "virtualCPU": {
+            "cpuArchitecture": "amd64",
+            "cpuClock": 2,
+            "numVirtualCpu": 2.0,
+            "virtualCpuOversubscriptionPolicy": "null",
+            "virtualCpuPinningSupported": false
+        }
+    }
+]

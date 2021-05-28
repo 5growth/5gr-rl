@@ -19,10 +19,11 @@ At the command line::
 
 To configure of MTP add next rows to file "domainlist.xml":
 
-    <Domain >
-        <Type>VIM</Type>
-        <Name>kubernetes</Name>
-        <Id>1</Id>
-        <Ip>127.0.0.1</Ip>
-        <Port>54000</Port>
-    </Domain>
+        <Domain>
+            <Type>VIM</Type>
+            <Name>OpenStack</Name>
+            <Id>1</Id>
+            <MecId>-1</MecId>
+            <Ip>127.0.0.1</Ip>
+            <Port>54000</Port>
+        </Domain>

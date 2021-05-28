@@ -5,8 +5,12 @@
  */
 package com.ericsson.dummyplugin.sbi;
 
+import com.ericsson.dummyplugin.nbi.swagger.model.MetaData;
+import com.ericsson.dummyplugin.nbi.swagger.model.MetaDataInner;
 import com.ericsson.dummyplugin.sbi.objects.NFVIPop;
 import com.ericsson.dummyplugin.sbi.objects.ComputeResource;
+import com.ericsson.dummyplugin.sbi.objects.MFinfo;
+import com.ericsson.dummyplugin.sbi.objects.PNFinfo;
 import com.ericsson.dummyplugin.sbi.objects.Zone;
 import java.io.File;
 import java.io.IOException;
@@ -29,10 +33,14 @@ public class XMLDomainParser {
     private List<NFVIPop> poplist;
     private List<Zone> zonelist;
     private HashMap<String, ComputeResource> reslist;
+    private List<PNFinfo> pnflist;
+    private List<MFinfo> mflist;
     
     public XMLDomainParser(String xmlFile) {
         poplist = new ArrayList();
         zonelist = new ArrayList();
+        pnflist = new ArrayList();
+        mflist = new ArrayList();
         reslist = new HashMap();
         Document document = getSAXParsedDocument(xmlFile);
 
@@ -184,6 +192,49 @@ public class XMLDomainParser {
                 System.out.println("XMLDomainParse --> Error compute type. Unknown Type = " + tmp);
                 exit(-1);
             }
+            
+        }
+        //Parse PNFElement
+        Element xmlpnflist = rootNode.getChild("PNFList");
+        List<Element> xmlpnf = xmlpnflist.getChildren("PNF");
+        
+        for (int i = 0; i < xmlpnf.size(); i++) {
+            Element pnfel = (Element) xmlpnf.get(i);
+            String pnfid = pnfel.getChildText("PNFId");
+            Element metadatalist = pnfel.getChild("MetadataList");
+            List<Element> pnfmetadata = metadatalist.getChildren("Metadata");
+            MetaData mdlist = new MetaData();
+            for (int j = 0; j < pnfmetadata.size(); j++) {
+                Element metadatael = (Element)pnfmetadata.get(j);
+                MetaDataInner mdel = new MetaDataInner();
+                String key = metadatael.getChildText("Key");
+                String value = metadatael.getChildText("Value");
+                mdel.setKey(key);
+                mdel.setValue(value);
+                mdlist.add(mdel);
+            }
+            PNFinfo pnf = new PNFinfo(pnfid, mdlist);
+            pnflist.add(pnf);
+        }
+        
+        //Parse MFElement
+        Element xmlmflist = rootNode.getChild("MFList");
+        List<Element> xmlmf = xmlmflist.getChildren("MFinfo");
+        
+        for (int i = 0; i < xmlmf.size(); i++) {
+            Element mfel = (Element) xmlmf.get(i);
+            String pnfid = mfel.getChildText("PNFId");
+            String vnfid = mfel.getChildText("VNFId");
+            Element xmlmfidlist = mfel.getChild("MFIdList");
+            List<Element> xmlmfids = xmlmfidlist.getChildren("MFId");
+            List<String > mfidlist = new ArrayList();
+            for (int j = 0; j < xmlmfids.size(); j++) {
+                Element mfidel = (Element)xmlmfids.get(j);
+                String mfid = mfidel.getChildText("Id");
+                mfidlist.add(mfid);
+            }
+            MFinfo mf = new MFinfo(pnfid, vnfid, mfidlist);
+            mflist.add(mf);
         }
                 
         
@@ -228,6 +279,22 @@ public class XMLDomainParser {
 
     public void setReslist(HashMap<String, ComputeResource> reslist) {
         this.reslist = reslist;
+    }
+
+    public List<PNFinfo> getPnflist() {
+        return pnflist;
+    }
+
+    public void setPnflist(List<PNFinfo> pnflist) {
+        this.pnflist = pnflist;
+    }
+
+    public List<MFinfo> getMflist() {
+        return mflist;
+    }
+
+    public void setMflist(List<MFinfo> mflist) {
+        this.mflist = mflist;
     }
 
 

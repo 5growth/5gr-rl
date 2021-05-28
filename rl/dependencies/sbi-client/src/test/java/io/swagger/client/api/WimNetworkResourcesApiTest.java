@@ -15,6 +15,9 @@ package io.swagger.client.api;
 
 import com.rl.extinterface.nbi.swagger.model.AllocateParameters;
 import com.rl.extinterface.nbi.swagger.model.AllocateReply;
+import com.rl.extinterface.nbi.swagger.model.AssignQoSList;
+import com.rl.extinterface.nbi.swagger.model.AssignQoSRequest;
+import com.rl.extinterface.nbi.swagger.model.AssignQoSResponse;
 import com.rl.extinterface.nbi.swagger.model.Filter;
 import com.rl.extinterface.nbi.swagger.model.InlineResponse2004;
 import com.rl.extinterface.nbi.swagger.model.NetworkIds;
@@ -34,6 +37,22 @@ public class WimNetworkResourcesApiTest {
 
     private final WimNetworkResourcesApi api = new WimNetworkResourcesApi();
 
+    
+    /**
+     * 
+     *
+     * 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void addQoSQueueTest() throws ApiException {
+        AssignQoSRequest params = null;
+        AssignQoSResponse response = api.addQoSQueue(params);
+
+        // TODO: test validations
+    }
     
     /**
      * 
@@ -75,9 +94,40 @@ public class WimNetworkResourcesApiTest {
      *          if the Api call fails
      */
     @Test
+    public void deleteQoSQueueTest() throws ApiException {
+        AssignQoSRequest params = null;
+        AssignQoSResponse response = api.deleteQoSQueue(params);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * 
+     *
+     * 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
     public void queryNetworksTest() throws ApiException {
         Filter networkQueryFilter = null;
         List<VirtualNetwork> response = api.queryNetworks(networkQueryFilter);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * 
+     *
+     * 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void queryQoSQueueTest() throws ApiException {
+        AssignQoSList response = api.queryQoSQueue();
 
         // TODO: test validations
     }

@@ -6,9 +6,9 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.inter_nfvi_pop_connnectivity_id_list import InterNfviPopConnnectivityIdList  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.meta_data import MetaData  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
+from mtp_plugin_kubernetes.models.inter_nfvi_pop_connnectivity_id_list import InterNfviPopConnnectivityIdList
+from mtp_plugin_kubernetes.models.meta_data import MetaData
 
 
 class DeleteInterNfviPopConnectivityRequest(Model):

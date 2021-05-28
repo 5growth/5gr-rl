@@ -6,11 +6,12 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.inter_nfvi_pop_network_topology import InterNfviPopNetworkTopology  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.inter_nfvi_pop_network_type import InterNfviPopNetworkType  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.logical_link_inter_nfvi_pops_inner_logical_links_network_qo_s import LogicalLinkInterNfviPopsInnerLogicalLinksNetworkQoS  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.network_layer import NetworkLayer  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
+from mtp_plugin_kubernetes.models.inter_nfvi_pop_network_topology import InterNfviPopNetworkTopology
+from mtp_plugin_kubernetes.models.inter_nfvi_pop_network_type import InterNfviPopNetworkType
+from mtp_plugin_kubernetes.models.logical_link_inter_nfvi_pops_inner_logical_links_network_qo_s import \
+    LogicalLinkInterNfviPopsInnerLogicalLinksNetworkQoS
+from mtp_plugin_kubernetes.models.network_layer import NetworkLayer
 
 
 class LogicalLinkInterNfviPopsInnerLogicalLinks(Model):

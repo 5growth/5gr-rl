@@ -108,7 +108,7 @@ public class AbstractNetworkResourcesApi {
 
         //Check if auto management of Reverse LL is enabled
         String autoManagement = System.getProperty("AUTO_MANAGEMENT_LL");
-        if (autoManagement.equals("yes")) {
+        if ((autoManagement != null) && autoManagement.equals("yes")) {
             //logical_links_from_so
             List<String> logicalLinkIdList = extractListOfLogicalLinks(body);
             logical_links_from_so.put(Long.toString(reqid), logicalLinkIdList);
@@ -167,7 +167,7 @@ public class AbstractNetworkResourcesApi {
         //Check if auto management of Reverse LL is enabled
         String autoManagement = System.getProperty("AUTO_MANAGEMENT_LL");
         //If autoManagement of reverse LLs is enabled the IDs of reverse LLs is added to networkId
-        if (autoManagement.equals("yes")) {
+        if ((autoManagement != null) && autoManagement.equals("yes")) {
             //logical_links_from_so
             addReverseInterNfviPopConnnectivityId(networkId);
 
@@ -220,7 +220,7 @@ public class AbstractNetworkResourcesApi {
 
         //Check if auto management of Reverse LL is enabled
         String autoManagement = System.getProperty("AUTO_MANAGEMENT_LL");
-        if (autoManagement.equals("yes")) {
+        if ((autoManagement != null) && autoManagement.equals("yes")) {
             //TO DO ......
             //logical_links_from_so.put(Long.toString(reqid), logicalLinkIdList);
             List<String> ll_list = logical_links_from_so.get(Long.toString(ev.getReqid()));

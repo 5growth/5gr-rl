@@ -1,5 +1,7 @@
 from __future__ import print_function
 
+import logging
+
 import bitmath
 import kubernetes
 from kubernetes.client.rest import ApiException
@@ -67,14 +69,4 @@ class KubeGetInfo:
             self.allocatable_memory = allocatable_memory_local.KiB.format("{value:.0f}")
 
         except ApiException as e:
-            print("Exception when calling CoreV1Api->list_resource_quota_for_all_namespaces: %s\n" % e)
-
-
-if __name__ == '__main__':
-    kube = KubeGetInfo()
-    print("totalCapacity_processor = " + kube.total_processor)
-    print("allocatedCapacity_processor = " + kube.allocated_processor)
-    print("availableCapacity_processor = " + kube.allocatable_processor)
-    print("totalCapacity_memory = " + kube.total_memory)
-    print("allocatedCapacity_memory = " + kube.allocated_memory)
-    print("availableCapacity_memory = " + kube.allocatable_memory)
+            logging.error("Exception when calling CoreV1Api->list_resource_quota_for_all_namespaces: %s\n" % e)

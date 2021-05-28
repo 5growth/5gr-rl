@@ -14,16 +14,26 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import com.rl.extinterface.nbi.swagger.model.CreateComputeResourceReservationRequestComputePoolReservationComputeAttributes;
+import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
  * Amount of compute resources that need to be reserved, e.g. {\&quot;cpu_cores\&quot;: 90, \&quot;vm_instances\&quot;: 10, \&quot;ram\&quot;: 10000}.
  */
 @ApiModel(description = "Amount of compute resources that need to be reserved, e.g. {\"cpu_cores\": 90, \"vm_instances\": 10, \"ram\": 10000}.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class CreateComputeResourceReservationRequestComputePoolReservation {
   @SerializedName("computeAttributes")
   private CreateComputeResourceReservationRequestComputePoolReservationComputeAttributes computeAttributes = null;

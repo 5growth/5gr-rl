@@ -6,10 +6,11 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.reserved_virtual_compute_virtualisation_container_reserved_virtual_network_interface import ReservedVirtualComputeVirtualisationContainerReservedVirtualNetworkInterface  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.virtual_compute_virtual_cpu import VirtualComputeVirtualCpu  # noqa: F401,E501
-from mtp_plugin_kubernetes.models.virtual_compute_virtual_memory import VirtualComputeVirtualMemory  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
+from mtp_plugin_kubernetes.models.reserved_virtual_compute_virtualisation_container_reserved_virtual_network_interface import \
+    ReservedVirtualComputeVirtualisationContainerReservedVirtualNetworkInterface
+from mtp_plugin_kubernetes.models.virtual_compute_virtual_cpu import VirtualComputeVirtualCpu
+from mtp_plugin_kubernetes.models.virtual_compute_virtual_memory import VirtualComputeVirtualMemory
 
 
 class VirtualCompute(Model):
@@ -18,7 +19,7 @@ class VirtualCompute(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, acceleration_capability: List[str]=None, compute_id: str=None, compute_name: str=None, flavour_id: str=None, host_id: str=None, operational_state: str=None, vc_image_id: str=None, virtual_cpu: VirtualComputeVirtualCpu=None, virtual_disks: str=None, virtual_memory: VirtualComputeVirtualMemory=None, virtual_network_interface: List[ReservedVirtualComputeVirtualisationContainerReservedVirtualNetworkInterface]=None, zone_id: str=None):  # noqa: E501
+    def __init__(self, acceleration_capability: List[str]=None, compute_id: str=None, compute_name: str=None, flavour_id: str=None, host_id: str=None, operational_state: str=None, vc_image_id: str=None, virtual_cpu: VirtualComputeVirtualCpu=None, virtual_disks: str=None, virtual_memory: VirtualComputeVirtualMemory=None, virtual_network_interface: List[ReservedVirtualComputeVirtualisationContainerReservedVirtualNetworkInterface]=None, zone_id: str=None, mecapp_id: str=None):  # noqa: E501
         """VirtualCompute - a model defined in Swagger
 
         :param acceleration_capability: The acceleration_capability of this VirtualCompute.  # noqa: E501
@@ -45,6 +46,8 @@ class VirtualCompute(Model):
         :type virtual_network_interface: List[ReservedVirtualComputeVirtualisationContainerReservedVirtualNetworkInterface]
         :param zone_id: The zone_id of this VirtualCompute.  # noqa: E501
         :type zone_id: str
+        :param mecapp_id: The mecapp_id of this VirtualCompute.  # noqa: E501
+        :type mecapp_id: str
         """
         self.swagger_types = {
             'acceleration_capability': List[str],
@@ -58,7 +61,8 @@ class VirtualCompute(Model):
             'virtual_disks': str,
             'virtual_memory': VirtualComputeVirtualMemory,
             'virtual_network_interface': List[ReservedVirtualComputeVirtualisationContainerReservedVirtualNetworkInterface],
-            'zone_id': str
+            'zone_id': str,
+            'mecapp_id': str
         }
 
         self.attribute_map = {
@@ -73,7 +77,8 @@ class VirtualCompute(Model):
             'virtual_disks': 'virtualDisks',
             'virtual_memory': 'virtualMemory',
             'virtual_network_interface': 'virtualNetworkInterface',
-            'zone_id': 'zoneId'
+            'zone_id': 'zoneId',
+            'mecapp_id': 'mecappID'
         }
 
         self._acceleration_capability = acceleration_capability
@@ -88,6 +93,7 @@ class VirtualCompute(Model):
         self._virtual_memory = virtual_memory
         self._virtual_network_interface = virtual_network_interface
         self._zone_id = zone_id
+        self._mecapp_id = mecapp_id
 
     @classmethod
     def from_dict(cls, dikt) -> 'VirtualCompute':
@@ -395,3 +401,28 @@ class VirtualCompute(Model):
             raise ValueError("Invalid value for `zone_id`, must not be `None`")  # noqa: E501
 
         self._zone_id = zone_id
+
+    @property
+    def mecapp_id(self) -> str:
+        """Gets the mecapp_id of this VirtualCompute.
+
+        If present, it identifies the reference MEC AppD reference Descritptor to apply for the allocated compute resources  # noqa: E501
+
+        :return: The mecapp_id of this VirtualCompute.
+        :rtype: str
+        """
+        return self._mecapp_id
+
+    @mecapp_id.setter
+    def mecapp_id(self, mecapp_id: str):
+        """Sets the mecapp_id of this VirtualCompute.
+
+        If present, it identifies the reference MEC AppD reference Descritptor to apply for the allocated compute resources  # noqa: E501
+
+        :param mecapp_id: The mecapp_id of this VirtualCompute.
+        :type mecapp_id: str
+        """
+        if mecapp_id is None:
+            raise ValueError("Invalid value for `mecapp_id`, must not be `None`")  # noqa: E501
+
+        self._mecapp_id = mecapp_id

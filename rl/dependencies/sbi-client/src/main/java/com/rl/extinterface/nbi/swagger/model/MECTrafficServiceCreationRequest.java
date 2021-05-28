@@ -14,12 +14,20 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import com.rl.extinterface.nbi.swagger.model.DNSRuleDescriptor;
+import com.rl.extinterface.nbi.swagger.model.LatencyDescriptor;
+import com.rl.extinterface.nbi.swagger.model.ServiceDependency;
+import com.rl.extinterface.nbi.swagger.model.ServiceDescriptor;
+import com.rl.extinterface.nbi.swagger.model.TrafficRuleDescriptor;
+import com.rl.extinterface.nbi.swagger.model.TransportDependency;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +35,10 @@ import java.util.List;
 /**
  * MECTrafficServiceCreationRequest
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class MECTrafficServiceCreationRequest {
   @SerializedName("requestId")
   private String requestId = null;

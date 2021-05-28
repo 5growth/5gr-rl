@@ -14,12 +14,18 @@
 package com.rl.extinterface.nbi.swagger.model;
 
 import java.util.Objects;
+import java.util.Arrays;
+import com.rl.extinterface.nbi.swagger.model.GatewaysInner;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Gateways
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class Gateways extends ArrayList<GatewaysInner> {
 
   @Override

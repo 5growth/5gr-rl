@@ -139,7 +139,7 @@ public class DummyRadioIF {
     @Subscribe
     public void handle_ParseDomainList(Parsedomainlist domlist) {
         System.out.println("CrossHaulIF ---> Parse domlist from xml file");
-        //TODO: Parse list of domain from xml file
+        
         XMLDomainParser xmldom = new XMLDomainParser(domlist.getFilename());
         
         poplist = xmldom.getPoplist();
@@ -166,7 +166,7 @@ public class DummyRadioIF {
         }
         FreeVlanReply vlanrep = new FreeVlanReply(vlanreq.getReqid(),
                     freevlans);
-        System.out.println("DummyRadioIF ---> post ComputeAllocateReply");
+        System.out.println("DummyRadioIF ---> post FreeVlanReply");
         SingletonEventBus.getBus().post(vlanrep);
     }
     
@@ -299,6 +299,14 @@ public class DummyRadioIF {
             respnetdata.setSegmentType("");
             respnetdata.setSharingCriteria("");
             respnetdata.setZoneId("");
+            //Insert netid in networkData
+            //Create name field in metadata
+            List<MetaDataInner> metanetlist = new ArrayList();
+            MetaDataInner metanetel = new MetaDataInner();
+            metanetel.setKey("id");
+            metanetel.setValue(netid);
+            metanetlist.add(metanetel);
+            respnetdata.setMetadata(metanetlist);
             resp.setNetworkData(respnetdata);
             
         } else {
@@ -313,6 +321,13 @@ public class DummyRadioIF {
             AllocateNetworkResultNetworkData respnetdata = new AllocateNetworkResultNetworkData();
             respnetdata.setNetworkResourceName(netdatareq.getNetworkResourceName());
             respnetdata.setNetworkResourceId(netid);
+            //Create name field in metadata
+            List<MetaDataInner> metanetlist = new ArrayList();
+            MetaDataInner metanetel = new MetaDataInner();
+            metanetel.setKey("id");
+            metanetel.setValue(netid);
+            metanetlist.add(metanetel);
+            respnetdata.setMetadata(metanetlist);
             resp.setNetworkData(respnetdata);
         }
         return resp;
@@ -350,16 +365,24 @@ public class DummyRadioIF {
             subnetdata.setIsDhcpEnabled(netdatareq.getTypeSubnetData().isIsDhcpEnabled());
             subnetdata.setResourceId(netdatareq.getTypeSubnetData().getResourceId());
             subnetdata.setOperationalState("enabled");
+            //Create name field in metadata
+            List<MetaDataInner> metalist = new ArrayList();
+            MetaDataInner metael = new MetaDataInner();
+            metael.setKey("name");
+            metael.setValue(subnetid);
+            metalist.add(metael);
+            subnetdata.setMetadata(metalist);
             //set subnetid
             subnetdata.setNetworkId(subnetid);
             resp.setSubnetData(subnetdata);
+            
             
         } else {
             boolean vxlanflag = false;
 
             //check if it is present the floating_required field in metadata
             for (int i = 0; (i < netdatareq.getMetadata().size()) && (vxlanflag == false); i++) {
-                if (netdatareq.getMetadata().get(i).getKey().compareTo("floating_required") == 0) {
+                if (netdatareq.getMetadata().get(i).getKey().compareTo("ip-floating_required") == 0) {
                     vxlanflag = true;
                     //change nettypemap to vlan
                     nettypemap.put(subnetid, "VXLAN");
@@ -376,6 +399,13 @@ public class DummyRadioIF {
             subnetdata.setIsDhcpEnabled(netdatareq.getTypeSubnetData().isIsDhcpEnabled());
             subnetdata.setResourceId(netdatareq.getTypeSubnetData().getResourceId());
             subnetdata.setOperationalState("enabled");
+            //Create name field in metadata
+            List<MetaDataInner> metalist = new ArrayList();
+            MetaDataInner metael = new MetaDataInner();
+            metael.setKey("name");
+            metael.setValue(subnetid);
+            metalist.add(metael);
+            subnetdata.setMetadata(metalist);
             //set subnetid
             subnetdata.setNetworkId(subnetid);
             resp.setSubnetData(subnetdata);
@@ -459,7 +489,7 @@ public class DummyRadioIF {
                 //find subnetid
                 for (Map.Entry<String, String> entry : netidmap.entrySet()) {
                     if (entry.getValue().compareTo(servtermreq.getE2EWIMElem().get(i)) == 0) {
-                        subnetid = entry.getValue();
+                        subnetid = entry.getKey();
                         break;
                     }
                 }

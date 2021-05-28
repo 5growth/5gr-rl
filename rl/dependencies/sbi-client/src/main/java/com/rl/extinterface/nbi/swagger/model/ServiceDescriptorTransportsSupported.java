@@ -22,13 +22,17 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import com.rl.extinterface.nbi.swagger.model.TransportDescriptor;
 import java.io.IOException;
 
 /**
  * Indicates transport and serialization formats supported made available to the service-consuming application. Defaults to REST+JSON if absent.
  */
 @ApiModel(description = "Indicates transport and serialization formats supported made available to the service-consuming application. Defaults to REST+JSON if absent.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-04-08T16:03:30.222Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-11-12T12:38:09.537Z")
+
+
+
 public class ServiceDescriptorTransportsSupported {
   @SerializedName("transport")
   private TransportDescriptor transport = null;

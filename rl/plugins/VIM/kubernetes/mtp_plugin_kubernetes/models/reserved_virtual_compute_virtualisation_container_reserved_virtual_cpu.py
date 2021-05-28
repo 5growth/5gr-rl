@@ -6,8 +6,9 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from mtp_plugin_kubernetes.models.base_model_ import Model
-from mtp_plugin_kubernetes.models.create_compute_resource_reservation_request_container_flavour_virtual_cpu_pinning import CreateComputeResourceReservationRequestContainerFlavourVirtualCpuPinning  # noqa: F401,E501
 from mtp_plugin_kubernetes import util
+from mtp_plugin_kubernetes.models.create_compute_resource_reservation_request_container_flavour_virtual_cpu_pinning import \
+    CreateComputeResourceReservationRequestContainerFlavourVirtualCpuPinning
 
 
 class ReservedVirtualComputeVirtualisationContainerReservedVirtualCpu(Model):

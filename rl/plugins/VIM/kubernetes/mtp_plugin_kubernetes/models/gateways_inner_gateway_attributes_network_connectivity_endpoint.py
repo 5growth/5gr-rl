@@ -42,7 +42,7 @@ class GatewaysInnerGatewayAttributesNetworkConnectivityEndpoint(Model):
 
         :param dikt: A dict.
         :type: dict
-        :return: The Gateways_inner_gatewayAttributes_networkConnectivityEndpoint of this GatewaysInnerGatewayAttributesNetworkConnectivityEndpoint.  # noqa: E501
+        :return: The gateways_inner_gatewayAttributes_networkConnectivityEndpoint of this GatewaysInnerGatewayAttributesNetworkConnectivityEndpoint.  # noqa: E501
         :rtype: GatewaysInnerGatewayAttributesNetworkConnectivityEndpoint
         """
         return util.deserialize_model(dikt, cls)
