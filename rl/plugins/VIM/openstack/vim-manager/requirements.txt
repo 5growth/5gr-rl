@@ -13,7 +13,7 @@ chardet==3.0.4
 Click==7.0
 cliff==2.16.0
 cmd2==0.8.9
-cryptography==2.8
+cryptography==3.2
 daiquiri==1.6.0
 debtcollector==1.22.0
 decorator==4.4.0
